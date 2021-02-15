@@ -56,17 +56,17 @@ Il file Git.md contiene un esempio di come usare Git per lo sviluppo degli eserc
 Si rammenta che la valutazione del progetto di laboratorio considererà anche l'uso adeguato di git da parte di ciascun membro del gruppo.
 
 ## Linguaggio in cui sviluppare il laboratorio
-
+<DIEGO: HO MODIFICATO I TESTI DEGLI ESERCIZI... CONTROLLATE E INTEGRATE>
 Gli esercizi vanno implementati utilizzando il linguaggio C o Java come precisato di seguito:
 
 - Esercizio 1: C
-- Esercizio 2: Java
-- Esercizio 3: C
-- Esercizio 4: C o Java a discrezione dello studente
+- Esercizio 2: C
+- Esercizio 3: Java
+- Esercizio 4: Java
 
 Come indicato sotto, alcuni esercizi chiedono di implementare codice generico. Seguono alcuni suggerimenti sul modo di realizzare codice con questa caratteristica nei due linguaggi accettati.
 
-**Nota** : Con "codice generico" si fa riferimento al fatto che  tale codice deve poter essere eseguito con tipi di dato non noti a tempo di compilazione.
+**Nota** : Con "codice generico" si intende codice che deve poter essere eseguito con tipi di dato non noti a tempo di compilazione.
 
 **Suggerimenti (C)**: Nel caso del C, è necessario capire come meglio approssimare l'idea di codice generico utilizzando quanto permesso dal linguaggio. Un approccio comune è far sì che le funzioni e le procedure presenti nel codice prendano in input puntatori a void e utilizzino qualche funzione fornita dall'utente per accedere alle componenti necessarie.
 
@@ -110,7 +110,7 @@ pandoc README.md -o README.pdf
 
 ---
 
-**Importante**: Gli esercizi 1 e 3 richiedono (fra le altre cose) di sviluppare codice generico. Nello sviluppare questa parte, si deve assumere di stare sviluppando una libreria generica intesa come fondamento di futuri programmi. Non è pertanto lecito fare assunzioni semplificative; in generale, l'implementazione della libreria generica non deve essere influenzata in alcun modo dagli usi di essa eventualmente richiesti negli esercizi (ad esempio, se un esercizio dovesse richiedere l'implementazione della struttura dati grafo e quello stesso o un altro esercizio dovesse richiedere l'implementazione, a partire da tale struttura dati, di un algoritmo per il calcolo delle componenti connesse di un grafo, l'implementazione della struttura dati *non* dovrebbe contenere elementi – variabili, procedure, funzioni, metodi, ecc. – eventualmente utili per il calcolo delle componenti connesse, ma non essenziali alla struttura dati; analogamente, se un esercizio dovesse richiedere di operare su grafi con nodi di tipo stringa, l'implementazione della struttura dati grafo dovrebbe restare generica e non potrebbe quindi assumere per i nodi il solo tipo stringa).
+**Importante**: Gli esercizi 1 3 e 4 richiedono (fra le altre cose) di sviluppare codice generico. Nello sviluppare questa parte, si deve assumere di stare sviluppando una libreria generica intesa come fondamento di futuri programmi. Non è pertanto lecito fare assunzioni semplificative; in generale, l'implementazione della libreria generica deve restare separata e non deve essere influenzata in alcun modo dagli usi di essa eventualmente richiesti negli esercizi (ad esempio, se un esercizio dovesse richiedere l'implementazione della struttura dati grafo e quello stesso o un altro esercizio dovesse richiedere l'implementazione, a partire da tale struttura dati, di un algoritmo per il calcolo delle componenti connesse di un grafo, l'implementazione della struttura dati deve essere separata dall'algoritmo per il calcolo delle componenti connesse e *non* deve contenere elementi – variabili, procedure, funzioni, metodi, ecc. – eventualmente utili a tale algoritmo, ma non essenziali alla struttura dati; analogamente, se un esercizio dovesse richiedere di operare su grafi con nodi di tipo stringa, l'implementazione della struttura dati grafo dovrebbe restare generica e non potrebbe quindi assumere per i nodi il solo tipo stringa).
 
 ---
 
@@ -130,8 +130,10 @@ Si rammenta, però, che il focus del laboratorio è l'implementazione di struttu
 
 Implementare una libreria che offre i seguenti algoritmi di ordinamento:
 
-- Insertion Sort
-- Quicksort
+- Selection Sort
+- Merge sort
+
+[@IDILIO: avevi proposto un'integrazione in cui si chiedesse di implementare un algoritmo ibrido Merge sort+Selection sort, con alcune considerazioni sulla determinazione della soglia per la dimensione degli array al di sotto della quale passare al Selection sort... Riusciresti a completare il testo con questa richiesta? Thanks!]
 
 Il codice che implementa ciascun algoritmo deve essere generico. Inoltre, ogni algoritmo deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
 
@@ -141,10 +143,10 @@ Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel 
 
 ### Uso della libreria di ordinamento implementata
 
-Il file `records.csv` che potete trovare dalle macchine del laboratorio seguendo il path
+Il file `records.csv` che potete trovare (compresso) all'indirizzo
 
 ```
-/usr/NFS/Linux/labalgoritmi/datasets/
+https://datacloud.di.unito.it/index.php/s/X7qC8JSLNRtLxPC
 ```
 
 contiene 20 milioni di record da ordinare.
@@ -175,7 +177,7 @@ relazione.
 
 ## Esercizio 2
 
-### Linguaggio richiesto: Java
+### Linguaggio richiesto: C
 
 ### Testo
 
@@ -187,7 +189,7 @@ Si consideri il problema di determinare la distanza di edit tra due stringhe (Ed
 - "tassa" e "passato" hanno edit distance pari a 4 (3 cancellazioni + 1 inserimento);
 - "pioppo" e "pioppo" hanno edit distance pari a 0.
 
-1. Si implementi una versione ricorsiva della funzione edit\_distance basata sulle seguenti osservazioni (indichiamo con $|s|$ la lunghezza di $s$ e con $\mathrm{rest}(s)$ la sottostringa di $s$ ottenuta ignorando il primo carattere di $s$):
+1. Si implementi una versione ricorsiva della funzione edit\_distance la cui struttura riproponga quella della seguente definizione (indichiamo con $|s|$ la lunghezza di $s$ e con $\mathrm{rest}(s)$ la sottostringa di $s$ ottenuta ignorando il primo carattere di $s$):
 
 - se $|s1|$ = 0, allora $\mathrm{edit\_distance}(s1,s2) = |s2|$;
 - se $|s2|$ = 0, allora $\mathrm{edit\_distance}(s1,s2) = |s1|$;
@@ -202,9 +204,9 @@ Si consideri il problema di determinare la distanza di edit tra due stringhe (Ed
 
 Si ha: $\mathrm{edit\_distance}(s1,s2)=\min\{d_{\mathrm{no-op}},d_{\mathrm{canc}},d_{\mathrm{ins}}\}$
 
-1. Si implementi una seconda versione edit\_distance\_dyn della funzione, adottando una strategia di programmazione dinamica. Tale versione deve essere anch'essa ricorsiva (in particolare, essa può essere facilmente ottenuta a partire dall'implementazione richiesta al punto precedente).
+2. Si implementi una seconda versione edit\_distance\_dyn della funzione, adottando una strategia di programmazione dinamica. Tale versione deve essere anch'essa ricorsiva e la sua struttura deve essere simile a quella della versione richiesta al punto precedente.
 
-*Nota*: Le definizioni sopra riportate non corrispondono al modo usuale di definire la distanza di edit. Sono del tutto sufficienti però per risolvere l'esercizio e sono quelle su cui dovrà essere basato il codice prodotto.
+*Nota*: Le definizioni sopra riportate non corrispondono al modo usuale di definire la distanza di edit. Sono però del tutto sufficienti per risolvere l'esercizio e, come detto, sono quelle su cui dovrà essere basato il codice prodotto.
 
 ### Unit Testing
 
@@ -212,13 +214,14 @@ Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel 
 
 ### Uso delle funzioni implementate
 
-Il file `dictionary.txt` che potete trovare dalle macchine del laboratorio seguendo il path
+All'indirizzo
 
 ```
-/usr/NFS/Linux/labalgoritmi/datasets/
+https://datacloud.di.unito.it/index.php/s/gfoEndRSfwQKiHS
 ```
+potete trovare i file `dictionary.txt` e `correctme.txt` (in una cartella compressa).
 
-contiene l'elenco (di una parte significativa) delle parole italiane. Le parole sono scritte di seguito, ciascuna su una riga.
+Il file `dictionary.txt` contiene l'elenco (di una parte significativa) delle parole italiane. Le parole sono scritte di seguito, ciascuna su una riga.
 
 Il file `correctme.txt` contiene una citazione di John Lennon. La citazione presenta alcuni errori di battitura.
 
@@ -228,27 +231,14 @@ Si implementi un'applicazione che usa la funzione edit\_distance\_dyn per determ
 
 ## Esercizio 3
 
-### Linguaggio richiesto: C
+### Linguaggio richiesto: Java
 
 ### Testo
 
-Si implementi una libreria per la struttura dati Hash Map, tenendo conto delle seguenti indicazioni:
-- Una Hash Map rappresenta un insieme di associazioni del
-tipo `<K,V>`, dove K è una chiave e V è il valore ad essa associato;
-- in una Hash Map, non possono esservi chiavi ripetute;
-- l'implementazione sfrutta un meccanismo di hashing;
-- L'implementazione deve offrire le seguenti operazioni:
-  - creazione di una Hash Map vuota;
-  - distruzione di una Hash Map (con conseguente deallocazione della memoria associata);
-  - verifica se una  Hash Map è vuota;
-  - recupero del numero di associazioni presenti in una Hash Map;
-  - cancellazione di tutte le associazioni di una Hash Map;
-  - verifica se la chiave specificata è presente in una Hash Map;
-  - inserimento in una Hash Map di un'associazione di tipo `<K,V>`;
-  - recupero da una Hash Map dell'eventuale valore, associato alla chiave specificata
-  - cancellazione da una Hash Map dell'eventuale associazione con una chiave specificata
-  - recupero dell'insieme delle chiavi presenti in una Hash Map
--Il codice che implementa la Hash Map deve essere generico (nel senso che deve consentire di inserire associazioni `<K,V>` di cui non è noto a tempo di compilazione né il tipo della chiave K, né quello del valore V) e non deve assumere alcuna cardinalità massima per l'insieme di associazioni che possono essere ospitate nella Hash Map.
+Si implementi la struttura dati Union-Find Set (con le euristiche di unione per rango e compressione del cammino). La struttura dati deve permettere di inserire oggetti di
+tipo generico e non prevedere un insieme iniziale finito di elementi.
+
+Una descrizione della Union-Find Set è riportata sul testo Cormen et al., `Introduzione agli algoritmi e strutture dati`, McGraw-Hill, nel capitolo `Strutture dati per insiemi disgiunti`, paragrafo `Foreste di insiemi disgiunti`.
 
 ### Unit Testing
 
@@ -256,69 +246,90 @@ Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel 
 
 ## Esercizio 4
 
-### Linguaggio richiesto: C o Java
+### Linguaggio richiesto: Java
 
 ### Testo
 
-Si consideri un grafo connesso con $N$ nodi e $N-1$ archi bidirezionali pesati con un peso intero $W$. Ci si pone il problema di trovare un algoritmo efficiente per rispondere a $Q$ distinte interrogazioni.
+Si implementi una libreria che realizza la struttura dati Grafo in modo che **sia ottimale per dati sparsi**
+(IMPORTANTE: le scelte implementative che farete dovranno essere giustificate in relazione alle nozioni presentate
+durante le lezioni in aula). La struttura deve consentire di rappresentare sia grafi diretti che grafi non diretti
+(suggerimento:  un grafo non diretto può essere rappresentato usando un'implementazione per grafi diretti modificata
+per garantire che, per ogni arco (a,b), etichettato w, presente nel grafo, sia presente nel grafo anche l'arco (b,a),
+etichettato w. Ovviamente, il grafo dovrà mantenere l'informazione che specifica se esso è un grafo diretto o non diretto.).
 
-Una interrogazione consiste in un nuovo arco pesato $q$. L'algoritmo deve rispondere `YES` se $q$ permette di ridurre il peso complessivo del grafo, `NO` altrimenti. L'arco $q$ soddisfa questa condizione se esiste un arco $e$ tale per cui sia possibile sostituire $q$ a $e$ lasciando il grafo connesso e diminuendone il peso complessivo. L'esecuzione della singola interrogazione non deve modificare il grafo (i.e., il grafo di partenza è sempre lo stesso).
+L'implementazione deve essere generica sia per quanto riguarda il tipo dei nodi, sia per quanto riguarda le etichette
+degli archi.
 
-I file di input iniziano con una linea contenente il numero $N$ di nodi del grafo a cui seguono $N-1$ linee contenenti gli archi. Ogni linea che specifica un arco contiene `3` interi separati da spazi: il nodo sorgente, il nodo destinazione e il peso dell'arco.
+La struttura dati implementata dovrà offrire (almeno) le seguenti operazioni (accanto ad ogni operazione è specificata la
+complessità richiesta; n può indicare il numero di nodi o il numero di archi, a seconda del contesto):
 
-I file continuano con una linea contenente il numero $Q$ di interrogazioni a cui rispondere. Seguono $Q$ linee contenenti le interrogazioni. Ogni interrogazione è nello stesso formato usato per descrivere gli archi.
+- Creazione di un grafo vuoto – O(1)
+- Aggiunta di un nodo – O(1)
+- Aggiunta di un arco – O(1)
+- Verifica se il grafo è diretto – O(1)
+- Verifica se il grafo contiene un dato nodo – O(1)
+- Verifica se il grafo contiene un dato arco – O(1)  (*)
+- Cancellazione di un nodo – O(n)
+- Cancellazione di un arco – O(1)  (*)
+- Determinazione del numero di nodi – O(1)
+- Determinazione del numero di archi – O(n)
+- Recupero dei nodi del grafo – O(n)
+- Recupero degli archi del grafo – O(n)
+- Recupero nodi adiacenti di un dato nodo – O(1)  (*)
+- Recupero etichetta associata a una coppia di nodi – O(1) (*)
 
-L'output del programma deve consistere in esattamente $Q$ linee contenenti `YES` o `NO` a seconda che la risposta alla corrispondente interrogazione sia positiva (l'arco oggetto dell'interrogazione riduce il peso del grafo) o negativa (viceversa).
-
-Potete assumere quanto segue:
-
-- $1 \leq N \leq 100\,000$
-- $1 \leq Q \leq 100\,000$
-- i nodi sono interi che assumono valori nel range $[1, 100\,000]$
-- per ogni arco $(u,v,w): u \neq v \wedge w \in [1, 1\,000\,000\,000]$.
-
-## Esempio:
-
-### Input:
-```
-6
-1 2 2
-1 3 3
-3 4 5
-3 5 4
-2 6 4
-4
-1 4 4
-4 5 6
-2 3 8
-1 6 3
-```
-
-### Output atteso:
-
-```
-YES
-NO
-NO
-YES
-```
+(*) quando il grafo è veramente sparso, assumendo che l'operazione venga effettuata su un nodo la cui lista di adiacenza ha una lunghezza in O(1).
 
 ### Unit Testing
 
-Per questo esercizio non siete tenuti a scrivere unit test. Siete liberi di farlo se lo ritenete opportuno.
+Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel documento Unit Testing.
 
-### Verifica delle prestazioni
+### Uso della libreria che implementa la struttura dati Grafo
 
-Insieme a questo esercizio venogno forniti 10 dataset di test. Ogni dataset è descritto da un file nel formato descritto e da un file risultato nel formato richiesto come output. Si può considerare un test superato se l'algoritmo implementato completa l'elaborazione del file di input in meno di 2 secondi.
+Si implementi l'algoritmo di Kruskal per la determinazione della minima foresta  ricoprente di un grafo.
 
-I file di test possono essere recuperati dalle macchine del laboratorio accedendo al seguente path:
+L'implementazione dell'algoritmo di Kruskal dovrà utilizzare la struttura dati Union-Find Set implementata
+nell'esercizio precedente.
+
+N.B. Nel caso in cui il grafo sia costituito da una sola componente connessa,
+l'algoritmo restituirà un albero; nel caso in cui, invece, vi siano più componenti connesse,
+l'algoritmo restituirà una foresta costituita dai minimi alberi ricoprenti di ciascuna componente connessa.
+
+### Uso delle librerie che implementano la struttura dati Grafo e l'algoritmo di Kruskal
+
+[@IDILIO: nella seguente sezione, faccio riferimento al dataset che avevamo proposto qualche anno fa. Se preferisci sostituirlo con un dataset diverso (mi pare ne proponessi uno sui collegamenti fra Internet autonomous systems, cambia pure la descrizione che segue... e poi ricordiamoci anche di caricare il nuovo dataset su datacloud...)]
+
+La struttura dati Grafo e l'algoritmo di Kruskal dovranno essere utilizzati con i dati contenuti nel file italian\_dist\_graph.csv.
+
+Il file italian\_dist\_graph.csv che potete trovare all'indirizzo
 
 ```
-/usr/NFS/Linux/labalgoritmi/datasets/
+https://datacloud.di.unito.it/index.php/s/PirTJpq4JMnpH3G
 ```
 
-### Note importanti
+contiene le distanze in metri tra varie località
+italiane e una frazione delle località a loro più vicine.
+Il formato è un CSV standard: i campi sono separati da virgole; i record sono separati dal carattere di fine
+riga (\\n).
 
-- Tutti i test possono essere completati nei tempi richiesti su una macchina ragionevomente attrezzata (es., i computer in laboratorio);
-- Superare tutti i test *non* è facile e *non* è richiesto. In fase d'esame verrà valutato lo sforzo fatto per andare oltre la soluzione più banale, ma non ci si aspetta che tutti riescano a superare tutti i test.
-- Si ricorda che i file di test *non* devono essere oggetto di commit su git!
+Ogni record contiene i seguenti dati:
+
+- località 1: (tipo stringa) nome della località "sorgente". La stringa può   contenere spazi, non può contenere virgole;
+- località 2: (tipo stringa) nome della località "destinazione". La stringa  può contenere spazi, non può contenere virgole;
+- distanza: (tipo float) distanza in metri tra le due località.
+
+**Note** :
+
+- potete interpretare le informazioni presenti nelle righe del file come   archi non diretti (pertanto, si suggerisce di inserire nel grafo sia l'arco di andata che quello di ritorno a fronte di ogni riga letta).
+- il file è stato creato a partire da un dataset poco accurato. I dati riportati contengono inesattezze e imprecisioni.
+
+**IL FILE italian\_dist\_graph.csv NON DEVE ESSERE OGGETTO DI COMMIT SU GIT!**
+
+**Controlli**
+
+Un'implementazione corretta dell'algoritmo di Kruskal, eseguita sui dati
+contenuti nel file italian\_dist\_graph.csv, dovrebbe determinare una minima foresta ricoprente con
+18.640 nodi, 18.637 archi (non orientati) e di peso complessivo di circa 89.939,913 Km.
+
+
+</DIEGO>
