@@ -173,7 +173,7 @@ che vi sareste aspettati? Se sì, perché? Se no, fate delle ipotesi circa il mo
 algoritmi non funzionano come vi aspettate, verificatele e riportate quanto scoperto nella
 relazione.
 
-**Ricordiamo** che il file `records.csv` non deve essere oggetto di commit su git!
+**Si ricorda che** che il file `records.csv` **NON DEVE ESSERE OGGETTO DI COMMIT SU GIT!**
 
 ## Esercizio 2
 
@@ -227,7 +227,7 @@ Il file `correctme.txt` contiene una citazione di John Lennon. La citazione pres
 
 Si implementi un'applicazione che usa la funzione edit\_distance\_dyn per determinare, per ogni parola w in correctme.txt, la lista di parole in dictionary.txt con edit distance minima da w. Si sperimenti il funzionamento dell'applicazione e si riporti in una breve relazione (circa una pagina) i risultati degli esperimenti.
 
-**Si ricorda** che i file `dictionary.txt` e `correctme.txt` non devono essere oggetto di commit su git!
+**Si ricorda** che i file `dictionary.txt` e `correctme.txt` **NON DEVONO ESSERE OGGETTO DI COMMIT SU GIT!**
 
 ## Esercizio 3
 
@@ -323,7 +323,7 @@ Ogni record contiene i seguenti dati:
 - potete interpretare le informazioni presenti nelle righe del file come   archi non diretti (pertanto, si suggerisce di inserire nel grafo sia l'arco di andata che quello di ritorno a fronte di ogni riga letta).
 - il file è stato creato a partire da un dataset poco accurato. I dati riportati contengono inesattezze e imprecisioni.
 
-**IL FILE italian\_dist\_graph.csv NON DEVE ESSERE OGGETTO DI COMMIT SU GIT!**
+**Si ricorda** il file italian\_dist\_graph.csv **NON DEVE ESSERE OGGETTO DI COMMIT SU GIT!**
 
 **Controlli**
 
