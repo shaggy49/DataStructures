@@ -28,7 +28,7 @@ Ad esempio, si consideri un gruppo di laboratorio costituito dalle studentesse/d
 
 - alla data della prova scritta del primo appello di giugno, il progetto di laboratorio del gruppo deve essere aggiornato alla versione che si intende presentare;
 - il solo studente X deve sostenere la prova orale nella sessione giugno-luglio,  procedendo come indicato nell'esempio riportato sopra, mentre Y e Z sosterranno la discussione quando avranno superato la prova scritta.
-- Supponiamo che Y e Z superino la prova scritta nell'appello di gennaio: essi dovranno sostenere la prova orale nella sessione di gennaio-febbraio
+- Supponiamo che Y e Z superino la prova scritta nell'appello di gennaio: essi dovranno sostenere la prova orale nella sessione di gennaio-febbraio.
 - Gli studenti Y e Z dovranno, di norma, discutere la stessa versione del progetto di laboratorio che ha discusso lo studente X; i.e., eventuali modifiche al laboratorio successive alla discussione di X dovranno essere debitamente documentate (i.e., il log delle modifiche dovrà comparire su GitLab) e motivate.
 
 **Validità del progetto di laboratorio** : le specifiche per il progetto di laboratorio descritte in questo documento resteranno valide fino all'ultimo appello della sessione gennaio-febbraio relativa al corrente anno accademico **(vale a dire, quella di gennaio-febbraio 2022)** e non oltre!. Gli appelli delle sessioni successive a questa dovranno essere sostenuti sulla base delle specifiche che verranno descritte nella prossima edizione del laboratorio di algoritmi.
@@ -56,7 +56,7 @@ Il file Git.md contiene un esempio di come usare Git per lo sviluppo degli eserc
 Si rammenta che la valutazione del progetto di laboratorio considererà anche l'uso adeguato di git da parte di ciascun membro del gruppo.
 
 ## Linguaggio in cui sviluppare il laboratorio
-<DIEGO: HO MODIFICATO I TESTI DEGLI ESERCIZI... CONTROLLATE E INTEGRATE>
+
 Gli esercizi vanno implementati utilizzando il linguaggio C o Java come precisato di seguito:
 
 - Esercizio 1: C
@@ -68,7 +68,7 @@ Come indicato sotto, alcuni esercizi chiedono di implementare codice generico. S
 
 **Nota** : Con "codice generico" si intende codice che deve poter essere eseguito con tipi di dato non noti a tempo di compilazione.
 
-**Suggerimenti (C)**: Nel caso del C, è necessario capire come meglio approssimare l'idea di codice generico utilizzando quanto permesso dal linguaggio. Un approccio comune è far sì che le funzioni e le procedure presenti nel codice prendano in input puntatori a void e utilizzino qualche funzione fornita dall'utente per accedere alle componenti necessarie.
+**Suggerimenti (C)**: Nel caso del C, è necessario capire come meglio approssimare l'idea di codice generico utilizzando quanto permesso dal linguaggio. Un approccio comune è far sì che le funzioni e le procedure presenti nel codice prendano in input puntatori a `void` e utilizzino qualche funzione fornita dall'utente per accedere alle componenti necessarie.
 
 Nota: chi è in grado di realizzare tipi di dato astratto tramite tipi opachi è incoraggiato a procedere in questa direzione.
 
@@ -81,7 +81,6 @@ Nota: chi è in grado di realizzare tipi di dato astratto tramite tipi opachi è
 È, invece, possibile l'uso di strutture dati native del linguaggio o offerte da librerie esterne, se la loro realizzazione non è richiesta da uno degli esercizi proposti.
 
 Es.: nello sviluppo in Java, l'uso di ArrayList è da ritenersi possibile, se nessun esercizio chiede la realizzazione in Java di un array dinamico.
-
 
 ## Qualità dell'implementazione
 
@@ -98,7 +97,7 @@ Per "buona qualità" intendiamo codice ben modularizzato, ben commentato e ben t
 - tutti i nomi (es., nomi di variabili, di metodi, di classi, ecc.) *devono* essere significativi e in inglese;
 - il codice deve essere correttamente indentato; impostare l'indentazione a 2 caratteri (un'indentazione di 4 caratteri è ammessa ma scoraggiata) e impostare l'editor in modo che inserisca "soft tabs" (cioè, deve inserire il numero corretto di spazi invece che un carattere di tabulazione);
 - per dare i nomi agli identificatori, seguire le convenzioni in uso per il linguaggio scelto:
-  - Java: i nomi dei  package sono tutti in minuscolo senza separazione fra le parole (es. thepackage); i nomi dei tipi (classi, interfacce, ecc.) iniziano con una lettera maiuscola e proseguono in camel case (es. TheClass), i nomi dei metodi e delle variabili iniziano con una lettera minuscola e proseguono in camel case (es. theMethod), i nomi delle costanti sono tutti in maiuscolo e in formato snake case (es. THE\_CONSTANT);
+  - Java: i nomi dei package sono tutti in minuscolo senza separazione fra le parole (es. thepackage); i nomi dei tipi (classi, interfacce, ecc.) iniziano con una lettera maiuscola e proseguono in camel case (es. TheClass), i nomi dei metodi e delle variabili iniziano con una lettera minuscola e proseguono in camel case (es. theMethod), i nomi delle costanti sono tutti in maiuscolo e in formato snake case (es. THE\_CONSTANT);
   - C:  macro e costanti sono tutti in maiuscolo e in formato snake case (es. THE\_MACRO, THE\_CONSTANT); i nomi di tipo (e.g.  struct, typedefs, enums, ...) iniziano con una lettera maiuscola e proseguono in camel case (e.g., TheType, TheStruct); i nomi di funzione iniziano con una lettera minuscola e proseguono in snake case (e.g., the\_function());
 - i file vanno salvati in formato UTF-8.
 
@@ -128,18 +127,13 @@ Si rammenta, però, che il focus del laboratorio è l'implementazione di struttu
 
 ### Testo
 
-Implementare una libreria che offre i seguenti algoritmi di ordinamento:
+Implementare una libreria che offre un algoritmo di ordinamento chiamato `Merge-Insertion Sort`. L'idea è approfittare dal fatto che l'`insertion sort` può essere più veloce che il `merge sort` quando la sottolista da ordinare è piccola. Quindi, si consideri una modifica del `merge sort` in cui le sottoliste di lunghezza `k` o inferiore sono ordinate usando l'`insertion sort` e sono poi combinate usando il meccanismo tradizionale di fusione del `merge sort`. Il valore del parametro `k` dovrà essere studiato e discusso nella relazione. Ad esempio, `k=0` implica che `Merge-Insertion Sort` si comporta esattamente come il `merge sort` classico, mentre `k>>0` aumenta l'utilizzo del'`insertion sort`.
 
-- Selection Sort
-- Merge sort
-
-[@IDILIO: avevi proposto un'integrazione in cui si chiedesse di implementare un algoritmo ibrido Merge sort+Selection sort, con alcune considerazioni sulla determinazione della soglia per la dimensione degli array al di sotto della quale passare al Selection sort... Riusciresti a completare il testo con questa richiesta? Thanks!]
-
-Il codice che implementa ciascun algoritmo deve essere generico. Inoltre, ogni algoritmo deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
+Il codice che implementa `Merge-Insertion Sort` deve essere generico. Inoltre, la libraria deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
 
 ### Unit Testing
 
-Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel documento Unit Testing.
+Implementare gli unit-test per la libreria secondo le indicazioni suggerite nel documento Unit Testing.
 
 ### Uso della libreria di ordinamento implementata
 
@@ -161,17 +155,10 @@ Ogni record è descritto su una riga e contiene i seguenti campi:
 Il formato è un CSV standard: i campi sono separati da virgole; i record sono
 separati da `\n`.
 
-Usando ciascuno degli algoritmi implementati, si ordinino i *record* (non è sufficiente ordinare i
-singoli campi) contenuti nel file `records.csv` in ordine non decrescente secondo i valori contenuti
-nei tre campi "field" (cioè, per ogni algoritmo, è necessario ripetere l'ordinamento tre volte, una
-volta per ciascun campo).
+Usando l'algoritmo implementato, si ordinino i *record* (non è sufficiente ordinare i
+singoli campi) contenuti nel file `records.csv` in ordine non decrescente secondo i valori contenuti nei tre campi "field" (cioè, per ogni valore di `k`, è necessario ripetere l'ordinamento tre volte, una volta per ciascun campo).
 
-Si misurino i tempi di risposta e si produca una breve relazione in cui si riportano i risultati
-ottenuti insieme a un loro commento. Nel caso l'ordinamento si  protragga per più di 10 minuti
-potete interrompere l'esecuzione e riportare un fallimento dell'operazione. I risultati sono quelli
-che vi sareste aspettati? Se sì, perché? Se no, fate delle ipotesi circa il motivo per cui gli
-algoritmi non funzionano come vi aspettate, verificatele e riportate quanto scoperto nella
-relazione.
+Si misurino i tempi di risposta variando il valore di `k` e si produca una breve relazione in cui si riportano i risultati ottenuti insieme a un loro commento. Dimostrare nella relazione come il valore di `k` dovrebbe essere scelto nella pratica. Nel caso l'ordinamento si protragga per più di 10 minuti potete interrompere l'esecuzione e riportare un fallimento dell'operazione. I risultati sono quelli che vi sareste aspettati? Se sì, perché? Se no, fate delle ipotesi circa il motivo per cui l'algoritmo non funziona come vi aspettate, verificatele e riportate quanto scoperto nella relazione.
 
 **Si ricorda che** che il file `records.csv` **NON DEVE ESSERE OGGETTO DI COMMIT SU GIT!**
 
@@ -288,16 +275,13 @@ Implementare gli unit-test degli algoritmi secondo le indicazioni suggerite nel 
 
 Si implementi l'algoritmo di Kruskal per la determinazione della minima foresta  ricoprente di un grafo.
 
-L'implementazione dell'algoritmo di Kruskal dovrà utilizzare la struttura dati Union-Find Set implementata
-nell'esercizio precedente.
+L'implementazione dell'algoritmo di Kruskal dovrà utilizzare la struttura dati Union-Find Set implementata nell'esercizio precedente.
 
 N.B. Nel caso in cui il grafo sia costituito da una sola componente connessa,
 l'algoritmo restituirà un albero; nel caso in cui, invece, vi siano più componenti connesse,
 l'algoritmo restituirà una foresta costituita dai minimi alberi ricoprenti di ciascuna componente connessa.
 
 ### Uso delle librerie che implementano la struttura dati Grafo e l'algoritmo di Kruskal
-
-[@IDILIO: nella seguente sezione, faccio riferimento al dataset che avevamo proposto qualche anno fa. Se preferisci sostituirlo con un dataset diverso (mi pare ne proponessi uno sui collegamenti fra Internet autonomous systems, cambia pure la descrizione che segue... e poi ricordiamoci anche di caricare il nuovo dataset su datacloud...)]
 
 La struttura dati Grafo e l'algoritmo di Kruskal dovranno essere utilizzati con i dati contenuti nel file italian\_dist\_graph.csv.
 
@@ -314,7 +298,7 @@ riga (\\n).
 
 Ogni record contiene i seguenti dati:
 
-- località 1: (tipo stringa) nome della località "sorgente". La stringa può   contenere spazi, non può contenere virgole;
+- località 1: (tipo stringa) nome della località "sorgente". La stringa può contenere spazi, non può contenere virgole;
 - località 2: (tipo stringa) nome della località "destinazione". La stringa  può contenere spazi, non può contenere virgole;
 - distanza: (tipo float) distanza in metri tra le due località.
 
@@ -331,5 +315,3 @@ Un'implementazione corretta dell'algoritmo di Kruskal, eseguita sui dati
 contenuti nel file italian\_dist\_graph.csv, dovrebbe determinare una minima foresta ricoprente con
 18.640 nodi, 18.637 archi (non orientati) e di peso complessivo di circa 89.939,913 Km.
 
-
-</DIEGO>
