@@ -127,9 +127,9 @@ Si rammenta, però, che il focus del laboratorio è l'implementazione di struttu
 
 ### Testo
 
-Implementare una libreria che offre un algoritmo di ordinamento chiamato `Merge-Insertion Sort`. L'idea è approfittare dal fatto che l'`insertion sort` può essere più veloce che il `merge sort` quando la sottolista da ordinare è piccola. Quindi, si consideri una modifica del `merge sort` in cui le sottoliste di lunghezza `k` o inferiore sono ordinate usando l'`insertion sort` e sono poi combinate usando il meccanismo tradizionale di fusione del `merge sort`. Il valore del parametro `k` dovrà essere studiato e discusso nella relazione. Ad esempio, `k=0` implica che `Merge-Insertion Sort` si comporta esattamente come il `merge sort` classico, mentre `k>>0` aumenta l'utilizzo del'`insertion sort`.
+Implementare una libreria che offre un algoritmo di ordinamento chiamato `Merge-BinaryInsertion Sort`. L'idea è approfittare dal fatto che il `binary insertion sort` può essere più veloce che il `merge sort` quando la sottolista da ordinare è piccola. Quindi, si consideri una modifica del `merge sort` in cui le sottoliste di lunghezza `k` o inferiore sono ordinate usando il  `binary insertion sort` e sono poi combinate usando il meccanismo tradizionale di fusione del `merge sort`. Il valore del parametro `k` dovrà essere studiato e discusso nella relazione. Ad esempio, `k=0` implica che `Merge-BinaryInsertion Sort` si comporta esattamente come il `merge sort` classico, mentre `k>>0` aumenta l'utilizzo del `binary insertion sort`.
 
-Il codice che implementa `Merge-Insertion Sort` deve essere generico. Inoltre, la libreria deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
+Il codice che implementa `Merge-BinaryInsertion Sort` deve essere generico. Inoltre, la libreria deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
 
 ### Unit Testing
 
