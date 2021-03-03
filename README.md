@@ -127,7 +127,7 @@ Si rammenta, però, che il focus del laboratorio è l'implementazione di struttu
 
 ### Testo
 
-Implementare una libreria che offre un algoritmo di ordinamento chiamato `Merge-BinaryInsertion Sort`. L'idea è approfittare dal fatto che il `binary insertion sort` può essere più veloce che il `merge sort` quando la sottolista da ordinare è piccola. Quindi, si consideri una modifica del `merge sort` in cui le sottoliste di lunghezza `k` o inferiore sono ordinate usando il  `binary insertion sort` e sono poi combinate usando il meccanismo tradizionale di fusione del `merge sort`. Il valore del parametro `k` dovrà essere studiato e discusso nella relazione. Ad esempio, `k=0` implica che `Merge-BinaryInsertion Sort` si comporta esattamente come il `merge sort` classico, mentre `k>>0` aumenta l'utilizzo del `binary insertion sort`.
+Implementare una libreria che offre un algoritmo di ordinamento  `Merge-BinaryInsertion Sort`. Con `BinaryInsertion Sort` ci riferiamo a una versione dell'algoritmo 'Insertion Sort` in cui la posisione, all'interno della sezione ordinata del vettore, in cui inserire l'elemento corrente è determinata tramite ricerca binaria. Il `Merge-BinaryInsertion Sort` è un algoritmo ibrido che combina `Merge Sort` e `BinaryInsertion Sort`.  L'idea è di approfittare del fatto che il `BinaryInsertion Sort` può essere più veloce del `Merge Sort` quando la sottolista da ordinare è piccola. Ciò suggerisce di considerare una modifica del `Merge Sort` in cui le sottoliste di lunghezza `k` o inferiore sono ordinate usando il  `BinaryInsertion Sort` e sono poi combinate usando il meccanismo tradizionale di fusione del `Merge Sort`. Il valore del parametro `k` dovrà essere studiato e discusso nella relazione. Ad esempio, `k=0` implica che `Merge-BinaryInsertion Sort` si comporta esattamente come il `merge sort` classico, mentre `k>>0` aumenta l'utilizzo del `binary insertion sort`.
 
 Il codice che implementa `Merge-BinaryInsertion Sort` deve essere generico. Inoltre, la libreria deve permettere di specificare (cioè deve accettare in input) il criterio secondo cui ordinare i dati.
 
@@ -314,4 +314,3 @@ Ogni record contiene i seguenti dati:
 Un'implementazione corretta dell'algoritmo di Kruskal, eseguita sui dati
 contenuti nel file italian\_dist\_graph.csv, dovrebbe determinare una minima foresta ricoprente con
 18.640 nodi, 18.637 archi (non orientati) e di peso complessivo di circa 89.939,913 Km.
-
