@@ -84,7 +84,7 @@ accedere tramite browser aprendo l'URL:
 Una volta effettuato il login, è possibile utilizzare l'interfaccia web per
 creare una copia personale del repository su cui lavorerete. Un membro per ogni
 gruppo acceda all'url:
-  [https://gitlab2.educ.di.unito.it/esposito/laboratorio-algoritmi-2020-2021](https://gitlab2.educ.di.unito.it/esposito/laboratorio-algoritmi-2020-2021)
+  [https://gitlab2.educ.di.unito.it/pozzato/laboratorio-algoritmi-2020-2021](https://gitlab2.educ.di.unito.it/pozzato/laboratorio-algoritmi-2020-2021)
 e clicchi sull'icona "Fork repository".
 
 Di default, l'interfaccia web proporrà di impostare i permessi del repository
@@ -95,8 +95,8 @@ perché qualcuno ne ha copiato il contenuto.
 
 Aggiungete ora i membri del gruppo *e i docenti di laboratorio* al gruppo di
 sviluppo del progetto con ruolo "developer" (trovate l'opzione seguendo i menù
-Settings -> Members a partire dalla pagina del vostro repository). I nick name
-dei docenti di laboratorio sono "esposito", "damfer" e "pozzato".
+Settings -> Members a partire dalla pagina del vostro repository). I nickname
+dei docenti di laboratorio sono "pozzato", "magro" e "drago".
 
 L'avere a disposizione una copia del laboratorio non è ancora sufficiente per
 poter iniziare a lavorare: è infatti necessario creare una copia locale alla
@@ -114,12 +114,12 @@ dove GIT_REPO_REF è la stringa di accesso menzionata.
 
 *Nota accesso https:* la versione di git installata nei laboratori richiede di
 inserire il proprio login seguito dal simbolo @ subito dopo l'indicazione del
-protocollo. A titolo di esempio, riportiamo La stringa di accesso per il
+protocollo. A titolo di esempio, riportiamo la stringa di accesso per il
 repository proposto dai docenti: (nel vostro caso dovrete
 sostituire l'URL con quello che vi siete annotati precedentemente):
 
 ```
- git clone https://esposito@gitlab.educ.di.unito.it/esposito/laboratorioalgoritmi-2015-16.git
+ git clone https://magro@gitlab2.educ.di.unito.it/pozzato/laboratorio-algoritmi-2020-2021
 ```
 
 ## Comandi di base per lavorare
@@ -141,7 +141,8 @@ aggiornamento. Segue un elenco dei comandi principali che dovrete utilizzare:
   necessario aggiungere esplicitamente tutti i file che sono stati modificati o
   creati.
 
-- `rm`: rimuove uno o più file dalla copia locale e dal repository al prossimo commit. È necessario aggiungere esplicitamente tutti i file che sono stati cancellati.
+- `rm`: rimuove uno o più file dalla copia locale e dal repository al prossimo commit. 
+È necessario aggiungere esplicitamente tutti i file che sono stati cancellati.
 
 - `commit`: salva lo stato del progetto.
 
