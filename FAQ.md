@@ -33,7 +33,7 @@
 
 **A**: No.
 
-**Q**: Ho l'impressione che si dia molta (troppa) importanza alla parte "estetica" del codice (commenti, indentazioni, etc..).
+**Q: Ho l'impressione che si dia molta (troppa) importanza alla parte "estetica" del codice (commenti, indentazioni, etc..).
 Spesso passo più tempo ad abbellire il codice che a scrivere gli algoritmi stessi.**
 
 **A**: Se hai questa impressione allora vuol dire che stai svolgendo bene il laboratorio. La scrittura di codice modulare, di buona qualità, ben commentato e ben testato è un lavoro che richiede tempo e dedizione. È però un'attività fondamentale per il successo dei progetti a cui lavorerai. Quando oltre a percepirne la fatica ne percepirai anche il valore, avrai interiorizzato una buona parte di quanto si voleva trasmettere quando si è formulato il mandato degli esercizi.
