@@ -4,6 +4,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define KEY_VALUE 2
+#define MAX_ELEM 1000000
+
 void merge_sort(int array[], int firstPosition, int lastPosition);
 void printArray(int arr[], int size);
 void insertionSort(int a[], int start, int last);
@@ -68,7 +71,7 @@ void merge_sort(int array[], int firstPosition, int lastPosition) {
     if (firstPosition < lastPosition) {
         // mettere confronto con k
         middlePosition = (firstPosition + lastPosition) / 2;
-        if(numElem <= 2){
+        if(numElem <= KEY_VALUE){
             insertionSort(array,firstPosition, middlePosition);
             insertionSort(array,middlePosition+1, lastPosition);
         }else {
@@ -81,15 +84,7 @@ void merge_sort(int array[], int firstPosition, int lastPosition) {
 }
 
 void merge_sort_original(int array[], int firstPosition, int lastPosition) {
-    int middlePosition;
-    if (firstPosition < lastPosition) {
-        // mettere confronto con k
-        middlePosition = (firstPosition + lastPosition) / 2;
-        merge_sort_original(array, firstPosition, middlePosition);
-        merge_sort_original(array, middlePosition + 1, lastPosition);
-        merge(array, firstPosition, middlePosition, lastPosition);
-    }
-    return;
+    
 }
 
 void printArray(int arr[], int size) {
@@ -145,7 +140,7 @@ void insertionSort(int a[], int start, int last) {
 
 int main() {
     clock_t begin = clock();
-    int a[1000000];
+    int a[MAX_ELEM];
     /* Initializes random number generator */
     srand((unsigned) getpid());
     for (int i = 0; i<1000000; i++){
@@ -162,6 +157,4 @@ int main() {
     printf("Tempo di esecuzione: %lf \n", time_spent);
     //fprintf(stdout, "%lu\n", (unsigned long)time(NULL));
     exit(EXIT_SUCCESS);
-
-
 }
