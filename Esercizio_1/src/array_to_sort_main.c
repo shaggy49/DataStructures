@@ -32,6 +32,25 @@ static int precedes_record_int_field(void *r1_p, void *r2_p){
 
 /*
 * It takes as input two pointers to Record.
+* It returns 1 iff the integer field of the first record is smaller than
+* the integer field of the second one (0 otherwise)
+*/
+static int precedes_record_float_field(void *r1_p, void *r2_p){
+	if (r1_p == NULL){
+		fprintf(stderr, "precedes_record_float_field: the first parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	if (r2_p == NULL){
+		fprintf(stderr, "precedes_record_float_field: the second parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	Record *rec1_p = (Record *)r1_p;
+	Record *rec2_p = (Record *)r2_p;
+	return rec1_p->floating_field < rec2_p->floating_field;
+}
+
+/*
+* It takes as input two pointers to Record.
 * It returns 1 iff the string field of the first record is smaller than
 * the string field of the second one (0 otherwise)
 */
