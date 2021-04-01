@@ -16,28 +16,29 @@ typedef struct _UnsortedArray UnsortedArray;
  */
 UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *));
 
-/* It accepts as input a pointer to an ordered array and a pointer to an
+/*
+ * It accepts as input a pointer to an ordered array and a pointer to an
  * element. It adds the element to the ordered array in the right position.
  * The input parameters cannot be NULL
  */
-void array_to_sort_add(UnsortedArray *, void *); //da rivedere
+void array_to_sort_add(UnsortedArray *, void *); 
 
-/* It accepts as input a pointer to an unsorted array and it
+/*
+ * It accepts as input a pointer to an unsorted array and it
  * returns the number of elements currently stored into the array.
  * The input parameter cannot be NULL
  */
 unsigned long array_to_sort_size(UnsortedArray*);
 
-/* It accepts as input a pointer to an unsorted array and an integer "i" and
+/*
+ * It accepts as input a pointer to an unsorted array and an integer "i" and
  * it returns the pointer to the i-th element of the ordered array
  * The first parameter cannot be NULL; the second parameter must be a valid
  * position within the ordered array
  */
+
+/* prende l'elemento in posizione 2 campo */
 void *array_to_sort_get(UnsortedArray *, unsigned long);
-
-
-/* swap ????? */
-
 
 /* It accepts as input a pointer to an unsorted array and
  * it frees the memory allocated to store the ordered array.
@@ -52,7 +53,8 @@ void array_to_sort_free_memory(UnsortedArray *);
  * It takes two other parameters that represents the first and the last
  * position of the array. The input parameters cannot be NULL
  */
-void array_to_sort_bin_ins_merge_sort(UnsortedArray *, unsigned long, unsigned long, int (*compare)(void*, void*));
+
+//void array_to_sort_bin_ins_merge_sort(UnsortedArray *, unsigned long, unsigned long, int (*compare)(void*, void*));
 
 /* Inoltre, la libreria deve permettere di specificare 
 (cioè deve accettare in input) il criterio secondo cui ordinare i dati. 
