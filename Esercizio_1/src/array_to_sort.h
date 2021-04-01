@@ -48,6 +48,9 @@ void *array_to_sort_get(UnsortedArray *, unsigned long);
  */
 void array_to_sort_free_memory(UnsortedArray *);
 
+
+void array_to_sort_swap_elem(UnsortedArray *, int, int);
+
 /* It takes an unsorted array as an input and it orders with a hybrid
  * bin-insert-merge-sort algorithm.
  * It takes two other parameters that represents the first and the last
@@ -59,5 +62,7 @@ void array_to_sort_free_memory(UnsortedArray *);
 /* Inoltre, la libreria deve permettere di specificare 
 (cioè deve accettare in input) il criterio secondo cui ordinare i dati. 
 */
+
+void array_to_sort_insertion_sort(UnsortedArray *);
 
 #endif // ARRAY_TO_SORT_H

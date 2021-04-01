@@ -62,12 +62,12 @@ static void free_array(UnsortedArray *unsorted_array){
 	return;
 }
 
-static void print_array(UnsortedArray *array){
-	unsigned long size = array_to_sort_size(array);
+static void print_array(UnsortedArray *unsorted_array){
+	unsigned long size = array_to_sort_size(unsorted_array);
 	Record *array_element;
 	printf("\nARRAY OF RECORDS\n");
 	for (unsigned long i = 0; i < size; ++i){
-		array_element = (Record *)array_to_sort_get(array, i);
+		array_element = (Record *)array_to_sort_get(unsorted_array, i);
 		printf("%s, %d\n", array_element->string_field, array_element->integer_field);
 	}
 	return;
@@ -114,8 +114,10 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 
 static void test_with_comparison_function(const char *file_name, int (*compare)(void *, void *)){
 	UnsortedArray *unsorted_array = array_to_sort_create(compare);
-	load_array(file_name, unsorted_array); 
-	/* la funzione che ordina effettivamente l'array */
+	load_array(file_name, unsorted_array);
+	print_array(unsorted_array);
+	//printf("unsorted_array->size: %ld\n", ->size);
+	array_to_sort_insertion_sort(unsorted_array);
 	print_array(unsorted_array);
 	free_array(unsorted_array);
 	return;

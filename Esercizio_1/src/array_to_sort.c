@@ -6,7 +6,6 @@
 #define INITIAL_CAPACITY 2
 
 unsigned long binary_search(UnsortedArray *array, void *item, unsigned long low, unsigned long high);
-void insertion_sort(UnsortedArray *array, unsigned long start, unsigned long last);
 void merge_sort(UnsortedArray *array, unsigned long firstPosition, unsigned long lastPosition);
 void merge(UnsortedArray *array, unsigned long firstPosition, unsigned long middlePosition, unsigned long lastPosition);
 
@@ -95,46 +94,52 @@ void array_to_sort_free_memory(UnsortedArray *unsorted_array){
     return;
 }
 
+//voglio shiftare elementi
+void array_to_sort_swap_elem(UnsortedArray *unsorted_array, int firstElem, int secondElem){
+    
+}
+
 
 // -------------FUNZIONI (MERGE.C)------------------
 
-unsigned long binary_search(UnsortedArray *array, void *item, unsigned long low, unsigned long high){
+unsigned long binary_search(UnsortedArray *unsorted_array, void *item, unsigned long low, unsigned long high){
     /* if (item == NULL) {
     fprintf(stderr, "add_unsorted_array_element: element parameter cannot be NULL");
     exit(EXIT_FAILURE);
     } */
 
     if (high <= low)
-        return (array->precedes(array->array[low], item) == -1) ? (low+1) : low;
+        return (unsorted_array->precedes(unsorted_array->array[low], item) == -1) ? (low+1) : low;
 
     unsigned long mid = (low + high) / 2;
 
-    if (array->precedes(array->array[mid], item) == 0)
+    if (unsorted_array->precedes(unsorted_array->array[mid], item) == 0)
         return mid + 1;
 
-    if (array->precedes(array->array[low], item) == 1)
-        return binary_search(array, item, mid + 1, high);
+    if (unsorted_array->precedes(unsorted_array->array[low], item) == 1)
+        return binary_search(unsorted_array, item, mid + 1, high);
 
-    return binary_search(array, item, low, mid - 1);
+    return binary_search(unsorted_array, item, low, mid - 1);
 }
 
-void insertion_sort(UnsortedArray *array, unsigned long start, unsigned long last){
-    unsigned long i, j, loc;
+void array_to_sort_insertion_sort(UnsortedArray *unsorted_array){
+    unsigned long i, j, location;
     void *selected;
 
-    for (i = start + 1; i <= last; i++){
+    for (i = 1; i < unsorted_array->size; i++){
         j = i - 1;
-        selected = array->array[i];
+        selected = unsorted_array->array[i];
 
         // find location where selected sould be inseretd
-        loc = binary_search(array, selected, 0, j);
+        location = binary_search(unsorted_array, selected, 0, j);
 
         // Move all elements after location to create space
-        while (j >= loc){
-            array->array[j + 1] = array->array[j];
+        while (j >= location){
+            array_to_sort_swap_elem(unsorted_array, j+1, j);
+            //unsorted_array->array[j + 1] = unsorted_array->array[j];
             j--;
         }
-        array->array[j + 1] = selected;
+        unsorted_array->array[j + 1] = selected;
     }
     return;
 }

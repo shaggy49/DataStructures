@@ -3,7 +3,7 @@ COMMON_DEPS 	= src/*.h Makefile
 
 all: bin/array_to_sort_main
 
-run:
+run: ./bin/array_to_sort_main
 	./bin/array_to_sort_main ./unsorted_array_file.csv
 
 build/%.o: src/%.c $(COMMON_DEPS)
