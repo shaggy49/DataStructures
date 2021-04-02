@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "array_to_sort.h"
 
 //Initial capacity for the array
@@ -94,9 +95,15 @@ void array_to_sort_free_memory(UnsortedArray *unsorted_array){
     return;
 }
 
-//voglio shiftare elementi
-void array_to_sort_swap_elem(UnsortedArray *unsorted_array, int firstElem, int secondElem){
-    
+/* function for swap two elements */
+void array_to_sort_swap_elem(UnsortedArray *unsorted_array, unsigned long firstElem, unsigned long secondElem){
+    unsigned long size = sizeof(UnsortedArray);
+    char buffer[size];
+    memcpy(buffer, unsorted_array->array[firstElem], size);
+    memcpy(unsorted_array->array[firstElem], unsorted_array->array[secondElem], size);
+    memcpy(unsorted_array->array[secondElem], buffer, size);
+    printf("sono quiiiii\n");
+    return;
 }
 
 
@@ -135,10 +142,12 @@ void array_to_sort_insertion_sort(UnsortedArray *unsorted_array){
 
         // Move all elements after location to create space
         while (j >= location){
-            array_to_sort_swap_elem(unsorted_array, j+1, j);
+            printf("sono qui\n");
+            array_to_sort_swap_elem(unsorted_array, j, j+1);
             //unsorted_array->array[j + 1] = unsorted_array->array[j];
             j--;
         }
+        printf("vado al prossimo elemento\n");
         unsorted_array->array[j + 1] = selected;
     }
     return;

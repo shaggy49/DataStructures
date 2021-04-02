@@ -8,12 +8,19 @@
 typedef struct _record {
 	char *string_field;
     int integer_field;
-	/* double floating_field; */
+	double floating_field;
 } Record;
 
 // -1 precede
 // 0 uguali
 // 1 maggiore
+/*
+* It takes as input two pointers to Record.
+* It returns -1 if the integer field of the first record is smaller than
+* the integer field of the second one, 0 if the first integer record is
+* equal to the integer field of the second one and 1 if the integer field
+* of the first record is bigger than the integer field of the second one
+*/
 static int precedes_record_int_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
 		fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer");
@@ -34,8 +41,10 @@ static int precedes_record_int_field(void *r1_p, void *r2_p){
 
 /*
 * It takes as input two pointers to Record.
-* It returns 1 iff the string field of the first record is smaller than
-* the string field of the second one (0 otherwise)
+* It returns -1 if the string field of the first record is smaller than
+* the string field of the second one, 0 if the first string record is
+* equal to the string field of the second one and 1 if the string field
+* of the first record is bigger than the string field of the second one
 */
 static int precedes_record_string_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
@@ -49,6 +58,31 @@ static int precedes_record_string_field(void *r1_p, void *r2_p){
 	Record *rec1_p = (Record *)r1_p;
 	Record *rec2_p = (Record *)r2_p;
 	return strcmp(rec1_p->string_field, rec2_p->string_field) < 0;
+}
+
+/*
+* It takes as input two pointers to Record.
+* It returns -1 if the floating field of the first record is smaller than
+* the floating field of the second one, 0 if the first floating record is
+* equal to the floating field of the second one and 1 if the floating field
+* of the first record is bigger than the floating field of the second one
+*/
+static int precedes_record_floating_field(void *r1_p, void *r2_p){
+	if (r1_p == NULL){
+		fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	if (r2_p == NULL){
+		fprintf(stderr, "precedes_record_int_field: the second parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	Record *rec1_p = (Record *)r1_p;
+	Record *rec2_p = (Record *)r2_p;
+	if (rec1_p->floating_field < rec2_p->floating_field)
+		return -1;
+	else if (rec1_p->floating_field == rec2_p->floating_field)
+		return 0;
+	return 1;
 }
 
 static void free_array(UnsortedArray *unsorted_array){

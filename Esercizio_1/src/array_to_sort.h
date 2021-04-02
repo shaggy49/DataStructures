@@ -49,7 +49,7 @@ void *array_to_sort_get(UnsortedArray *, unsigned long);
 void array_to_sort_free_memory(UnsortedArray *);
 
 
-void array_to_sort_swap_elem(UnsortedArray *, int, int);
+void array_to_sort_swap_elem(UnsortedArray *, unsigned long, unsigned long);
 
 /* It takes an unsorted array as an input and it orders with a hybrid
  * bin-insert-merge-sort algorithm.
