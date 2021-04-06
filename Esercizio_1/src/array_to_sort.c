@@ -8,7 +8,7 @@
 #define INITIAL_CAPACITY 2
 
 //Value of K
-#define KEY_VALUE 2
+#define KEY_VALUE 10
 
 long binary_search(UnsortedArray *array, void *item, long low, long high);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
@@ -151,14 +151,13 @@ void array_to_sort_merge_sort(UnsortedArray *unsorted_array, unsigned long first
     if (firstPosition < lastPosition){
         middlePosition = (firstPosition + lastPosition) / 2;
         if (currentSize <= KEY_VALUE){
-            array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, middlePosition);
-            array_to_sort_binary_insertion_sort(unsorted_array, middlePosition + 1, lastPosition);
+            array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, lastPosition);
         }
         else{
             array_to_sort_merge_sort(unsorted_array, firstPosition, middlePosition);
             array_to_sort_merge_sort(unsorted_array, middlePosition + 1, lastPosition);
+        	merge(unsorted_array, firstPosition, middlePosition, lastPosition);
         }
-        merge(unsorted_array, firstPosition, middlePosition, lastPosition);
     }
     return;
     /*  MERGE_SORT CLASSICO (SENZA k): */
