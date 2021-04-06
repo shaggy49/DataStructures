@@ -49,8 +49,6 @@ void *array_to_sort_get(UnsortedArray *, unsigned long);
 void array_to_sort_free_memory(UnsortedArray *);
 
 
-void array_to_sort_swap_elem(UnsortedArray *, unsigned long, unsigned long);
-
 /* It takes an unsorted array as an input and it orders with a hybrid
  * bin-insert-merge-sort algorithm.
  * It takes two other parameters that represents the first and the last
@@ -63,6 +61,12 @@ void array_to_sort_swap_elem(UnsortedArray *, unsigned long, unsigned long);
 (cioè deve accettare in input) il criterio secondo cui ordinare i dati. 
 */
 
-void array_to_sort_insertion_sort(UnsortedArray *);
+void array_to_sort_binary_insertion_sort(UnsortedArray *, unsigned long, unsigned long);
+
+void array_to_sort_merge_sort(UnsortedArray *, unsigned long, unsigned long);
+
+/*
+void array_to_sort_swap_elem(UnsortedArray *, long, long);
+*/
 
 #endif // ARRAY_TO_SORT_H

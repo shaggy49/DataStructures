@@ -14,6 +14,33 @@ typedef struct _record {
 // -1 precede
 // 0 uguali
 // 1 maggiore
+
+/*
+* It takes as input two pointers to Record.
+* It returns -1 if the string field of the first record is smaller than
+* the string field of the second one, 0 if the first string record is
+* equal to the string field of the second one and 1 if the string field
+* of the first record is bigger than the string field of the second one
+*/
+static int precedes_record_string_field(void *r1_p, void *r2_p){
+	if (r1_p == NULL){
+		fprintf(stderr, "precedes_record_string_field: the first parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	if (r2_p == NULL){
+		fprintf(stderr, "precedes_record_string_field: the second parameter is a null pointer");
+		exit(EXIT_FAILURE);
+	}
+	Record *rec1_p = (Record *)r1_p;
+	Record *rec2_p = (Record *)r2_p;
+
+	if (strcmp(rec1_p->string_field, rec2_p->string_field) < 0)
+		return -1;
+	else if (strcmp(rec1_p->string_field, rec2_p->string_field) == 0)
+		return 0;
+	return 1;
+}
+
 /*
 * It takes as input two pointers to Record.
 * It returns -1 if the integer field of the first record is smaller than
@@ -23,11 +50,11 @@ typedef struct _record {
 */
 static int precedes_record_int_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer");
+		fprintf(stderr, "precedes_record_integer_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_int_field: the second parameter is a null pointer");
+		fprintf(stderr, "precedes_record_integer_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -41,27 +68,6 @@ static int precedes_record_int_field(void *r1_p, void *r2_p){
 
 /*
 * It takes as input two pointers to Record.
-* It returns -1 if the string field of the first record is smaller than
-* the string field of the second one, 0 if the first string record is
-* equal to the string field of the second one and 1 if the string field
-* of the first record is bigger than the string field of the second one
-*/
-static int precedes_record_string_field(void *r1_p, void *r2_p){
-	if (r1_p == NULL){
-		fprintf(stderr, "precedes_string: the first parameter is a null pointer");
-		exit(EXIT_FAILURE);
-	}
-	if (r2_p == NULL){
-		fprintf(stderr, "precedes_string: the second parameter is a null pointer");
-		exit(EXIT_FAILURE);
-	}
-	Record *rec1_p = (Record *)r1_p;
-	Record *rec2_p = (Record *)r2_p;
-	return strcmp(rec1_p->string_field, rec2_p->string_field) < 0;
-}
-
-/*
-* It takes as input two pointers to Record.
 * It returns -1 if the floating field of the first record is smaller than
 * the floating field of the second one, 0 if the first floating record is
 * equal to the floating field of the second one and 1 if the floating field
@@ -69,11 +75,11 @@ static int precedes_record_string_field(void *r1_p, void *r2_p){
 */
 static int precedes_record_floating_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer");
+		fprintf(stderr, "precedes_record_floating_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_int_field: the second parameter is a null pointer");
+		fprintf(stderr, "precedes_record_floating_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -99,11 +105,12 @@ static void free_array(UnsortedArray *unsorted_array){
 static void print_array(UnsortedArray *unsorted_array){
 	unsigned long size = array_to_sort_size(unsorted_array);
 	Record *array_element;
-	printf("\nARRAY OF RECORDS\n");
+	printf("\n----------ARRAY OF RECORDS----------\n");
 	for (unsigned long i = 0; i < size; ++i){
 		array_element = (Record *)array_to_sort_get(unsorted_array, i);
-		printf("%s, %d\n", array_element->string_field, array_element->integer_field);
+		printf("%s, %d, %f\n", array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
+	printf("\n");
 	return;
 }
 
@@ -131,6 +138,7 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 
 		char *string_field_in_read_line_p = strtok(buffer, ",");
 		char *integer_field_in_read_line_p = strtok(NULL, ",");
+		char *floating_field_in_read_line_p = strtok(NULL, ",");
 
 		record_p->string_field = malloc((strlen(string_field_in_read_line_p) + 1) * sizeof(char));
 		if (record_p->string_field == NULL){
@@ -139,6 +147,7 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 		}
 		strcpy(record_p->string_field, string_field_in_read_line_p);
 		record_p->integer_field = atoi(integer_field_in_read_line_p);
+		record_p->floating_field = atof(floating_field_in_read_line_p);
 		array_to_sort_add(unsorted_array, (void *)record_p); //da modificare il fatto che non importa in che ordine inserisca gli elementi nell'array
 	}
 	fclose(fp);
@@ -150,8 +159,11 @@ static void test_with_comparison_function(const char *file_name, int (*compare)(
 	UnsortedArray *unsorted_array = array_to_sort_create(compare);
 	load_array(file_name, unsorted_array);
 	print_array(unsorted_array);
-	//printf("unsorted_array->size: %ld\n", ->size);
-	array_to_sort_insertion_sort(unsorted_array);
+	unsigned long size = array_to_sort_size(unsorted_array);
+	printf("----------Ordino l'array con binary_insertion_sort----------\n");
+	array_to_sort_binary_insertion_sort(unsorted_array, 0, size-1);
+	//printf("----------Ordino l'array con merge_sort----------\n");
+	//array_to_sort_merge_sort(unsorted_array, 0, size-1);
 	print_array(unsorted_array);
 	free_array(unsorted_array);
 	return;
@@ -163,7 +175,8 @@ int main(int argc, char const *argv[]){
 		printf("Usage: unsorted_array_main <file_name>\n");
 		exit(EXIT_FAILURE);										// da cambiare
 	}
-	test_with_comparison_function(argv[1], precedes_record_int_field);
-	/* test_with_comparison_function(argv[1], precedes_record_string_field); */
+	test_with_comparison_function(argv[1], precedes_record_string_field);
+	//test_with_comparison_function(argv[1], precedes_record_int_field);
+	//test_with_comparison_function(argv[1], precedes_record_floating_field);
 	exit(EXIT_SUCCESS);
 }
