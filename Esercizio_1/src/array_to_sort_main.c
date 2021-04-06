@@ -7,10 +7,13 @@
 #define BUFFER_SIZE 1024
 
 typedef struct _record {
+	int id_field;
 	char *string_field;
     int integer_field;
 	double floating_field;
 } Record;
+
+clock_t end;
 
 // -1 precede
 // 0 uguali
@@ -109,7 +112,7 @@ static void print_array(UnsortedArray *unsorted_array){
 	printf("\n----------ARRAY OF RECORDS----------\n");
 	for (unsigned long i = 0; i < size; ++i){
 		array_element = (Record *)array_to_sort_get(unsorted_array, i);
-		printf("%s, %d, %f\n", array_element->string_field, array_element->integer_field, array_element->floating_field);
+		printf("%4d; %4s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
 	printf("\n");
 	return;
@@ -136,7 +139,8 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 			fprintf(stderr, "main: unable to allocate memory for the read record");
 			exit(EXIT_FAILURE);
 		}
-		char *string_field_in_read_line_p = strtok(buffer, ",");
+		char *id_field_in_read_line_p = strtok(buffer, ",");
+		char *string_field_in_read_line_p = strtok(NULL, ",");
 		char *integer_field_in_read_line_p = strtok(NULL, ",");
 		char *floating_field_in_read_line_p = strtok(NULL, ",");
 
@@ -145,6 +149,7 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 			fprintf(stderr, "main: unable to allocate memory for the string field of the read record");
 			exit(EXIT_FAILURE);
 		}
+		record_p->id_field = atoi(id_field_in_read_line_p);
 		strcpy(record_p->string_field, string_field_in_read_line_p);
 		record_p->integer_field = atoi(integer_field_in_read_line_p);
 		record_p->floating_field = atof(floating_field_in_read_line_p);
@@ -160,8 +165,11 @@ static void test_with_comparison_function(const char *file_name, int (*compare)(
 	load_array(file_name, unsorted_array);
 	//print_array(unsorted_array);
 	unsigned long size = array_to_sort_size(unsorted_array);
+	/* printf("----------Ordino l'array con ins-bin_sort----------\n");
+	array_to_sort_binary_insertion_sort(unsorted_array, 0, size-1); */
 	printf("----------Ordino l'array con merge_sort----------\n");
 	array_to_sort_merge_sort(unsorted_array, 0, size-1);
+	end = clock();
 	//print_array(unsorted_array);
 	free_array(unsorted_array);
 	return;
@@ -173,12 +181,10 @@ int main(int argc, char const *argv[]){
 		printf("Usage: unsorted_array_main <file_name>\n");
 		exit(EXIT_FAILURE);										// da cambiare
 	}
-	// sono fede, sto impazzendo per cercare di riconnettermi ma tengo duro
 	clock_t begin = clock();
     test_with_comparison_function(argv[1], precedes_record_string_field);
     //test_with_comparison_function(argv[1], precedes_record_integer_field);
 	//test_with_comparison_function(argv[1], precedes_record_floating_field);
-	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("Tempo di esecuzione: %lf \n", time_spent);
 	exit(EXIT_SUCCESS);

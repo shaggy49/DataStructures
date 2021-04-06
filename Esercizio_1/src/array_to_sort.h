@@ -68,5 +68,4 @@ void array_to_sort_merge_sort(UnsortedArray *, unsigned long, unsigned long);
 /*
 void array_to_sort_swap_elem(UnsortedArray *, long, long);
 */
-
 #endif // ARRAY_TO_SORT_H

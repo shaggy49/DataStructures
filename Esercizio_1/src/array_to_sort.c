@@ -2,14 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "array_to_sort.h"
-
 #include <unistd.h>
 
 //Initial capacity for the array
 #define INITIAL_CAPACITY 2
 
 //Value of K
-#define KEY_VALUE 500000
+#define KEY_VALUE 2
 
 long binary_search(UnsortedArray *array, void *item, long low, long high);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
@@ -111,7 +110,6 @@ void array_to_sort_swap_elem(UnsortedArray *unsorted_array, long firstElem, long
 */
 
 // -------------FUNZIONI (MERGE.C)------------------
-
 long binary_search(UnsortedArray *unsorted_array, void *item, long low, long high){
     if (high <= low)
         return (unsorted_array->precedes(unsorted_array->array[low], item) == -1) ? (low+1) : low;
@@ -149,10 +147,10 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsorted_array, unsigned
 
 void array_to_sort_merge_sort(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned long lastPosition){
     unsigned long middlePosition;
+    unsigned long currentSize = lastPosition - firstPosition + 1;
     if (firstPosition < lastPosition){
-        // mettere confronto con k
         middlePosition = (firstPosition + lastPosition) / 2;
-        if (array_to_sort_size(unsorted_array) <= KEY_VALUE){
+        if (currentSize <= KEY_VALUE){
             array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, middlePosition);
             array_to_sort_binary_insertion_sort(unsorted_array, middlePosition + 1, lastPosition);
         }
@@ -163,17 +161,15 @@ void array_to_sort_merge_sort(UnsortedArray *unsorted_array, unsigned long first
         merge(unsorted_array, firstPosition, middlePosition, lastPosition);
     }
     return;
-    /* MERGE_SORT CLASSICO (SENZA k):
-    unsigned long middlePosition;
-    if (firstPosition < lastPosition){
+    /*  MERGE_SORT CLASSICO (SENZA k): */
+    /* if (firstPosition < lastPosition){
         // mettere confronto con k
         middlePosition = (firstPosition + lastPosition) / 2;
         array_to_sort_merge_sort(unsorted_array, firstPosition, middlePosition);
         array_to_sort_merge_sort(unsorted_array, middlePosition + 1, lastPosition);
         merge(unsorted_array, firstPosition, middlePosition, lastPosition);
     }
-    return;
-    */
+    return; */
 }
 
 void merge(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned long middlePosition, unsigned long lastPosition){
@@ -185,7 +181,8 @@ void merge(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned 
     sizeArrayRight = lastPosition - middlePosition;
 
     // Declaration arrays
-    void *arrayLeftElement[sizeArrayLeft], *arrayRightElement[sizeArrayRight];
+    void **arrayLeftElement = malloc(sizeof(*arrayLeftElement) * sizeArrayLeft);
+    void **arrayRightElement = malloc(sizeof(*arrayRightElement) * sizeArrayRight);
 
     // Create a copy of two sub-arrays
     for (unsigned long i = 0; i < sizeArrayLeft; i++)
@@ -227,5 +224,8 @@ void merge(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned 
         indexRightArray++;
         indexArray++;
     }
+
+    free(arrayLeftElement);
+    free(arrayRightElement);
     return;
 }

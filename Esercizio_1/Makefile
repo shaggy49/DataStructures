@@ -4,7 +4,7 @@ COMMON_DEPS 	= src/*.h Makefile
 all: bin/array_to_sort_main
 
 run: ./bin/array_to_sort_main
-	./bin/array_to_sort_main ./unsorted_array_file.csv
+	./bin/array_to_sort_main ~/Downloads/records.csv
 
 build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
