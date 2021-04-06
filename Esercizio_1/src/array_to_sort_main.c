@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "array_to_sort.h"
 
 #define BUFFER_SIZE 1024
@@ -48,7 +49,7 @@ static int precedes_record_string_field(void *r1_p, void *r2_p){
 * equal to the integer field of the second one and 1 if the integer field
 * of the first record is bigger than the integer field of the second one
 */
-static int precedes_record_int_field(void *r1_p, void *r2_p){
+static int precedes_record_integer_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
 		fprintf(stderr, "precedes_record_integer_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
@@ -130,12 +131,11 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 	}
 
 	while (fgets(buffer, BUFFER_SIZE, fp) != NULL){
-		Record *record_p = malloc(sizeof(Record));
+		Record *record_p = malloc(sizeof(Record));		//problema!!!
 		if (record_p == NULL){
 			fprintf(stderr, "main: unable to allocate memory for the read record");
 			exit(EXIT_FAILURE);
 		}
-
 		char *string_field_in_read_line_p = strtok(buffer, ",");
 		char *integer_field_in_read_line_p = strtok(NULL, ",");
 		char *floating_field_in_read_line_p = strtok(NULL, ",");
@@ -148,7 +148,7 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 		strcpy(record_p->string_field, string_field_in_read_line_p);
 		record_p->integer_field = atoi(integer_field_in_read_line_p);
 		record_p->floating_field = atof(floating_field_in_read_line_p);
-		array_to_sort_add(unsorted_array, (void *)record_p); //da modificare il fatto che non importa in che ordine inserisca gli elementi nell'array
+		array_to_sort_add(unsorted_array, (void *)record_p);
 	}
 	fclose(fp);
 	printf("\nData loaded\n");
@@ -158,13 +158,11 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 static void test_with_comparison_function(const char *file_name, int (*compare)(void *, void *)){
 	UnsortedArray *unsorted_array = array_to_sort_create(compare);
 	load_array(file_name, unsorted_array);
-	print_array(unsorted_array);
+	//print_array(unsorted_array);
 	unsigned long size = array_to_sort_size(unsorted_array);
-	printf("----------Ordino l'array con binary_insertion_sort----------\n");
-	array_to_sort_binary_insertion_sort(unsorted_array, 0, size-1);
-	//printf("----------Ordino l'array con merge_sort----------\n");
-	//array_to_sort_merge_sort(unsorted_array, 0, size-1);
-	print_array(unsorted_array);
+	printf("----------Ordino l'array con merge_sort----------\n");
+	array_to_sort_merge_sort(unsorted_array, 0, size-1);
+	//print_array(unsorted_array);
 	free_array(unsorted_array);
 	return;
 }
@@ -175,8 +173,13 @@ int main(int argc, char const *argv[]){
 		printf("Usage: unsorted_array_main <file_name>\n");
 		exit(EXIT_FAILURE);										// da cambiare
 	}
-	test_with_comparison_function(argv[1], precedes_record_string_field);
-	//test_with_comparison_function(argv[1], precedes_record_int_field);
+	// sono fede, sto impazzendo per cercare di riconnettermi ma tengo duro
+	clock_t begin = clock();
+    test_with_comparison_function(argv[1], precedes_record_string_field);
+    //test_with_comparison_function(argv[1], precedes_record_integer_field);
 	//test_with_comparison_function(argv[1], precedes_record_floating_field);
+	clock_t end = clock();
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Tempo di esecuzione: %lf \n", time_spent);
 	exit(EXIT_SUCCESS);
 }

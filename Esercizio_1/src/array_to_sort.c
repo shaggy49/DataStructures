@@ -8,6 +8,9 @@
 //Initial capacity for the array
 #define INITIAL_CAPACITY 2
 
+//Value of K
+#define KEY_VALUE 500000
+
 long binary_search(UnsortedArray *array, void *item, long low, long high);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
 
@@ -110,11 +113,6 @@ void array_to_sort_swap_elem(UnsortedArray *unsorted_array, long firstElem, long
 // -------------FUNZIONI (MERGE.C)------------------
 
 long binary_search(UnsortedArray *unsorted_array, void *item, long low, long high){
-    /* if (item == NULL) {
-    fprintf(stderr, "add_unsorted_array_element: element parameter cannot be NULL");
-    exit(EXIT_FAILURE);
-    } */
-
     if (high <= low)
         return (unsorted_array->precedes(unsorted_array->array[low], item) == -1) ? (low+1) : low;
 
@@ -132,7 +130,7 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsorted_array, unsigned
     long i, j, location;
     void *selected;
 
-    for (i = firstPosition + 1; i <= lastPosition; i++){
+    for (i = (signed) firstPosition + 1; i <= (signed) lastPosition; i++){
         j = i-1;
         selected = unsorted_array->array[i];
 
@@ -141,7 +139,6 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsorted_array, unsigned
 
         // Move all elements after location to create space
         while (j >= location) {
-            //array_to_sort_swap_elem(unsorted_array, j+1, j);
             unsorted_array->array[j + 1] = unsorted_array->array[j];
             j--;
         }
@@ -155,7 +152,7 @@ void array_to_sort_merge_sort(UnsortedArray *unsorted_array, unsigned long first
     if (firstPosition < lastPosition){
         // mettere confronto con k
         middlePosition = (firstPosition + lastPosition) / 2;
-        if (array_to_sort_size(unsorted_array) <= 2){
+        if (array_to_sort_size(unsorted_array) <= KEY_VALUE){
             array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, middlePosition);
             array_to_sort_binary_insertion_sort(unsorted_array, middlePosition + 1, lastPosition);
         }
@@ -189,19 +186,6 @@ void merge(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned 
 
     // Declaration arrays
     void *arrayLeftElement[sizeArrayLeft], *arrayRightElement[sizeArrayRight];
-    /*
-    UnsortedArray *arrayLeft, *arrayRight;
-
-    // Set fields of two arrays
-    arrayLeft->array = arrayLeftElement;
-    arrayRight->array = arrayRightElement;
-    arrayLeft->precedes = array->precedes;
-    arrayRight->precedes = array->precedes;
-    arrayLeft->array_capacity = 0;
-    arrayRight->array_capacity = 0;
-    arrayLeft->size = 0;
-    arrayRight->size = 0;
-    */
 
     // Create a copy of two sub-arrays
     for (unsigned long i = 0; i < sizeArrayLeft; i++)
