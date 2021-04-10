@@ -14,7 +14,7 @@ typedef struct _UnsortedArray UnsortedArray;
  * the second one and a number different from zero otherwise.
  * The input parameter cannot be NULL
  */
-UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *));
+UnsortedArray *array_to_sort_create(int (*compare)(void *, void *));
 
 /*
  * It accepts as input a pointer to an ordered array and a pointer to an

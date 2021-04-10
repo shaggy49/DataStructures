@@ -26,13 +26,13 @@ clock_t end;
 * equal to the string field of the second one and 1 if the string field
 * of the first record is bigger than the string field of the second one
 */
-static int precedes_record_string_field(void *r1_p, void *r2_p){
+static int compare_record_string_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_string_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_string_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_string_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_string_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -52,13 +52,13 @@ static int precedes_record_string_field(void *r1_p, void *r2_p){
 * equal to the integer field of the second one and 1 if the integer field
 * of the first record is bigger than the integer field of the second one
 */
-static int precedes_record_integer_field(void *r1_p, void *r2_p){
+static int compare_record_integer_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_integer_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_integer_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_integer_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_integer_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -77,13 +77,13 @@ static int precedes_record_integer_field(void *r1_p, void *r2_p){
 * equal to the floating field of the second one and 1 if the floating field
 * of the first record is bigger than the floating field of the second one
 */
-static int precedes_record_floating_field(void *r1_p, void *r2_p){
+static int compare_record_floating_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_floating_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_floating_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_floating_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_floating_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -110,7 +110,7 @@ static void print_array(UnsortedArray *unsorted_array){
 	unsigned long size = array_to_sort_size(unsorted_array);
 	Record *array_element;
 	printf("\n----------ARRAY OF RECORDS----------\n");
-	for (unsigned long i = 0; i < size; ++i){
+	for (unsigned long i = 0; i < 20; ++i){												//sistemare il print i < size !!!!!!!!!!!!!!!!!!!!!!!!!!!
 		array_element = (Record *)array_to_sort_get(unsorted_array, i);
 		printf("%4d; %4s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
@@ -165,27 +165,52 @@ static void test_with_comparison_function(const char *file_name, int (*compare)(
 	load_array(file_name, unsorted_array);
 	//print_array(unsorted_array);
 	unsigned long size = array_to_sort_size(unsorted_array);
-	/* printf("----------Ordino l'array con ins-bin_sort----------\n");
-	array_to_sort_binary_insertion_sort(unsorted_array, 0, size-1); */
-	printf("----------Ordino l'array con merge_sort----------\n");
-	array_to_sort_merge_sort(unsorted_array, 0, size-1);
+	printf("----------Sorting the file with binary_insertion_sort----------\n");
+	array_to_sort_binary_insertion_sort(unsorted_array, 5, 15);
+	/* printf("----------Sorting the file with merge_sort----------\n");
+	array_to_sort_merge_sort(unsorted_array, 0, size-1); */
 	end = clock();
-	//print_array(unsorted_array);
+	print_array(unsorted_array);
 	free_array(unsorted_array);
 	return;
 }
 
-//It should be invoked with one parameter specifying the filepath of the data file
+/* It should be invoked with one parameter specifying the filepath of the data file */
 int main(int argc, char const *argv[]){
+	unsigned int num_ord, cont_err;
+
 	if (argc < 2){
-		printf("Usage: unsorted_array_main <file_name>\n");
+		printf("----------Usage: unsorted_array_main <file_name>----------\n");
 		exit(EXIT_FAILURE);										// da cambiare
 	}
+	
+	/* Read a number to decide how to sort the file: 1 string, 2 integer, 3 floating point */
+	printf("\n----------How do you want to sort the file?----------\n"); 			//STUDIA E RIGUARDA CHIEDI A FEDE
+	printf("Type 1 for string, 2 for integer and 3 for floating point:\n");
+	for (cont_err = 0; cont_err < 5; cont_err++) {
+		if (scanf("%u", &num_ord) != 1){
+			printf("----------scanf failed----------\n");
+			exit(EXIT_FAILURE);	
+		}
+		if ((1 <= num_ord) && (num_ord<= 3))
+			break;
+		if (cont_err < 4)
+			printf("----------You entered an incorrect number. Try again----------\n");
+		else {
+			printf("----------You entered an incorrect number more than five times----------\n");
+			exit(EXIT_FAILURE);		
+		}
+	}
+
 	clock_t begin = clock();
-    test_with_comparison_function(argv[1], precedes_record_string_field);
-    //test_with_comparison_function(argv[1], precedes_record_integer_field);
-	//test_with_comparison_function(argv[1], precedes_record_floating_field);
+	if (num_ord == 1)
+		test_with_comparison_function(argv[1], compare_record_string_field);
+	else if (num_ord == 2)
+		test_with_comparison_function(argv[1], compare_record_integer_field);
+	else if (num_ord == 3)
+		test_with_comparison_function(argv[1], compare_record_floating_field);
+
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("Tempo di esecuzione: %lf \n", time_spent);
+	printf("Execution time: %lf \n", time_spent);
 	exit(EXIT_SUCCESS);
 }

@@ -8,7 +8,7 @@
 #define INITIAL_CAPACITY 2
 
 //Value of K
-#define KEY_VALUE 0
+#define KEY_VALUE 2
 
 long binary_search(UnsortedArray *array, void *item, long low, long high);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
@@ -18,13 +18,13 @@ typedef struct _UnsortedArray{
     void **array;
     unsigned long size;
     unsigned long array_capacity;
-    int (*precedes)(void *, void *);
+    int (*compare)(void *, void *);
 } UnsortedArray;
 
 
-UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
-    if (precedes == NULL) {
-        fprintf(stderr, "array_to_sort_create: precedes parameter cannot be NULL");
+UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
+    if (compare == NULL) {
+        fprintf(stderr, "array_to_sort_create: compare parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
     UnsortedArray *unsorted_array = (UnsortedArray*)malloc(sizeof(UnsortedArray));
@@ -39,7 +39,7 @@ UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
     }
     unsorted_array->size = 0;
     unsorted_array->array_capacity = INITIAL_CAPACITY;
-    unsorted_array->precedes = precedes;
+    unsorted_array->compare = compare;
     return unsorted_array;
 }
 
@@ -112,13 +112,13 @@ void array_to_sort_swap_elem(UnsortedArray *unsorted_array, long firstElem, long
 // -------------FUNZIONI (MERGE.C)------------------
 long binary_search(UnsortedArray *unsorted_array, void *item, long low, long high){
     if (high <= low)
-        return (unsorted_array->precedes(unsorted_array->array[low], item) == -1) ? (low+1) : low;
+        return (unsorted_array->compare(unsorted_array->array[low], item) == -1) ? (low+1) : low;
 
     long mid = (low + high) / 2;
 
-    if (unsorted_array->precedes(unsorted_array->array[mid], item) == 0)
+    if (unsorted_array->compare(unsorted_array->array[mid], item) == 0)
         return mid +1;
-    else if (unsorted_array->precedes(unsorted_array->array[mid], item) == -1)
+    else if (unsorted_array->compare(unsorted_array->array[mid], item) == -1)
         return binary_search(unsorted_array, item, mid + 1, high);
     
     return binary_search(unsorted_array, item, low, mid - 1);
@@ -150,24 +150,13 @@ void array_to_sort_merge_sort(UnsortedArray *unsorted_array, unsigned long first
     unsigned long currentSize = lastPosition - firstPosition + 1;
     if (firstPosition < lastPosition){
         middlePosition = (firstPosition + lastPosition) / 2;
-        if (currentSize/2 <= KEY_VALUE){
-            if (currentSize % 2 == 0){
-                array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, middlePosition);
-                array_to_sort_binary_insertion_sort(unsorted_array, middlePosition+1, lastPosition);
-            }
-            else if(currentSize % 2 == 1){
-                if (currentSize/2 +1 <= KEY_VALUE)
-                    array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, middlePosition);
-                else
-                    array_to_sort_merge_sort(unsorted_array, firstPosition, middlePosition);
-                array_to_sort_binary_insertion_sort(unsorted_array, middlePosition+1, lastPosition);
-            }
-        }
+        if (currentSize <= KEY_VALUE)
+            array_to_sort_binary_insertion_sort(unsorted_array, firstPosition, lastPosition);
         else{
             array_to_sort_merge_sort(unsorted_array, firstPosition, middlePosition);
             array_to_sort_merge_sort(unsorted_array, middlePosition + 1, lastPosition);
+            merge(unsorted_array, firstPosition, middlePosition, lastPosition);
         }
-        merge(unsorted_array, firstPosition, middlePosition, lastPosition);
     }
     return;
     /*  MERGE_SORT CLASSICO (SENZA k): */
@@ -208,7 +197,7 @@ void merge(UnsortedArray *unsorted_array, unsigned long firstPosition, unsigned 
     // Until we reach either end of either L or M, pick larger among
     // elements L and M and place them in the correct position at A[p..r]
     while (indexLeftArray < sizeArrayLeft && indexRightArray < sizeArrayRight){
-        if (unsorted_array->precedes(arrayLeftElement[indexLeftArray], arrayRightElement[indexRightArray]) != 1){
+        if (unsorted_array->compare(arrayLeftElement[indexLeftArray], arrayRightElement[indexRightArray]) != 1){
             // per ora sx è minore uguale di destra, non devo effettuare uno cambiamento
             unsorted_array->array[indexArray] = arrayLeftElement[indexLeftArray];
             indexLeftArray++;
