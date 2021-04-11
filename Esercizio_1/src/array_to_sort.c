@@ -8,8 +8,7 @@
 #define INITIAL_CAPACITY 1024
 
 //Value of K
-#define KEY_VALUE 2
-
+#define KEY_VALUE 5
 long binary_search(UnsortedArray *array, void *, long, long);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
 
