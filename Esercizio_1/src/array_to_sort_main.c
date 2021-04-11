@@ -26,13 +26,13 @@ clock_t end;
 * equal to the string field of the second one and 1 if the string field
 * of the first record is bigger than the string field of the second one
 */
-static int precedes_record_string_field(void *r1_p, void *r2_p){
+static int compare_record_string_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_string_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_string_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_string_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_string_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -52,13 +52,13 @@ static int precedes_record_string_field(void *r1_p, void *r2_p){
 * equal to the integer field of the second one and 1 if the integer field
 * of the first record is bigger than the integer field of the second one
 */
-static int precedes_record_integer_field(void *r1_p, void *r2_p){
+static int compare_record_integer_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_integer_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_integer_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_integer_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_integer_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
@@ -77,13 +77,13 @@ static int precedes_record_integer_field(void *r1_p, void *r2_p){
 * equal to the floating field of the second one and 1 if the floating field
 * of the first record is bigger than the floating field of the second one
 */
-static int precedes_record_floating_field(void *r1_p, void *r2_p){
+static int compare_record_floating_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
-		fprintf(stderr, "precedes_record_floating_field: the first parameter is a null pointer");
+		fprintf(stderr, "compare_record_floating_field: the first parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	if (r2_p == NULL){
-		fprintf(stderr, "precedes_record_floating_field: the second parameter is a null pointer");
+		fprintf(stderr, "compare_record_floating_field: the second parameter is a null pointer");
 		exit(EXIT_FAILURE);
 	}
 	Record *rec1_p = (Record *)r1_p;
