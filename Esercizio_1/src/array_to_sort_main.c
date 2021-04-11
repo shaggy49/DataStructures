@@ -95,24 +95,24 @@ static int precedes_record_floating_field(void *r1_p, void *r2_p){
 	return 1;
 }
 
-static void free_array(UnsortedArray *unsorted_array){
-	unsigned long size = array_to_sort_size(unsorted_array);
+static void free_array(UnsortedArray *unsortedArray){
+	unsigned long size = array_to_sort_size(unsortedArray);
 	for (unsigned long i = 0; i < size; ++i){
-		Record *array_element = (Record *)array_to_sort_get(unsorted_array, i);
+		Record *array_element = (Record *)array_to_sort_get(unsortedArray, i);
 		free(array_element->string_field);
 		free(array_element);
 	}
-	array_to_sort_free_memory(unsorted_array);
+	array_to_sort_free_memory(unsortedArray);
 	return;
 }
 
-static void print_array(UnsortedArray *unsorted_array){
-	unsigned long size = array_to_sort_size(unsorted_array);
+static void print_array(UnsortedArray *unsortedArray){
+	unsigned long size = array_to_sort_size(unsortedArray);
 	Record *array_element;
 	printf("\n----------ARRAY OF RECORDS----------\n");
 	for (unsigned long i = 0; i < size; ++i){
-		array_element = (Record *)array_to_sort_get(unsorted_array, i);
-		printf("%4d; %4s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
+		array_element = (Record *)array_to_sort_get(unsortedArray, i);
+		printf("%8d;\t %12s;\t %8d;\t %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
 	printf("\n");
 	return;
@@ -122,7 +122,7 @@ static void print_array(UnsortedArray *unsorted_array){
 	Prende in input il filename del csv da "convertire" in struct OrderedArray
 	e inserisce gli elementi ordinandoli.
  */
-static void load_array(const char *file_name, UnsortedArray *unsorted_array){
+static void load_array(const char *file_name, UnsortedArray *unsortedArray){
 	char buffer[BUFFER_SIZE];
 	FILE *fp;
 
@@ -134,7 +134,7 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 	}
 
 	while (fgets(buffer, BUFFER_SIZE, fp) != NULL){
-		Record *record_p = malloc(sizeof(Record));		//problema!!!
+		Record *record_p = malloc(sizeof(Record));
 		if (record_p == NULL){
 			fprintf(stderr, "main: unable to allocate memory for the read record");
 			exit(EXIT_FAILURE);
@@ -153,39 +153,64 @@ static void load_array(const char *file_name, UnsortedArray *unsorted_array){
 		strcpy(record_p->string_field, string_field_in_read_line_p);
 		record_p->integer_field = atoi(integer_field_in_read_line_p);
 		record_p->floating_field = atof(floating_field_in_read_line_p);
-		array_to_sort_add(unsorted_array, (void *)record_p);
+		array_to_sort_add(unsortedArray, (void *)record_p);
 	}
 	fclose(fp);
 	printf("\nData loaded\n");
 	return;
 }
 
-static void test_with_comparison_function(const char *file_name, int (*compare)(void *, void *)){
-	UnsortedArray *unsorted_array = array_to_sort_create(compare);
-	load_array(file_name, unsorted_array);
-	//print_array(unsorted_array);
-	unsigned long size = array_to_sort_size(unsorted_array);
-	/* printf("----------Ordino l'array con ins-bin_sort----------\n");
-	array_to_sort_binary_insertion_sort(unsorted_array, 0, size-1); */
-	printf("----------Ordino l'array con merge_sort----------\n");
-	array_to_sort_merge_sort(unsorted_array, 0, size-1);
+static void test_with_comparison_function(const char *file_name, int (*precedes)(void *, void *)){
+	UnsortedArray *unsortedArray = array_to_sort_create(precedes);
+	load_array(file_name, unsortedArray);
+	//print_array(unsortedArray);
+	unsigned long size = array_to_sort_size(unsortedArray);
+	/* printf("----------Sorting the file with binary_insertion_sort----------\n");
+	array_to_sort_binary_insertion_sort(unsortedArray, 0, size-1); */
+	printf("----------Sorting the file with merge_sort----------\n");
+	array_to_sort_merge_sort(unsortedArray, 0, size-1);
 	end = clock();
-	//print_array(unsorted_array);
-	free_array(unsorted_array);
+	print_array(unsortedArray);
+	free_array(unsortedArray);
 	return;
 }
 
-//It should be invoked with one parameter specifying the filepath of the data file
+/* It should be invoked with one parameter specifying the filepath of the data file */
 int main(int argc, char const *argv[]){
+	unsigned int num_ord, cont_err;
+
 	if (argc < 2){
-		printf("Usage: unsorted_array_main <file_name>\n");
+		printf("----------Usage: unsortedArray_main <file_name>----------\n");
 		exit(EXIT_FAILURE);										// da cambiare
 	}
+	
+	/* Read a number to decide how to sort the file: 1 string, 2 integer, 3 floating point */
+	printf("\n----------How do you want to sort the file?----------\n"); 			//STUDIA E RIGUARDA CHIEDI A FEDE
+	printf("Type 1 for string, 2 for integer and 3 for floating point:\n");
+	for (cont_err = 0; cont_err < 5; cont_err++) {
+		if (scanf("%u", &num_ord) != 1){
+			printf("----------scanf failed----------\n");
+			exit(EXIT_FAILURE);	
+		}
+		if ((1 <= num_ord) && (num_ord<= 3))
+			break;
+		if (cont_err < 4)
+			printf("----------You entered an incorrect number. Try again----------\n");
+		else {
+			printf("----------You entered an incorrect number more than five times----------\n");
+			exit(EXIT_FAILURE);		
+		}
+	}
+
 	clock_t begin = clock();
-    test_with_comparison_function(argv[1], precedes_record_string_field);
-    //test_with_comparison_function(argv[1], precedes_record_integer_field);
-	//test_with_comparison_function(argv[1], precedes_record_floating_field);
+	if (num_ord == 1)
+		test_with_comparison_function(argv[1], precedes_record_string_field);
+	else if (num_ord == 2)
+		test_with_comparison_function(argv[1], precedes_record_integer_field);
+	else if (num_ord == 3)
+		test_with_comparison_function(argv[1], precedes_record_floating_field);
+
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("Tempo di esecuzione: %lf \n", time_spent);
+	printf("Execution time: %lf \n", time_spent);
 	exit(EXIT_SUCCESS);
 }

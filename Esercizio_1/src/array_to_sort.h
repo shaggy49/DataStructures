@@ -55,7 +55,7 @@ void array_to_sort_free_memory(UnsortedArray *);
  * position of the array. The input parameters cannot be NULL
  */
 
-//void array_to_sort_bin_ins_merge_sort(UnsortedArray *, unsigned long, unsigned long, int (*compare)(void*, void*));
+//void array_to_sort_bin_ins_merge_sort(UnsortedArray *, unsigned long, unsigned long, int (*precedes)(void*, void*));
 
 /* Inoltre, la libreria deve permettere di specificare 
 (cioè deve accettare in input) il criterio secondo cui ordinare i dati. 
