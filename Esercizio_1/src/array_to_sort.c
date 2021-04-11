@@ -18,13 +18,13 @@ typedef struct _UnsortedArray{
     void **array;
     unsigned long size;
     unsigned long array_capacity;
-    int (*compare)(void *, void *);
+    int (*precedes)(void *, void *);
 } UnsortedArray;
 
 
-UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
-    if (compare == NULL) {
-        fprintf(stderr, "array_to_sort_create: compare parameter cannot be NULL");
+UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
+    if (precedes == NULL) {
+        fprintf(stderr, "array_to_sort_create: precedes parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
     UnsortedArray *unsortedArray = (UnsortedArray*)malloc(sizeof(UnsortedArray));
