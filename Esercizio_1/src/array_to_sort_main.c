@@ -106,6 +106,7 @@ static void free_array(UnsortedArray *unsortedArray){
 	return;
 }
 
+/*
 static void print_array(UnsortedArray *unsortedArray){
 	unsigned long size = array_to_sort_size(unsortedArray);
 	Record *array_element;
@@ -117,63 +118,50 @@ static void print_array(UnsortedArray *unsortedArray){
 	printf("\n");
 	return;
 }
+*/
 
 static void write_to_file(UnsortedArray *unsortedArray, unsigned int type_write){
 	unsigned long size = array_to_sort_size(unsortedArray);
 	Record *array_element;
+	FILE *fp = NULL;
 	
-	printf("Creating file...\n");
-	FILE *fp;
-	//sistemare il controllo 
-	if (type_write == 1){
+	printf("\n----------Creating file----------\n");
+	if (type_write == 1)
 		fp = fopen("string_sorted_array.csv", "w");
-		if (fp == NULL) {
-        	printf("file can't be opened\n");
-        	exit(EXIT_FAILURE);
-    	}
+	else if (type_write == 2)
+		fp = fopen("integer_sorted_array.csv", "w");	
+	else if (type_write ==  3)
+		fp = fopen("float_sorted_array.csv", "w");	
+		
+	if (fp == NULL) {
+    	printf("file can't be opened\n");
+       	exit(EXIT_FAILURE);
+   	}
+
+	if (type_write == 1)
 		fprintf(fp,"Sorted array by string\n");
-		for (unsigned long i = 0; i < size; ++i){
-			array_element = (Record *) array_to_sort_get(unsortedArray,i);
-			fprintf(fp,"%8d; %12s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
-		}
-		fclose(fp);
-	} else if (type_write == 2){
-		fp = fopen("integer_sorted_array.csv", "w");
-		if (fp == NULL) {
-        	printf("file can't be opened\n");
-        	exit(EXIT_FAILURE);
-    	}
-		fprintf(fp,"Sorted array by integer\n");
-		for (unsigned long i = 0; i < size; ++i){
-			array_element = (Record *) array_to_sort_get(unsortedArray,i);
-			fprintf(fp,"%8d; %12s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
-		}
-		fclose(fp);
-	} else if (type_write ==  3) {
-		fp = fopen("float_sorted_array.csv", "w");
-		if (fp == NULL) {
-     	   printf("file can't be opened\n");
-        	exit(EXIT_FAILURE);
-    	}
+	else if (type_write == 2)
+		fprintf(fp,"Sorted array by integer\n");	
+	else if (type_write ==  3)
 		fprintf(fp,"Sorted array by floating point\n");
-		for (unsigned long i = 0; i < size; ++i){
-			array_element = (Record *) array_to_sort_get(unsortedArray,i);
-			fprintf(fp,"%8d; %12s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
-		}
-		fclose(fp);
+
+	for (unsigned long i = 0; i < size; ++i){
+		array_element = (Record *) array_to_sort_get(unsortedArray,i);
+		fprintf(fp,"%8d; %12s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
+	fclose(fp);
 	printf("End writing\n");
 }
 
 /* 
-	Prende in input il filename del csv da "convertire" in struct OrderedArray
+	Prende in input il filename del csv da "convertire" in struct UnsortedArray
 	e inserisce gli elementi ordinandoli.
  */
 static void load_array(const char *file_name, UnsortedArray *unsortedArray){
 	char buffer[BUFFER_SIZE];
 	FILE *fp;
 
-	printf("\nLoading data from file...\n");
+	printf("\n----------Loading data from file----------\n");
 	fp = fopen(file_name, "r");
 	if (fp == NULL){
 		fprintf(stderr, "main: unable to open the file");
@@ -203,21 +191,20 @@ static void load_array(const char *file_name, UnsortedArray *unsortedArray){
 		array_to_sort_add(unsortedArray, (void *)record_p);
 	}
 	fclose(fp);
-	printf("\nData loaded\n");
+	printf("Data loaded\n");
 	return;
 }
 
 static void test_with_comparison_function(const char *file_name, int (*precedes)(void *, void *), unsigned int type_write){
 	UnsortedArray *unsortedArray = array_to_sort_create(precedes);
 	load_array(file_name, unsortedArray);
-	//print_array(unsortedArray);
 	unsigned long size = array_to_sort_size(unsortedArray);
 	/* printf("----------Sorting the file with binary_insertion_sort----------\n");
 	array_to_sort_binary_insertion_sort(unsortedArray, 0, size-1); */
-	printf("----------Sorting the file with merge_sort----------\n");
-	array_to_sort_merge_sort(unsortedArray, 0, size-1);
+	printf("\n----------Sorting the file with merge_sort----------\n");
+	array_to_sort_merge_binary_insertion_sort(unsortedArray, 0, size-1);
 	end = clock();
-	//print_array(unsortedArray);
+	printf("End sorting\n");
 	write_to_file(unsortedArray, type_write);
 	free_array(unsortedArray);	
 	return;
@@ -237,7 +224,7 @@ int main(int argc, char const *argv[]){
 	printf("Type 1 for string, 2 for integer and 3 for floating point:\n");
 	for (cont_err = 0; cont_err < 5; cont_err++) {
 		if (scanf("%u", &num_ord) != 1){
-			printf("----------scanf failed----------\n");
+			printf("scanf failed\n");
 			exit(EXIT_FAILURE);	
 		}
 		if ((1 <= num_ord) && (num_ord<= 3))
@@ -259,6 +246,6 @@ int main(int argc, char const *argv[]){
 		test_with_comparison_function(argv[1], precedes_record_floating_field, num_ord);
 
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("\nExecution time: %lf \n", time_spent);
+	printf("\n----------Time to sort: %lf ----------\n", time_spent);
 	exit(EXIT_SUCCESS);
 }

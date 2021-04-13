@@ -9,8 +9,13 @@
 
 //Value of K
 #define KEY_VALUE 5
-long binary_search(UnsortedArray *array, void *, long, long);
+long binary_search(UnsortedArray *, void *, long, long);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
+void array_to_sort_merge_sort_modified(UnsortedArray *, unsigned long, unsigned long);
+void array_to_sort_binary_insertion_sort(UnsortedArray *, unsigned long, unsigned long);
+
+// Index of new element that will be inserted
+static unsigned long indexNewElem = 0;
 
 //It represents the internal structure of this implementation of ordered arrays
 typedef struct _UnsortedArray{
@@ -42,6 +47,14 @@ UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
     return unsortedArray;
 }
 
+int array_to_sort_is_empty(UnsortedArray *unsortedArray) {
+    if (unsortedArray == NULL) {
+        fprintf(stderr, "unsorted_array_is_empty: unsorted_array parameter cannot be NULL");
+        exit(EXIT_FAILURE);
+    }
+    return unsortedArray->size == 0;
+}
+
 void array_to_sort_add(UnsortedArray *unsortedArray, void *element){
     if (unsortedArray == NULL){
         fprintf(stderr, "add_unsortedArray_element: unsortedArray parameter cannot be NULL");
@@ -60,9 +73,8 @@ void array_to_sort_add(UnsortedArray *unsortedArray, void *element){
             exit(EXIT_FAILURE);
         }
     }
-    static unsigned long index = 0;
-    unsortedArray->array[index] = element;
-    index++;
+    unsortedArray->array[indexNewElem] = element;
+    indexNewElem++;
     unsortedArray->size++;
     return;
 }
@@ -77,11 +89,11 @@ unsigned long array_to_sort_size(UnsortedArray *unsortedArray){
 
 void *array_to_sort_get(UnsortedArray *unsortedArray, unsigned long index){
     if (unsortedArray == NULL) {
-        fprintf(stderr, "ordered_array_get: ordered_array parameter cannot be NULL");
+        fprintf(stderr, "array_to_sort_get: unsortedArray parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
     if (index >= unsortedArray->size) {
-        fprintf(stderr, "ordered_array_get: Index %lu is out of the array bounds", index);
+        fprintf(stderr, "array_to_sort_get: Index %lu is out of the array bounds", index);
         exit(EXIT_FAILURE);
     }
     return unsortedArray->array[index];
@@ -92,23 +104,14 @@ void array_to_sort_free_memory(UnsortedArray *unsortedArray){
         fprintf(stderr, "unsortedArray_free_memory: unsortedArray parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
+    indexNewElem = 0;
     free(unsortedArray->array);
     free(unsortedArray);
     return;
 }
 
-/* function for swap two elements 
-void array_to_sort_swap_elem(UnsortedArray *unsortedArray, long firstElem, long secondElem){
-    unsigned long size = sizeof(UnsortedArray);
-    char buffer[size];
-    memcpy(buffer, unsortedArray->array[firstElem], size);
-    memcpy(unsortedArray->array[firstElem], unsortedArray->array[secondElem], size);
-    memcpy(unsortedArray->array[secondElem], buffer, size);
-    return;
-}
-*/
+/* ------------------ ORDER FUNCTIONS ------------------ */
 
-// -------------FUNZIONI (MERGE.C)------------------
 long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstPosition, long lastPosition){
     if (lastPosition < firstPosition)
         return firstPosition;
@@ -123,7 +126,7 @@ long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstP
 
 void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
     long positionElem, tempPos, finalPositionElem;
-    void *selectedElem;                                                 //malloc ????????????
+    void *selectedElem;
 
     for (positionElem = (signed) firstPosition + 1; positionElem <= (signed) lastPosition; positionElem++){
         tempPos = positionElem-1;
@@ -142,7 +145,20 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned 
     return;
 }
 
-void array_to_sort_merge_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
+void array_to_sort_merge_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
+    if(unsortedArray == NULL){
+        fprintf(stderr, "Unsorted array parameter cannot be NULL\n");
+        exit(EXIT_FAILURE);
+    }
+    if ((firstPosition > lastPosition) || (lastPosition >= unsortedArray->size)) {
+        fprintf(stderr, "Invalid parameter\n");
+        exit(EXIT_FAILURE);
+    }
+    array_to_sort_merge_sort_modified(unsortedArray, firstPosition, lastPosition);
+    return;
+}
+
+void array_to_sort_merge_sort_modified(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
     unsigned long middlePosition;
     unsigned long currentSize = lastPosition - firstPosition + 1;
     if (firstPosition < lastPosition){
@@ -150,21 +166,12 @@ void array_to_sort_merge_sort(UnsortedArray *unsortedArray, unsigned long firstP
         if (currentSize <= KEY_VALUE)
             array_to_sort_binary_insertion_sort(unsortedArray, firstPosition, lastPosition);
         else{
-            array_to_sort_merge_sort(unsortedArray, firstPosition, middlePosition);
-            array_to_sort_merge_sort(unsortedArray, middlePosition + 1, lastPosition);
+            array_to_sort_merge_sort_modified(unsortedArray, firstPosition, middlePosition);
+            array_to_sort_merge_sort_modified(unsortedArray, middlePosition + 1, lastPosition);
             merge(unsortedArray, firstPosition, middlePosition, lastPosition);
         }
     }
     return;
-    /*  MERGE_SORT CLASSICO (SENZA k): */
-    /* if (firstPosition < lastPosition){
-        // mettere confronto con k
-        middlePosition = (firstPosition + lastPosition) / 2;
-        array_to_sort_merge_sort(unsortedArray, firstPosition, middlePosition);
-        array_to_sort_merge_sort(unsortedArray, middlePosition + 1, lastPosition);
-        merge(unsortedArray, firstPosition, middlePosition, lastPosition);
-    }
-    return; */
 }
 
 void merge(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long middlePosition, unsigned long lastPosition){
