@@ -21,3 +21,4 @@ bin/array_to_sort_tests: build/array_to_sort_tests.o build/array_to_sort.o build
 clean:
 	$(RM) build/*
 	$(RM) bin/*
+	$(RM) ./*.csv
