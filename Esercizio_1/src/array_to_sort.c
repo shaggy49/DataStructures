@@ -117,10 +117,10 @@ long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstP
         return firstPosition;
     else {
         long middlePosition = (firstPosition + lastPosition) / 2;
-        if (unsortedArray->precedes(unsortedArray->array[middlePosition], selectedElem) == -1)      //middle precede selected
-            return binary_search(unsortedArray, selectedElem, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
-        else                                                                                        //middle è maggiore o uguale di selected
+        if (unsortedArray->precedes(selectedElem, unsortedArray->array[middlePosition]) == -1)      
             return binary_search(unsortedArray, selectedElem, firstPosition, middlePosition - 1);   //richiamo sulla meta di sinistra
+        else                                                                                        
+            return binary_search(unsortedArray, selectedElem, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
     }
 }
 
@@ -132,10 +132,8 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned 
         tempPos = positionElem-1;
         selectedElem = unsortedArray->array[positionElem];
 
-        // find position where selected should be inserted
         finalPositionElem = binary_search(unsortedArray, selectedElem, (signed) firstPosition, positionElem-1);
 
-        // Move all elements of one position to the right from tempPosition to the finalPositionElem to create space
         while (tempPos >= finalPositionElem) {
             unsortedArray->array[tempPos + 1] = unsortedArray->array[tempPos];
             tempPos--;
@@ -175,34 +173,27 @@ void array_to_sort_merge_sort_modified(UnsortedArray *unsortedArray, unsigned lo
 }
 
 void merge(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long middlePosition, unsigned long lastPosition){
-    // Create L ← A[p..q] and M ← A[q+1..r]
     unsigned long sizeArrayLeft;
     unsigned long sizeArrayRight;
 
     sizeArrayLeft = middlePosition - firstPosition + 1;
     sizeArrayRight = lastPosition - middlePosition;
 
-    // Declaration arrays
     void **arrayLeftElement = malloc(sizeof(*arrayLeftElement) * sizeArrayLeft);
     void **arrayRightElement = malloc(sizeof(*arrayRightElement) * sizeArrayRight);
 
-    // Create a copy of two sub-arrays
     for (unsigned long i = 0; i < sizeArrayLeft; i++)
         arrayLeftElement[i] = unsortedArray->array[firstPosition + i];
     for (unsigned long j = 0; j < sizeArrayRight; j++)
         arrayRightElement[j] = unsortedArray->array[middlePosition + 1 + j];
 
-    // Maintain current index of sub-arrays and main array
     unsigned long indexLeftArray, indexRightArray, indexArray;
     indexLeftArray = 0;
     indexRightArray = 0;
     indexArray = firstPosition;
 
-    // Until we reach either end of either L or M, pick larger among
-    // elements L and M and place them in the correct position at A[p..r]
     while (indexLeftArray < sizeArrayLeft && indexRightArray < sizeArrayRight){
         if (unsortedArray->precedes(arrayLeftElement[indexLeftArray], arrayRightElement[indexRightArray]) != 1){
-            // per ora sx è minore uguale di destra, non devo effettuare uno cambiamento
             unsortedArray->array[indexArray] = arrayLeftElement[indexLeftArray];
             indexLeftArray++;
         }
@@ -213,8 +204,6 @@ void merge(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned l
         indexArray++;
     }
 
-    // When we run out of elements in either L or M,
-    // pick up the remaining elements and put in A[p..r]
     while (indexLeftArray < sizeArrayLeft){
         unsortedArray->array[indexArray] = arrayLeftElement[indexLeftArray];
         indexLeftArray++;

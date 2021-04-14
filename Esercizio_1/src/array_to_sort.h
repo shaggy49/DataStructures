@@ -61,7 +61,7 @@ void array_to_sort_free_memory(UnsortedArray *);
  * bin-insert-merge-sort algorithm.
  * It takes two other parameters that represents the first and the last
  * position of the array. The second and third parameters must be a valid
- * positions within the array otherwise an undefined execution could appear. 
+ * positions within the array.
  * The input parameters cannot be NULL.
  */
 void array_to_sort_merge_binary_insertion_sort(UnsortedArray *, unsigned long, unsigned long);

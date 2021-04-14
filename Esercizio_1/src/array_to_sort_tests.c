@@ -13,7 +13,8 @@ extern void array_to_sort_binary_insertion_sort(UnsortedArray *, unsigned long, 
  * Test suite for ordered array data structure and algorithms
  */
 
-// precedence relation used in tests
+
+/* ---------PRECEDENCE RELATION USED IN TESTS---------- */
 
 static int precedes_string_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
@@ -72,6 +73,8 @@ static int precedes_floating_field(void *r1_p, void *r2_p){
 	return 1;
 }
 
+/* -------------------TESTING array_to_sort_is_empty()------------------- */
+
 /*
 static void test_array_to_sort_null (){
     UnsortedArray *unsortedArray = array_to_sort_create(NULL);
@@ -92,6 +95,9 @@ static void test_array_to_sort_is_empty_one_el(){
     TEST_ASSERT_FALSE(array_to_sort_is_empty(unsorted_array_int));
     array_to_sort_free_memory(unsorted_array_int);
 }
+
+/* -------------------TESTING array_to_sort_size()------------------- */
+
 
 static void test_array_to_sort_size_zero_el(){
     UnsortedArray *unsorted_array_int = array_to_sort_create(precedes_integer_field);
@@ -117,6 +123,8 @@ static void test_array_to_sort_size_two_el(){
     array_to_sort_free_memory(unsorted_array_int);
 }
 
+/* -------------------TESTING array_to_sort_add()------------------- */
+
 static void test_array_to_sort_add_get_one_el(){
     int i1 = 330;
     UnsortedArray *unsorted_array_int = array_to_sort_create(precedes_integer_field);
@@ -125,31 +133,103 @@ static void test_array_to_sort_add_get_one_el(){
     array_to_sort_free_memory(unsorted_array_int);
 }
 
-/*
+/* -------------------TESTING array_to_sort_binary_search()------------------- */
+ 
 static void test_array_to_sort_binary_search_one_el_string(){
-    char *s1 = "zenoveffa";
-    char *s2 = "amore";
-    long expectedPosition = 0;
+    char *s1 = "genoveffa";
+    char *toInsert = "zorro";
+    long expectedPosition;
     UnsortedArray *unsorted_array_char = array_to_sort_create(precedes_string_field);
     array_to_sort_add(unsorted_array_char, &s1);
-    char **expectedElement = &s2;
-    expectedPosition = binary_search(unsorted_array_char, expectedElement, 0, 0);
-    TEST_ASSERT_EQUAL_INT(0, expectedPosition);
+    expectedPosition = binary_search(unsorted_array_char, &toInsert, 0, 0);
+    TEST_ASSERT_EQUAL_INT(1, expectedPosition);
     array_to_sort_free_memory(unsorted_array_char);
 }
-*/
+
 
 static void test_array_to_sort_binary_search_one_el_int(){
-    int i1 = 300;
-    int i2 = 2000;
-    long expectedPosition = 0;
+    int i1 = -2;
+    int i2= 200;
+    int toInsert = -122;
+    long expectedPosition;
     UnsortedArray *unsorted_array_int = array_to_sort_create(precedes_integer_field);
     array_to_sort_add(unsorted_array_int, &i1);
-    int *expectedElement = &i2;
-    expectedPosition = binary_search(unsorted_array_int, expectedElement, 0, 0);
-    TEST_ASSERT_EQUAL_INT(1, expectedPosition);
+    array_to_sort_add(unsorted_array_int, &i2);
+    expectedPosition = binary_search(unsorted_array_int, &toInsert, 0, 0);
+    TEST_ASSERT_EQUAL_INT(0, expectedPosition);
     array_to_sort_free_memory(unsorted_array_int);
 }
+
+static void test_array_to_sort_binary_search_three_el_float(){
+    double d1 = -12.5433;
+    double d2 = 32.44;
+    double d3 = 1244.000;
+    double toInsert = 1.633;
+    long expectedPosition;
+    UnsortedArray *unsorted_array_float = array_to_sort_create(precedes_floating_field);
+    array_to_sort_add(unsorted_array_float, &d1);
+    array_to_sort_add(unsorted_array_float, &d2);
+    array_to_sort_add(unsorted_array_float, &d3);
+    expectedPosition = binary_search(unsorted_array_float, &toInsert, 0, 2);
+    TEST_ASSERT_EQUAL_INT(1, expectedPosition);
+    array_to_sort_free_memory(unsorted_array_float);
+}
+
+/* -------------------TESTING array_to_sort_binary_insertion_sort()------------------- */
+
+static void test_array_to_sort_bin_ins_sort_one_el_int(){
+    int i1 = 300;
+    int *expectedArray[] = {&i1};
+    UnsortedArray *unsorted_array_int = array_to_sort_create(precedes_integer_field);
+    array_to_sort_add(unsorted_array_int, &i1);
+    array_to_sort_binary_insertion_sort(unsorted_array_int, 0, 0);
+    int **actualArray = malloc(sizeof(int *));
+    actualArray[0] = (int *)array_to_sort_get(unsorted_array_int, 0);
+    TEST_ASSERT_EQUAL_PTR_ARRAY(expectedArray, actualArray, 1);
+    free(actualArray);
+    array_to_sort_free_memory(unsorted_array_int);
+}
+
+static void test_array_to_sort_bin_ins_sort_two_el_string(){
+    char *s1 = "genoveffa";
+    char *s2 = "zorro";
+    char **expectedArray[] = {&s1, &s2};
+    UnsortedArray *unsorted_array_char = array_to_sort_create(precedes_string_field);
+    array_to_sort_add(unsorted_array_char, &s1);
+    array_to_sort_add(unsorted_array_char, &s2);
+    array_to_sort_binary_insertion_sort(unsorted_array_char, 0, 1);
+    char **actualArray = malloc(2 * sizeof(char *));
+    for (unsigned long i = 0; i < 2; ++i) {
+        actualArray[i] = (char *)array_to_sort_get(unsorted_array_char, i);
+    }
+    TEST_ASSERT_EQUAL_PTR_ARRAY(expectedArray, actualArray, 2);
+    free(actualArray);
+    array_to_sort_free_memory(unsorted_array_char);
+}
+
+static void test_array_to_sort_bin_ins_sort_three_el_int(){
+    int i1 = 321;
+    int i2 = -533209;
+    int i3 = -241;
+    int *expectedArray[] = {&i2, &i3, &i1};
+
+    UnsortedArray *unsorted_array_int = array_to_sort_create(precedes_integer_field);
+    array_to_sort_add(unsorted_array_int, &i1);
+    array_to_sort_add(unsorted_array_int, &i2);
+    array_to_sort_add(unsorted_array_int, &i3);
+
+    array_to_sort_binary_insertion_sort(unsorted_array_int, 0, 2);
+
+    int **actualArray = malloc(3 * sizeof(int *));
+    for (unsigned long i = 0; i < 3; ++i) {
+        actualArray[i] = (int *)array_to_sort_get(unsorted_array_int, i);
+    }
+    TEST_ASSERT_EQUAL_PTR_ARRAY(expectedArray, actualArray, 3);
+    free(actualArray);
+    array_to_sort_free_memory(unsorted_array_int);
+}
+
+/* -------------------TESTING array_to_sort_merge_binary_insertion_sort()------------------- */
 
 static void test_array_to_sort_merge_bin_one_el_string(){
     char *s1 = "ciao";
@@ -258,6 +338,7 @@ static void test_array_to_sort_merge_bin_three_el_float(){
 
 int main(){
     UNITY_BEGIN();
+    
     RUN_TEST(test_array_to_sort_is_empty_zero_el);
     RUN_TEST(test_array_to_sort_is_empty_one_el);
     RUN_TEST(test_array_to_sort_size_zero_el);
@@ -265,8 +346,13 @@ int main(){
     RUN_TEST(test_array_to_sort_size_two_el);
     RUN_TEST(test_array_to_sort_add_get_one_el);
 
-    //RUN_TEST(test_array_to_sort_binary_search_one_el_string);
+    RUN_TEST(test_array_to_sort_binary_search_one_el_string);
     RUN_TEST(test_array_to_sort_binary_search_one_el_int);
+    RUN_TEST(test_array_to_sort_binary_search_three_el_float);
+
+    RUN_TEST(test_array_to_sort_bin_ins_sort_one_el_int);
+    RUN_TEST(test_array_to_sort_bin_ins_sort_two_el_string);
+    RUN_TEST(test_array_to_sort_bin_ins_sort_three_el_int);
 
     RUN_TEST(test_array_to_sort_merge_bin_one_el_string);
     RUN_TEST(test_array_to_sort_merge_bin_three_el_string);
@@ -274,5 +360,6 @@ int main(){
     RUN_TEST(test_array_to_sort_merge_bin_three_el_int);
     RUN_TEST(test_array_to_sort_merge_bin_one_el_float);
     RUN_TEST(test_array_to_sort_merge_bin_three_el_float);
+
     return UNITY_END();
 }
