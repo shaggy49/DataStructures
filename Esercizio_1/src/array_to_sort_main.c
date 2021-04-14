@@ -13,11 +13,8 @@ typedef struct _record {
 	double floating_field;
 } Record;
 
+clock_t begin;
 clock_t end;
-
-// -1 precede
-// 0 uguali
-// 1 maggiore
 
 /*
 * It takes as input two pointers to Record.
@@ -125,7 +122,7 @@ static void write_to_file(UnsortedArray *unsortedArray, unsigned int type_write)
 	Record *array_element;
 	FILE *fp = NULL;
 	
-	printf("\n----------Creating file----------\n");
+	printf("\nCreating file\n");
 	if (type_write == 1)
 		fp = fopen("string_sorted_array.csv", "w");
 	else if (type_write == 2)
@@ -138,30 +135,23 @@ static void write_to_file(UnsortedArray *unsortedArray, unsigned int type_write)
        	exit(EXIT_FAILURE);
    	}
 
-	if (type_write == 1)
-		fprintf(fp,"Sorted array by string\n");
-	else if (type_write == 2)
-		fprintf(fp,"Sorted array by integer\n");	
-	else if (type_write ==  3)
-		fprintf(fp,"Sorted array by floating point\n");
-
 	for (unsigned long i = 0; i < size; ++i){
 		array_element = (Record *) array_to_sort_get(unsortedArray,i);
 		fprintf(fp,"%8d; %12s; %8d; %12f\n", array_element->id_field, array_element->string_field, array_element->integer_field, array_element->floating_field);
 	}
 	fclose(fp);
-	printf("End writing\n");
+	printf("Your csv file is now sort, check the new file just made\n");
 }
 
 /* 
-	Prende in input il filename del csv da "convertire" in struct UnsortedArray
-	e inserisce gli elementi ordinandoli.
+ * Takes as input the csv filename to convert in UnsortedArray type
+ * and insert all the element in the same order as the original file.
  */
 static void load_array(const char *file_name, UnsortedArray *unsortedArray){
 	char buffer[BUFFER_SIZE];
 	FILE *fp;
 
-	printf("\n----------Loading data from file----------\n");
+	printf("\nLoading data from file\n");
 	fp = fopen(file_name, "r");
 	if (fp == NULL){
 		fprintf(stderr, "main: unable to open the file");
@@ -199,9 +189,10 @@ static void test_with_comparison_function(const char *file_name, int (*precedes)
 	UnsortedArray *unsortedArray = array_to_sort_create(precedes);
 	load_array(file_name, unsortedArray);
 	unsigned long size = array_to_sort_size(unsortedArray);
-	/* printf("----------Sorting the file with binary_insertion_sort----------\n");
+	/* printf("\nSorting the file with binary_insertion_sort\n");
 	array_to_sort_binary_insertion_sort(unsortedArray, 0, size-1); */
-	printf("\n----------Sorting the file with merge_sort----------\n");
+	printf("\nSorting the file with merge_bin_sort\n");
+	begin = clock();
 	array_to_sort_merge_binary_insertion_sort(unsortedArray, 0, size-1);
 	end = clock();
 	printf("End sorting\n");
@@ -216,12 +207,12 @@ int main(int argc, char const *argv[]){
 
 	if (argc < 2){
 		printf("----------Usage: unsortedArray_main <file_name>----------\n");
-		exit(EXIT_FAILURE);										// da cambiare
+		exit(EXIT_FAILURE);										
 	}
 	
 	/* Read a number to decide how to sort the file: 1 string, 2 integer, 3 floating point */
-	printf("\n----------How do you want to sort the file?----------\n"); 			//STUDIA E RIGUARDA CHIEDI A FEDE
-	printf("Type 1 for string, 2 for integer and 3 for floating point:\n");
+	printf("\nHow do you want to sort the file?\n"); 			
+	printf("Type [1] for string, [2] for integer and [3] for floating point:\n");
 	for (cont_err = 0; cont_err < 5; cont_err++) {
 		if (scanf("%u", &num_ord) != 1){
 			printf("scanf failed\n");
@@ -230,14 +221,13 @@ int main(int argc, char const *argv[]){
 		if ((1 <= num_ord) && (num_ord<= 3))
 			break;
 		if (cont_err < 4)
-			printf("----------You entered an incorrect number. Try again----------\n");
+			printf("You entered an incorrect number. Try again\n");
 		else {
-			printf("----------You entered an incorrect number more than five times----------\n");
+			printf("You entered an incorrect number more than five times\n");
 			exit(EXIT_FAILURE);		
 		}
 	}
 
-	clock_t begin = clock();
 	if (num_ord == 1)
 		test_with_comparison_function(argv[1], precedes_record_string_field, num_ord);
 	else if (num_ord == 2)
@@ -246,6 +236,6 @@ int main(int argc, char const *argv[]){
 		test_with_comparison_function(argv[1], precedes_record_floating_field, num_ord);
 
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("\n----------Time to sort: %lf ----------\n", time_spent);
+	printf("\nTime to sort: %lf\n", time_spent);
 	exit(EXIT_SUCCESS);
 }
