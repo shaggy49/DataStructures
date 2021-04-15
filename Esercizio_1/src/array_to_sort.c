@@ -4,31 +4,31 @@
 #include "array_to_sort.h"
 #include <unistd.h>
 
-//Initial capacity for the array
+/* Initial capacity for the array */
 #define INITIAL_CAPACITY 1024
 
-//Value of K
-#define KEY_VALUE 5
-long binary_search(UnsortedArray *, void *, long, long);
+/* Value of K */
+#define KEY_VALUE 100
+unsigned long binary_search(UnsortedArray *, void *, long, long);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
 void array_to_sort_merge_sort_modified(UnsortedArray *, unsigned long, unsigned long);
 void array_to_sort_binary_insertion_sort(UnsortedArray *, unsigned long, unsigned long);
 
-// Index of new element that will be inserted
+/* Index of new element that will be inserted */
 static unsigned long indexNewElem = 0;
 
-//It represents the internal structure of this implementation of ordered arrays
+/* It represents the internal structure of this implementation of ordered arrays */
 typedef struct _UnsortedArray{
     void **array;
     unsigned long size;
     unsigned long array_capacity;
-    int (*precedes)(void *, void *);
+    int (*compare)(void *, void *);
 } UnsortedArray;
 
 
-UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
-    if (precedes == NULL) {
-        fprintf(stderr, "array_to_sort_create: precedes parameter cannot be NULL");
+UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
+    if (compare == NULL) {
+        fprintf(stderr, "array_to_sort_create: compare parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
     UnsortedArray *unsortedArray = (UnsortedArray*)malloc(sizeof(UnsortedArray));
@@ -43,7 +43,7 @@ UnsortedArray *array_to_sort_create(int (*precedes)(void *, void *)){
     }
     unsortedArray->size = 0;
     unsortedArray->array_capacity = INITIAL_CAPACITY;
-    unsortedArray->precedes = precedes;
+    unsortedArray->compare = compare;
     return unsortedArray;
 }
 
@@ -57,11 +57,11 @@ int array_to_sort_is_empty(UnsortedArray *unsortedArray) {
 
 void array_to_sort_add(UnsortedArray *unsortedArray, void *element){
     if (unsortedArray == NULL){
-        fprintf(stderr, "add_unsortedArray_element: unsortedArray parameter cannot be NULL");
+        fprintf(stderr, "add_unsortedarrayElement: unsortedArray parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
     if (element == NULL){
-        fprintf(stderr, "add_unsortedArray_element: element parameter cannot be NULL");
+        fprintf(stderr, "add_unsortedarrayElement: element parameter cannot be NULL");
         exit(EXIT_FAILURE);
     }
 
@@ -112,12 +112,12 @@ void array_to_sort_free_memory(UnsortedArray *unsortedArray){
 
 /* ------------------ ORDER FUNCTIONS ------------------ */
 
-long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstPosition, long lastPosition){
+unsigned long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstPosition, long lastPosition){
     if (lastPosition < firstPosition)
-        return firstPosition;
+        return (unsigned) firstPosition;
     else {
         long middlePosition = (firstPosition + lastPosition) / 2;
-        if (unsortedArray->precedes(selectedElem, unsortedArray->array[middlePosition]) == -1)      
+        if (unsortedArray->compare(selectedElem, unsortedArray->array[middlePosition]) == -1)      
             return binary_search(unsortedArray, selectedElem, firstPosition, middlePosition - 1);   //richiamo sulla meta di sinistra
         else                                                                                        
             return binary_search(unsortedArray, selectedElem, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
@@ -125,20 +125,20 @@ long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstP
 }
 
 void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
-    long positionElem, tempPos, finalPositionElem;
+    unsigned long positionElem, tempPos, finalPositionElem;
     void *selectedElem;
 
-    for (positionElem = (signed) firstPosition + 1; positionElem <= (signed) lastPosition; positionElem++){
-        tempPos = positionElem-1;
+    for (positionElem = firstPosition + 1; positionElem <= lastPosition; positionElem++){
+        tempPos = positionElem;
         selectedElem = unsortedArray->array[positionElem];
 
-        finalPositionElem = binary_search(unsortedArray, selectedElem, (signed) firstPosition, positionElem-1);
+        finalPositionElem = binary_search(unsortedArray, selectedElem, (signed) firstPosition, (signed) positionElem - 1);
 
-        while (tempPos >= finalPositionElem) {
-            unsortedArray->array[tempPos + 1] = unsortedArray->array[tempPos];
+        while (tempPos > finalPositionElem) {
+            unsortedArray->array[tempPos] = unsortedArray->array[tempPos-1];
             tempPos--;
         }
-        unsortedArray->array[tempPos+1] = selectedElem;
+        unsortedArray->array[tempPos] = selectedElem;
     }
     return;
 }
@@ -193,7 +193,7 @@ void merge(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned l
     indexArray = firstPosition;
 
     while (indexLeftArray < sizeArrayLeft && indexRightArray < sizeArrayRight){
-        if (unsortedArray->precedes(arrayLeftElement[indexLeftArray], arrayRightElement[indexRightArray]) != 1){
+        if (unsortedArray->compare(arrayLeftElement[indexLeftArray], arrayRightElement[indexRightArray]) != 1){
             unsortedArray->array[indexArray] = arrayLeftElement[indexLeftArray];
             indexLeftArray++;
         }

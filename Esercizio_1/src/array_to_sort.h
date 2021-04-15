@@ -8,15 +8,15 @@ typedef struct _UnsortedArray UnsortedArray;
 
 /* 
  * It creates an empty array and returns the created array.
- * It accepts as input a pointer to a function implementing the precedence
- * relation between the array elements. Such a function must accept as input
+ * It accepts as input a pointer to a function implementing the comparison
+ * between the array elements. Such a function must accept as input
  * two pointers to elements and:
  * return -1 if the first element precedes the second one;
  * return 0 if the two elements are equal;
  * return 1 if the first element follows the second one;
  * The input parameter cannot be NULL.
  */
-UnsortedArray *array_to_sort_create(int (*preceds)(void *, void *));
+UnsortedArray *array_to_sort_create(int (*compare)(void *, void *));
 
 /* 
  * It accepts as input a pointer to an unsorted array and
@@ -58,7 +58,7 @@ void array_to_sort_free_memory(UnsortedArray *);
 
 /* 
  * It takes an unsorted array as an input and it orders with a hybrid
- * bin-insert-merge-sort algorithm.
+ * merge-bin-insert-sort algorithm.
  * It takes two other parameters that represents the first and the last
  * position of the array. The second and third parameters must be a valid
  * positions within the array.
