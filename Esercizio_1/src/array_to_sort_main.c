@@ -96,7 +96,8 @@ static void free_array(UnsortedArray *unsortedArray){
 		free(arrayElement->string_field);
 		free(arrayElement);
 	}
-	array_to_sort_free_memory(unsortedArray);
+	if (array_to_sort_free_memory(unsortedArray) == -1)
+		exit(EXIT_FAILURE);
 	return;
 }
 
@@ -107,7 +108,7 @@ static void print_array(UnsortedArray *unsortedArray){
 	printf("\n----------ARRAY OF RECORDS----------\n");
 	for (unsigned long i = 0; i < size-1; ++i){
 		arrayElement = (Record *)array_to_sort_get(unsortedArray, i);
-		printf("%8d;\t %12s;\t %8d;\t %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
+		dprintf(1,"%8d,\t %12s,\t %8d,\t %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
 	}
 	printf("\n");
 	return;
@@ -134,7 +135,8 @@ static void write_to_file(UnsortedArray *unsortedArray, unsigned int typeWrite){
 
 	for (unsigned long i = 0; i < size; ++i){
 		arrayElement = (Record *) array_to_sort_get(unsortedArray,i);
-		fprintf(fp,"%8d; %12s; %8d; %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
+		//printf("%8d, %12s, %8d, %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);		
+		fprintf(fp,"%8d, %12s, %8d, %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
 	}
 	fclose(fp);
 	printf("Your csv file is now sort, check the new file just made\n");
@@ -175,7 +177,8 @@ static void load_array(const char *fileName, UnsortedArray *unsortedArray){
 		strcpy(recordPointer->string_field, string_field_in_read_line_p);
 		recordPointer->integer_field = atoi(integer_field_in_read_line_p);
 		recordPointer->floating_field = atof(floating_field_in_read_line_p);
-		array_to_sort_add(unsortedArray, (void *)recordPointer);
+		if (array_to_sort_add(unsortedArray, (void *)recordPointer) == -1)
+			exit(EXIT_FAILURE);
 	}
 	fclose(fp);
 	printf("Data loaded\n");
@@ -185,21 +188,25 @@ static void load_array(const char *fileName, UnsortedArray *unsortedArray){
 static void test_with_comparison_function(const char *fileName, int (*compare)(void *, void *), unsigned int typeWrite){
 	clock_t begin, end;
 	double timeSpent;
+	UnsortedArray *unsortedArray;
 
-	UnsortedArray *unsortedArray = array_to_sort_create(compare);
+	if ((unsortedArray = array_to_sort_create(compare)) == NULL)
+		exit(EXIT_FAILURE);
 	load_array(fileName, unsortedArray);
 	unsigned long size = array_to_sort_size(unsortedArray);
 	/* printf("\nSorting the file with binary_insertion_sort\n");
 	array_to_sort_binary_insertion_sort(unsortedArray, 0, size-1); */
 	printf("\nSorting the file with merge_bin_ins_sort\n");
 	begin = clock();
-	array_to_sort_merge_binary_insertion_sort(unsortedArray, 0, size-1);
+	if(array_to_sort_merge_binary_insertion_sort(unsortedArray, 0, size-1) == -1)
+		exit(EXIT_FAILURE);
 	end = clock();
 	printf("End sorting\n");
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("\nTime to sort: %lf\n", timeSpent);
 	write_to_file(unsortedArray, typeWrite);
-	free_array(unsortedArray);	
+	//print_array(unsortedArray);
+	free_array(unsortedArray);
 	return;
 }
 

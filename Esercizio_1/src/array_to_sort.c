@@ -8,7 +8,7 @@
 #define INITIAL_CAPACITY 1024
 
 /* Value of K */
-#define KEY_VALUE 100
+#define KEY_VALUE 4
 unsigned long binary_search(UnsortedArray *, void *, long, long);
 void merge(UnsortedArray *, unsigned long, unsigned long, unsigned long);
 void array_to_sort_merge_sort_modified(UnsortedArray *, unsigned long, unsigned long);
@@ -29,17 +29,17 @@ typedef struct _UnsortedArray{
 UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
     if (compare == NULL) {
         fprintf(stderr, "array_to_sort_create: compare parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     UnsortedArray *unsortedArray = (UnsortedArray*)malloc(sizeof(UnsortedArray));
     if (unsortedArray == NULL) {
         fprintf(stderr, "array_to_sort_create: unable to allocate memory for the ordered array");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     unsortedArray->array = (void**)malloc(INITIAL_CAPACITY * sizeof(void*));
     if (unsortedArray->array == NULL) {
         fprintf(stderr, "array_to_sort_create: unable to allocate memory for the internal array");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     unsortedArray->size = 0;
     unsortedArray->array_capacity = INITIAL_CAPACITY;
@@ -50,19 +50,19 @@ UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
 int array_to_sort_is_empty(UnsortedArray *unsortedArray) {
     if (unsortedArray == NULL) {
         fprintf(stderr, "unsorted_array_is_empty: unsorted_array parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return -1;
     }
     return unsortedArray->size == 0;
 }
 
-void array_to_sort_add(UnsortedArray *unsortedArray, void *element){
+int array_to_sort_add(UnsortedArray *unsortedArray, void *element){
     if (unsortedArray == NULL){
         fprintf(stderr, "add_unsortedarrayElement: unsortedArray parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return -1;
     }
     if (element == NULL){
         fprintf(stderr, "add_unsortedarrayElement: element parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return -1;
     }
 
     if (unsortedArray->size >= unsortedArray->array_capacity) {
@@ -70,19 +70,19 @@ void array_to_sort_add(UnsortedArray *unsortedArray, void *element){
         unsortedArray->array = (void **)realloc(unsortedArray->array, unsortedArray->array_capacity * sizeof(void *));
         if (unsortedArray->array == NULL) {
             fprintf(stderr, "array_to_sort_add: unable to reallocate memory to host the new element");
-            exit(EXIT_FAILURE);
+            return -1;
         }
     }
     unsortedArray->array[indexNewElem] = element;
     indexNewElem++;
     unsortedArray->size++;
-    return;
+    return 0;
 }
 
 unsigned long array_to_sort_size(UnsortedArray *unsortedArray){
     if (unsortedArray == NULL) {
         fprintf(stderr, "_size: ordered_array parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return 0;
     }
     return unsortedArray->size;
 }
@@ -90,24 +90,24 @@ unsigned long array_to_sort_size(UnsortedArray *unsortedArray){
 void *array_to_sort_get(UnsortedArray *unsortedArray, unsigned long index){
     if (unsortedArray == NULL) {
         fprintf(stderr, "array_to_sort_get: unsortedArray parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     if (index >= unsortedArray->size) {
         fprintf(stderr, "array_to_sort_get: Index %lu is out of the array bounds", index);
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     return unsortedArray->array[index];
 }
 
-void array_to_sort_free_memory(UnsortedArray *unsortedArray){
+int array_to_sort_free_memory(UnsortedArray *unsortedArray){
     if (unsortedArray == NULL){
         fprintf(stderr, "unsortedArray_free_memory: unsortedArray parameter cannot be NULL");
-        exit(EXIT_FAILURE);
+        return -1;
     }
     indexNewElem = 0;
     free(unsortedArray->array);
     free(unsortedArray);
-    return;
+    return 0;
 }
 
 /* ------------------ ORDER FUNCTIONS ------------------ */
@@ -143,17 +143,17 @@ void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned 
     return;
 }
 
-void array_to_sort_merge_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
+int array_to_sort_merge_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
     if(unsortedArray == NULL){
         fprintf(stderr, "Unsorted array parameter cannot be NULL\n");
-        exit(EXIT_FAILURE);
+        return -1;
     }
     if ((firstPosition > lastPosition) || (lastPosition >= unsortedArray->size)) {
         fprintf(stderr, "Invalid parameter\n");
-        exit(EXIT_FAILURE);
+        return -1;
     }
     array_to_sort_merge_sort_modified(unsortedArray, firstPosition, lastPosition);
-    return;
+    return 0;
 }
 
 void array_to_sort_merge_sort_modified(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
