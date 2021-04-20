@@ -33,7 +33,7 @@ UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
     }
     UnsortedArray *unsortedArray = (UnsortedArray*)malloc(sizeof(UnsortedArray));
     if (unsortedArray == NULL) {
-        fprintf(stderr, "array_to_sort_create: unable to allocate memory for the ordered array");
+        fprintf(stderr, "array_to_sort_create: unable to allocate memory for the unordere array");
         return NULL;
     }
     unsortedArray->array = (void**)malloc(INITIAL_CAPACITY * sizeof(void*));

@@ -106,7 +106,7 @@ static void print_array(UnsortedArray *unsortedArray){
 	unsigned long size = array_to_sort_size(unsortedArray);
 	Record *arrayElement;
 	printf("\n----------ARRAY OF RECORDS----------\n");
-	for (unsigned long i = 0; i < size-1; ++i){
+	for (unsigned long i = 0; i < size; ++i){
 		arrayElement = (Record *)array_to_sort_get(unsortedArray, i);
 		dprintf(1,"%8d,\t %12s,\t %8d,\t %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
 	}
