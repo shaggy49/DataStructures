@@ -52,7 +52,12 @@ int edit_distance_add(ArrayStrings *arrayStrings, char *word){
             return -1;
         }
     }
-    arrayStrings->array[indexNewString] = word;
+    arrayStrings->array[indexNewString] = malloc(strlen(word) + 1);
+    if (arrayStrings->array[indexNewString] == NULL){
+        fprintf(stderr, "edit_distance_add: unable to allocate memory for the word");
+        return -1;
+    }
+    strcpy(arrayStrings->array[indexNewString], word);
     indexNewString++;
     arrayStrings->size++;
     return 0;

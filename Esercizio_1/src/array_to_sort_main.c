@@ -4,7 +4,7 @@
 #include <time.h>
 #include "array_to_sort.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 512
 
 typedef struct _record {
 	int id_field;
@@ -135,7 +135,6 @@ static void write_to_file(UnsortedArray *unsortedArray, unsigned int typeWrite){
 
 	for (unsigned long i = 0; i < size; ++i){
 		arrayElement = (Record *) array_to_sort_get(unsortedArray,i);
-		//printf("%8d, %12s, %8d, %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);		
 		fprintf(fp,"%8d, %12s, %8d, %12f\n", arrayElement->id_field, arrayElement->string_field, arrayElement->integer_field, arrayElement->floating_field);
 	}
 	fclose(fp);
