@@ -7,7 +7,7 @@ tests: bin/edit_distance_tests
 	./bin/edit_distance_tests
 
 run : ./bin/edit_distance_main
-	./bin/edit_distance_main ~/Downloads/dictionary.txt
+	./bin/edit_distance_main ~/Downloads/dictionary.txt ~/Downloads/correctme.txt 
 
 build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@

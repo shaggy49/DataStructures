@@ -4,11 +4,7 @@
 /*
  * An array of strings that contains words of any kind
  */
-typedef struct _ArrayStrings{
-    char **array;
-    unsigned long size;
-    unsigned long array_capacity;
-} ArrayStrings;
+typedef struct _ArrayStrings ArrayStrings;
 
 ArrayStrings *edit_distance_create();
 
@@ -27,7 +23,7 @@ int edit_distance_free_memory(ArrayStrings *);
  */
 //int edit_distance_dyn(char *, int, char *, int);
 
-int edit_distance(char *, int, char *, int);
+int edit_distance(char *, char *);
 
 
 

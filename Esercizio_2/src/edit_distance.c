@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include "edit_distance.h"
 
 #define INITIAL_CAPACITY 1024
 #define MIN(x,y) ((x) <= (y) ? (x) : (y))
-#define INFINITE 2404040
+
+typedef struct _ArrayStrings{
+    char **array;
+    unsigned long size;
+    unsigned long array_capacity;
+} ArrayStrings;
 
 /* Index of new string that will be inserted */
 static unsigned long indexNewString = 0;
@@ -96,15 +102,16 @@ int edit_distance_free_memory(ArrayStrings *arrayStrings){
     
 /* ------------------ CALCULATE EDIT_DISTANCE FUNCTIONS ------------------ */
 
-int edit_distance(char *s1, int sizeS1, char *s2, int sizeS2){
-    if(sizeS1 == 0)
-        return sizeS2;
-    if(sizeS2 == 0)
-        return sizeS1;
+int edit_distance(char *s1, char *s2){
+    if(strlen(s1) == 0)
+        return strlen(s2);
+    if(strlen(s2) == 0)
+        return strlen(s1);
     else{
-        int d_nop = (s1[0] == s2[0] ? edit_distance(s1+1, sizeS1-1, s2+1, sizeS2 -1) : INFINITE);
-        int d_canc = 1 + edit_distance(s1, sizeS1, s2+1, sizeS2 -1);
-        int d_ins = 1 + edit_distance(s1+1, sizeS1-1, s2, sizeS2);
+        //qui andrebbe inserito qualche controllo per evitare di calcolare più volte la stessa cosa
+        int d_nop = (s1[0] == s2[0] ? edit_distance(s1+1, s2+1) : INT_MAX);
+        int d_canc = 1 + edit_distance(s1, s2+1);
+        int d_ins = 1 + edit_distance(s1+1, s2);
         return MIN( MIN(d_canc,d_ins), d_nop);
     }
 }
