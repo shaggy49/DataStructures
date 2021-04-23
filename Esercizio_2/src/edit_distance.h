@@ -16,14 +16,23 @@ unsigned long edit_distance_size(ArrayStrings*);
 
 char *edit_distance_get(ArrayStrings *, unsigned long);
 
+void edit_distance_set_index_to_add(unsigned long);
+
 int edit_distance_free_memory(ArrayStrings *);
+
+int edit_distance_swap_words(ArrayStrings *, unsigned long, ArrayStrings *, unsigned long);
 
 /* 
  * It calulates the edit distance between two strings.
  */
 //int edit_distance_dyn(char *, int, char *, int);
 
-int edit_distance(char *, char *);
+unsigned long edit_distance(char *, char *);
+
+int distance (const char * word1,
+                     unsigned long len1,
+                     const char * word2,
+                     unsigned long len2);
 
 
 
