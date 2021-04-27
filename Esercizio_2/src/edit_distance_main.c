@@ -140,7 +140,7 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
  * the first parameter is the dictonary's filepath to look up for suggestions
  * the second parameter is the txt file's filepath to correct.
  */
-int main(int argc, char const *argv[]){
+/* int main(int argc, char const *argv[]){
     ArrayStrings *dictonaryWords;
     ArrayStrings *wordsToCorrect;
 
@@ -152,8 +152,8 @@ int main(int argc, char const *argv[]){
     if ((dictonaryWords = edit_distance_create()) == NULL)
 		exit(EXIT_FAILURE);
     load_array_dictionary(argv[1], dictonaryWords);
-    /* printf("Here is your dictonary file:\n\n"); */
-    /* print_array(dictonaryWords); */
+    printf("Here is your dictonary file:\n\n");
+    print_array(dictonaryWords);
     if ((wordsToCorrect = edit_distance_create()) == NULL)
 		exit(EXIT_FAILURE);
     
@@ -167,8 +167,32 @@ int main(int argc, char const *argv[]){
     print_array(wordsToCorrect);
     write_to_file(wordsToCorrect);
 
+    printf("%lu\n", edit_distance("ciao", "bao"));
+
     edit_distance_free_memory(dictonaryWords);
     edit_distance_free_memory(wordsToCorrect);
     
     exit(EXIT_SUCCESS);
 }
+ */
+
+int main() {
+    char *str1 = "mattia";
+    char *str2 = "matto";
+    unsigned int editDistDyn = 0;
+
+    editDistDyn = edit_distance_dyn(str1, str2);
+    
+    printf("%i\n", editDistDyn);
+
+    exit(EXIT_SUCCESS);   
+    //     This code is a contribution of Mattia Carlino --> AHAHAHAHA mi associo 
+
+}
+
+/* non vanno:
+pane cane
+pan can
+casa zasa
+casaaa zasaaa
+*/

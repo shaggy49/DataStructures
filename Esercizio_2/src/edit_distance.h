@@ -25,15 +25,9 @@ int edit_distance_swap_words(ArrayStrings *, unsigned long, ArrayStrings *, unsi
 /* 
  * It calulates the edit distance between two strings.
  */
-//int edit_distance_dyn(char *, int, char *, int);
 
-unsigned long edit_distance(char *, char *);
+unsigned int edit_distance(char *, char *);
 
-int distance (const char * word1,
-                     unsigned long len1,
-                     const char * word2,
-                     unsigned long len2);
-
-
+unsigned int edit_distance_dyn(char *, char *);
 
 #endif //EDIT_DISTANCE
