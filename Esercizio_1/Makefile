@@ -1,7 +1,7 @@
 CFLAGS 		= -g -O1 -Wall -Wextra -Wpedantic -Wconversion
 COMMON_DEPS 	= src/*.h Makefile
 
-all: bin/array_to_sort_main bin/array_to_sort_tests
+all: bin/array_to_sort_main
 
 tests: bin/array_to_sort_tests
 	./bin/array_to_sort_tests

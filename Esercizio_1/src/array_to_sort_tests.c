@@ -10,7 +10,7 @@ extern void array_to_sort_merge_sort_modified(UnsortedArray *, unsigned long, un
 extern void array_to_sort_binary_insertion_sort(UnsortedArray *, unsigned long, unsigned long);
 
 /*
- * Test suite for ordered array data structure and algorithms
+ * Test suite for array_to_sort data structure and algorithms
  */
 
 
@@ -115,7 +115,7 @@ static void test_array_to_sort_size_two_el(){
     array_to_sort_free_memory(unsorted_array_int);
 }
 
-/* -------------------TESTING array_to_sort_add()------------------- */
+/* -------------------TESTING array_to_sort_add() and array_to_sort_get()------------------- */
 
 static void test_array_to_sort_add_get_one_el(){
     int i1 = 330;

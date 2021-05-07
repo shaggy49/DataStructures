@@ -214,7 +214,7 @@ int main(int argc, char const *argv[]){
 	unsigned int numOrd, contErr;
 
 	if (argc < 2){
-		printf("Usage: unsortedArray_main <fileName>\n");
+		printf("Usage: array_to_sort_main <fileName>\n");
 		exit(EXIT_FAILURE);										
 	}
 	

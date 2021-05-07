@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <unistd.h>
+#include <math.h>
 
 void remove_char(char* s, char c);
 
@@ -29,6 +31,7 @@ static void load_array_dictionary(const char *fileName, ArrayStrings *arrayStrin
     }
 
     while (fgets(buffer, BUFFER_SIZE, fp) != NULL){
+        REMOVE_PUNTACTION(buffer)
         if (edit_distance_add(arrayStrings, buffer) == -1)
             exit(EXIT_FAILURE);
     }
@@ -67,10 +70,11 @@ static void load_array_words(const char *fileName, ArrayStrings *arrayStrings){
     return;
 }
 
+/* Da cambiare perche` noi dobbiamo avere le virgole nella stampa finale */
 void remove_char(char* string, char toRemove){
     unsigned int length = (unsigned int) strlen(string);
-    unsigned int cont, j = 0;
-    for (cont = 0 ; cont < length; cont++){
+    unsigned int j = 0;
+    for (unsigned int cont = 0 ; cont < length; cont++){
         if (string[cont] != toRemove)
             string[j++] = string[cont];
     }
@@ -111,88 +115,91 @@ static void print_array(ArrayStrings *arrayStrings){
 	return;
 }
 
-void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictonaryWords){
-    unsigned long n_wordsToCorrect = edit_distance_size(wordsToCorrect);
-    unsigned long n_dictonaryWords = edit_distance_size(dictonaryWords);
-    unsigned long i, j_min, min_dist;
-    unsigned long edit_calcula;
-    
-    for(i = 0; i < n_wordsToCorrect; i++){
-        edit_calcula = 0;
-        min_dist = INT_MAX;
-        j_min = INT_MAX;
-        for(unsigned long j = 0; j < n_dictonaryWords; j++){
-            edit_calcula = edit_distance(edit_distance_get(wordsToCorrect,i), edit_distance_get(dictonaryWords,j));
-            /* unsigned long edit_calcula = distance(edit_distance_get(wordsToCorrect,i), n_wordsToCorrect, edit_distance_get(dictonaryWords,j), n_dictonaryWords); */
-            if (edit_calcula == 0)
-                break;
-            else if (edit_calcula < min_dist){
-                min_dist = edit_calcula;
-                j_min = j;
-            }
+/* it returns 1 if the word is present in the dictionary, 0 otherwise */
+long binary_search_word(ArrayStrings *dictonaryWords, char *word, long firstPosition, long lastPosition){
+    if (lastPosition < firstPosition)
+        return 0;
+    else {
+        long middlePosition = (firstPosition + lastPosition) / 2;
+        // 0 se sono uguali, -1 se minore, 1 se maggiore
+        if (strcmp(word, edit_distance_get(dictonaryWords, (unsigned) middlePosition)) == 0){
+            return 1;
         }
-        if (edit_calcula != 0)
-            edit_distance_swap_words(wordsToCorrect, i, dictonaryWords, j_min);
-    }    
+        else if (strcmp(word, edit_distance_get(dictonaryWords, (unsigned) middlePosition)) < 0)
+            return binary_search_word(dictonaryWords, word, firstPosition, middlePosition - 1);   //richiamo sulla meta di sinistra
+        else
+            return binary_search_word(dictonaryWords, word, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
+    }
 }
 
+void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictonaryWords){
+    unsigned long nWordsToCorrect = edit_distance_size(wordsToCorrect);
+    unsigned long nDictonaryWords = edit_distance_size(dictonaryWords);
+    unsigned long minPosDict;
+    int minEdDist, editDistance;
+
+    for(unsigned long i = 0; i < nWordsToCorrect; i++){
+        editDistance = 0;
+        minEdDist = INT_MAX;
+        minPosDict = INT_MAX;
+        
+        if (binary_search_word(dictonaryWords, edit_distance_get(wordsToCorrect,i), 0, (signed) nDictonaryWords - 1) == 0) {
+            // parola non presente nel dizionario
+            for(unsigned long j = 0; j < nDictonaryWords; j++){
+                int lengthDifference = abs((int) strlen(edit_distance_get(wordsToCorrect,i)) - (int) strlen(edit_distance_get(dictonaryWords,j)));
+                if (lengthDifference < minEdDist){
+                    editDistance = edit_distance_dyn(edit_distance_get(wordsToCorrect,i), edit_distance_get(dictonaryWords,j));
+                    if (editDistance < minEdDist){
+                        minEdDist = editDistance;
+                        minPosDict = j;
+                    }
+                }
+            }
+            printf("minEdDist of: %s is %d it will be replaced with \"%s\"\n", edit_distance_get(wordsToCorrect,i), minEdDist, edit_distance_get(dictonaryWords,minPosDict));
+            edit_distance_swap_words(wordsToCorrect, i, dictonaryWords, minPosDict);
+        }
+    }
+}
 /* It should be invoked with two parameters specifying two data filepaths:
  * the first parameter is the dictonary's filepath to look up for suggestions
  * the second parameter is the txt file's filepath to correct.
  */
-/* int main(int argc, char const *argv[]){
+
+
+int main(int argc, char const *argv[]){
     ArrayStrings *dictonaryWords;
     ArrayStrings *wordsToCorrect;
-
+    // fare in modo che si inseriscano i file in ordine corretto (Dizioanario, File da correggere)
 	if (argc < 3){
-		printf("Usage: unsortedArray_main <fileName>\n");
+		printf("Usage: edit_distance_main <dictionaryFileName> <correctMeFileName>\n");
 		exit(EXIT_FAILURE);										
 	}
 
     if ((dictonaryWords = edit_distance_create()) == NULL)
 		exit(EXIT_FAILURE);
     load_array_dictionary(argv[1], dictonaryWords);
-    printf("Here is your dictonary file:\n\n");
-    print_array(dictonaryWords);
+    
+    //  printf("Here is your dictonary file:\n\n");
+    //print_array(dictonaryWords);
+    
+
     if ((wordsToCorrect = edit_distance_create()) == NULL)
 		exit(EXIT_FAILURE);
     
-    edit_distance_set_index_to_add(0);
     load_array_words(argv[2], wordsToCorrect);
-    printf("\n\nHere is your correctMe file (original):\n\n");
-    print_array(wordsToCorrect);
+    
+    // printf("\n\nHere is your correctMe file (original):\n\n");
+    //print_array(wordsToCorrect);
 
     calculate_edit_distance(wordsToCorrect, dictonaryWords);
-    printf("\n\nHere is your correctMe file (just modified):\n\n");
-    print_array(wordsToCorrect);
+    
+    //printf("\n\nHere is your correctMe file (just modified):\n\n");
+    //print_array(wordsToCorrect);
+    
     write_to_file(wordsToCorrect);
-
-    printf("%lu\n", edit_distance("ciao", "bao"));
-
+    
     edit_distance_free_memory(dictonaryWords);
     edit_distance_free_memory(wordsToCorrect);
     
     exit(EXIT_SUCCESS);
 }
- */
-
-int main() {
-    char *str1 = "mattia";
-    char *str2 = "matto";
-    unsigned int editDistDyn = 0;
-
-    editDistDyn = edit_distance_dyn(str1, str2);
-    
-    printf("%i\n", editDistDyn);
-
-    exit(EXIT_SUCCESS);   
-    //     This code is a contribution of Mattia Carlino --> AHAHAHAHA mi associo 
-
-}
-
-/* non vanno:
-pane cane
-pan can
-casa zasa
-casaaa zasaaa
-*/

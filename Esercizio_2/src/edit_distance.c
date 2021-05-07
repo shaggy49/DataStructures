@@ -29,12 +29,13 @@ ArrayStrings *edit_distance_create(){
     }
     arrayStrings->size = 0;
     arrayStrings->array_capacity = INITIAL_CAPACITY;
+    indexNewString = 0;
     return arrayStrings;
 }
 
 int edit_distance_is_empty(ArrayStrings *arrayStrings) {
     if (arrayStrings == NULL) {
-        fprintf(stderr, "unsorted_array_is_empty: unsorted_array parameter cannot be NULL");
+        fprintf(stderr, "array_strings_is_empty: array_strings parameter cannot be NULL");
         return -1;
     }
     return arrayStrings->size == 0;
@@ -75,10 +76,6 @@ unsigned long edit_distance_size(ArrayStrings *arrayStrings){
         return 0;
     }
     return arrayStrings->size;
-}
-
-void edit_distance_set_index_to_add(unsigned long newValue){
-    indexNewString = newValue;
 }
 
 char *edit_distance_get(ArrayStrings *arrayStrings, unsigned long index){
@@ -122,89 +119,74 @@ int edit_distance_swap_words(ArrayStrings * wordsToCorrect, unsigned long i, Arr
 
 
 /* ------------------ CALCULATE EDIT_DISTANCE FUNCTIONS ------------------ */
-
-unsigned int edit_distance(char *word1, char *word2){
+int edit_distance(char *word1, char *word2){
     if(strlen(word1) == 0)
-        return (unsigned int) strlen(word2);
+        return (int) strlen(word2);
     if(strlen(word2) == 0)
-        return (unsigned int) strlen(word1);
+        return (int) strlen(word1);
     else{
-        //qui andrebbe inserito qualche controllo per evitare di calcolare più volte la stessa cosa
-        unsigned int dNop = (word1[0] == word2[0] ? edit_distance(word1+1, word2+1) : INT_MAX);
-        unsigned int dIns = 1 + edit_distance(word1+1, word2);
-        unsigned int dCanc = 1 + edit_distance(word1, word2+1);
+        int dNop = (word1[0] == word2[0] ? edit_distance(word1+1, word2+1) : INT_MAX);
+        int dIns = 1 + edit_distance(word1+1, word2);
+        int dCanc = 1 + edit_distance(word1, word2+1);
         return MIN( MIN(dCanc,dIns), dNop);
     }
 }
-/* 
-typedef struct _EditDistanceCalculate{
-    char ** word1;
-    char ** word2;
-    unsigned long * edit_distance;
-    unsigned long capacity;
-} EditDistanceCalculate;
 
-char * edit_dist_calc[3]
-
-unsigned long edit_distance_dyn(char *word1, char *word2){
-
+int edit_distance_classic(char *word1, char *word2){
+    if((word1 == NULL) || (word2 == NULL)){
+        fprintf(stderr, "String parameters cannot be NULL\n");
+        return -1;
+    }
+    return edit_distance(word1, word2);
 }
 
-
-unsigned long edit_distance_dyn(char *word1, char *word2, EditDistanceCalculate memo){
-    for (unsigned long cont = 0; cont < memo->capacity; cont++){
-        for()
-        if ((strcmp(memo->word1[cont], word1) == 1) && (strcmp(memo->word2, word2) == 1))
-            return memo->edit_distance;
-    }
-    else {
-        ....qui....e nel main......tico tico tico
-        
-    }
-}
- */
- 
-//memoization
-unsigned int memo(char * word1, char * word2, unsigned int arr[(unsigned int)strlen(word1)][(unsigned int)strlen(word2)]){
-    unsigned int lenWord1 = (unsigned int) strlen(word1);
-    unsigned int lenWord2 = (unsigned int) strlen(word2);
+int memo(char * word1, char * word2, int **arr){
+    int lenWord1 = (int) strlen(word1);
+    int lenWord2 = (int) strlen(word2);
 
     if(lenWord1 == 0)
         return lenWord2;
     
     if(lenWord2 == 0)
         return lenWord1;
-
+ 
     if((arr[lenWord1][lenWord2]) > 0)
         return arr[lenWord1][lenWord2];
     
-    if(word1[0] == word2[0]){
+    if(word1[0] == word2[0]){ 
         arr[lenWord1][lenWord2] = memo(word1 + 1, word2 + 1, arr);
-        return memo(word1 + 1, word2 + 1, arr);
+        return arr[lenWord1][lenWord2];
     }
     else{
-        unsigned int dIns = memo(word1 + 1, word2, arr);
-        unsigned int dCanc = memo(word1, word2 + 1, arr);
+        int dIns = memo(word1 + 1, word2, arr);
+        int dCanc = memo(word1, word2 + 1, arr);
         
-        arr[lenWord1][lenWord2] = 1 + MIN(dIns, dCanc);
+        arr[lenWord1][lenWord2] = 1 + MIN(dIns, dCanc); //non va bene
         return 1 + MIN(dIns, dCanc);
     }
 }
     
-unsigned int edit_distance_dyn(char *word1, char *word2) {
-    //memoization
-    printf("\n%s %s\n", word1, word2);
+int edit_distance_dyn(char *word1, char *word2) {
+    if((word1 == NULL) || (word2 == NULL)){
+        fprintf(stderr, "String parameters cannot be NULL\n");
+        return -1;
+    }
+    int result;
+    unsigned int lenWord1 = (unsigned) strlen(word1);
+    unsigned int lenWord2 = (unsigned) strlen(word2);
 
-    unsigned int lenWord1 = (unsigned int) strlen(word1);
-    unsigned int lenWord2 = (unsigned int) strlen(word2);
-
-    printf("%u %u\n\n", lenWord1, lenWord2);
-
-    unsigned int arr[lenWord1 + 1][lenWord2 + 1];
+    int **arr= (int **) malloc(sizeof(*arr) * (lenWord1 + 1));     //array di puntatori a interi
     for (unsigned int row = 0; row < lenWord1 + 1; row++){
+        int *values = (int *) malloc(sizeof(int) * (lenWord2 + 1));        //array di puntatori ognuno punta a una zona di memoria 
+        arr[row] = values;    
         for (unsigned int column = 0; column < lenWord2 + 1; column++){
             arr[row][column] = 0;
         }
     }
-    return memo(word1, word2, arr);
+    result = memo(word1, word2, arr);
+    for (unsigned int row = 0; row < lenWord1 + 1; row++){
+        free(arr[row]);
+    }
+    free(arr);
+    return result;
 }

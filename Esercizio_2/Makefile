@@ -1,13 +1,13 @@
 CFLAGS 		= -g -O1 -Wall -Wextra -Wpedantic -Wconversion
 COMMON_DEPS 	= src/*.h Makefile
 
-all: bin/edit_distance_main #bin/edit_distance_tests 
+all: bin/edit_distance_main
 
 tests: bin/edit_distance_tests
 	./bin/edit_distance_tests
 
-run : ./bin/edit_distance_main
-	./bin/edit_distance_main ~/Downloads/dictionary_minimal.txt ~/Downloads/correctme.txt 
+run : ./bin/edit_distance_main 
+	./bin/edit_distance_main ~/Downloads/dictionary.txt ~/Downloads/correctme.txt
 
 build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
