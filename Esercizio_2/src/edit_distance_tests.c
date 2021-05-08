@@ -87,6 +87,48 @@ static void test_edit_distance_dyn_one_null(){
     TEST_ASSERT_EQUAL(-1, edit_distance_dyn(str1, str2));
 }
 
+static void test_edit_distance_classic_one_empty(){
+    char *str1 = "";
+    char *str2 = "ciao";
+
+    TEST_ASSERT_EQUAL(4, edit_distance_classic(str1, str2));
+}
+
+static void test_edit_distance_dyn_one_empty(){
+    char *str1 = "";
+    char *str2 = "amore";
+
+    TEST_ASSERT_EQUAL(5, edit_distance_dyn(str1, str2));
+}
+
+static void test_edit_distance_classic_two_strings(){
+    char *str1 = "bao";
+    char *str2 = "ciao";
+
+    TEST_ASSERT_EQUAL(3, edit_distance_classic(str1, str2));
+}
+
+static void test_edit_distance_dyn_two_strings(){
+    char *str1 = "bao";
+    char *str2 = "ciao";
+
+    TEST_ASSERT_EQUAL(3, edit_distance_dyn(str1, str2));
+}
+
+static void test_edit_distance_classic_two_long_strings(){
+    char *str1 = "tastiera";
+    char *str2 = "parmigiano";
+
+    TEST_ASSERT_EQUAL(12, edit_distance_classic(str1, str2));
+}
+
+static void test_edit_distance_dyn_two_long_strings(){
+    char *str1 = "tastiera";
+    char *str2 = "parmigiano";
+
+    TEST_ASSERT_EQUAL(12, edit_distance_dyn(str1, str2));
+}
+
 int main(){
     UNITY_BEGIN();
 /* -------------------TESTING edit_distance_auxiliaries()------------------- */
@@ -100,5 +142,11 @@ int main(){
     RUN_TEST(test_edit_distance_dyn_two_null);
     RUN_TEST(test_edit_distance_classic_one_null);
     RUN_TEST(test_edit_distance_dyn_one_null);
+    RUN_TEST(test_edit_distance_classic_one_empty);
+    RUN_TEST(test_edit_distance_dyn_one_empty);
+    RUN_TEST(test_edit_distance_classic_two_strings);
+    RUN_TEST(test_edit_distance_dyn_two_strings);
+    RUN_TEST(test_edit_distance_classic_two_long_strings);
+    RUN_TEST(test_edit_distance_dyn_two_long_strings);
     return UNITY_END();
 }

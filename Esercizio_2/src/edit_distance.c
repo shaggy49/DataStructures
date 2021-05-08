@@ -101,19 +101,17 @@ int edit_distance_free_memory(ArrayStrings *arrayStrings){
     return 0;
 }
 
-/* 
- * swappa dictonaryWords[j] in wordsToCorrect[i] 
- */
-int edit_distance_swap_words(ArrayStrings * wordsToCorrect, unsigned long i, ArrayStrings *dictonaryWords, unsigned long j){
-    if(wordsToCorrect == NULL || dictonaryWords == NULL){
+
+int edit_distance_copy_word_from_to(ArrayStrings * firstArray, unsigned long i, ArrayStrings *secondArray, unsigned long j){
+    if(firstArray == NULL || secondArray == NULL){
         fprintf(stderr, "edit_distance_swap_words: parameter cannot be NULL");
         return -1;
     }
-    if(i >= wordsToCorrect->size || j >= dictonaryWords->size){
+    if(i >= firstArray->size || j >= secondArray->size){
         fprintf(stderr, "edit_distance_swap_words: Index is out of the array bounds");
         return -1;
     }
-    strcpy(wordsToCorrect->array[i], dictonaryWords->array[j]);
+    strcpy(firstArray->array[i], secondArray->array[j]);
     return 0;
 }
 

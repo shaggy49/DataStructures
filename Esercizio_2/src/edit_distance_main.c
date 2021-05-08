@@ -117,7 +117,7 @@ static void print_array(ArrayStrings *arrayStrings){
 
 /* it returns 1 if the word is present in the dictionary, 0 otherwise */
 long binary_search_word(ArrayStrings *dictonaryWords, char *word, long firstPosition, long lastPosition){
-    if (lastPosition < firstPosition)
+    if (firstPosition > lastPosition)
         return 0;
     else {
         long middlePosition = (firstPosition + lastPosition) / 2;
@@ -139,7 +139,6 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
     int minEdDist, editDistance;
 
     for(unsigned long i = 0; i < nWordsToCorrect; i++){
-        editDistance = 0;
         minEdDist = INT_MAX;
         minPosDict = INT_MAX;
         
@@ -147,6 +146,7 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
             // parola non presente nel dizionario
             for(unsigned long j = 0; j < nDictonaryWords; j++){
                 int lengthDifference = abs((int) strlen(edit_distance_get(wordsToCorrect,i)) - (int) strlen(edit_distance_get(dictonaryWords,j)));
+                //per evitare di confrontare la parola con altre che sicuramente hanno una edit distance maggiore
                 if (lengthDifference < minEdDist){
                     editDistance = edit_distance_dyn(edit_distance_get(wordsToCorrect,i), edit_distance_get(dictonaryWords,j));
                     if (editDistance < minEdDist){
@@ -155,21 +155,19 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
                     }
                 }
             }
-            printf("minEdDist of: %s is %d it will be replaced with \"%s\"\n", edit_distance_get(wordsToCorrect,i), minEdDist, edit_distance_get(dictonaryWords,minPosDict));
-            edit_distance_swap_words(wordsToCorrect, i, dictonaryWords, minPosDict);
+            printf("minEdDist of: \"%s\" is %d; It will be replaced with ==> \"%s\"\n", edit_distance_get(wordsToCorrect,i), minEdDist, edit_distance_get(dictonaryWords,minPosDict));
+            edit_distance_copy_word_from_to(wordsToCorrect, i, dictonaryWords, minPosDict);
         }
     }
 }
+
 /* It should be invoked with two parameters specifying two data filepaths:
  * the first parameter is the dictonary's filepath to look up for suggestions
  * the second parameter is the txt file's filepath to correct.
  */
-
-
 int main(int argc, char const *argv[]){
     ArrayStrings *dictonaryWords;
     ArrayStrings *wordsToCorrect;
-    // fare in modo che si inseriscano i file in ordine corretto (Dizioanario, File da correggere)
 	if (argc < 3){
 		printf("Usage: edit_distance_main <dictionaryFileName> <correctMeFileName>\n");
 		exit(EXIT_FAILURE);										
