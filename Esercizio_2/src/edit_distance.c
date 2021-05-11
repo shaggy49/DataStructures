@@ -104,11 +104,11 @@ int edit_distance_free_memory(ArrayStrings *arrayStrings){
 
 int edit_distance_copy_word_from_to(ArrayStrings * firstArray, unsigned long i, ArrayStrings *secondArray, unsigned long j){
     if(firstArray == NULL || secondArray == NULL){
-        fprintf(stderr, "edit_distance_swap_words: parameter cannot be NULL");
+        fprintf(stderr, "edit_distance_copy_word_from_to: parameter cannot be NULL");
         return -1;
     }
     if(i >= firstArray->size || j >= secondArray->size){
-        fprintf(stderr, "edit_distance_swap_words: Index is out of the array bounds");
+        fprintf(stderr, "edit_distance_copy_word_from_to: Index is out of the array bounds");
         return -1;
     }
     strcpy(firstArray->array[i], secondArray->array[j]);
@@ -117,72 +117,109 @@ int edit_distance_copy_word_from_to(ArrayStrings * firstArray, unsigned long i, 
 
 
 /* ------------------ CALCULATE EDIT_DISTANCE FUNCTIONS ------------------ */
-int edit_distance(char *word1, char *word2){
+int edit_distance(char *word1, char *word2, int *count){
+    (*count)++;
     if(strlen(word1) == 0)
         return (int) strlen(word2);
     if(strlen(word2) == 0)
         return (int) strlen(word1);
     else{
-        int dNop = (word1[0] == word2[0] ? edit_distance(word1+1, word2+1) : INT_MAX);
-        int dIns = 1 + edit_distance(word1+1, word2);
-        int dCanc = 1 + edit_distance(word1, word2+1);
+        int dNop = (word1[0] == word2[0] ? edit_distance(word1+1, word2+1, count) : INT_MAX);
+        int dIns = 1 + edit_distance(word1+1, word2, count);
+        int dCanc = 1 + edit_distance(word1, word2+1, count);
         return MIN( MIN(dCanc,dIns), dNop);
     }
 }
 
 int edit_distance_classic(char *word1, char *word2){
+    int countRecCall = 0, edit=0;
     if((word1 == NULL) || (word2 == NULL)){
         fprintf(stderr, "String parameters cannot be NULL\n");
         return -1;
     }
-    return edit_distance(word1, word2);
+    edit = edit_distance(word1, word2, &countRecCall);
+    /* 
+    * If the macro SHOW_N_REC_CALLS is defined it will be shown more info on recursive memo calls
+    */
+    #ifdef SHOW_N_REC_CALLS
+        printf("Number of recursive calls (classic programming) between %s %s == %d\n", word1, word2, countRecCall);
+    #endif
+    return edit;
 }
 
-int memo(char * word1, char * word2, int **arr){
+int memo(char * word1, char * word2, int **arr, int *count){
+    (*count)++;
     int lenWord1 = (int) strlen(word1);
     int lenWord2 = (int) strlen(word2);
 
+    // caso base quando tocco la prima riga
     if(lenWord1 == 0)
         return lenWord2;
     
+    //caso base quando tocco la prima colonna
     if(lenWord2 == 0)
         return lenWord1;
- 
-    if((arr[lenWord1][lenWord2]) > 0)
-        return arr[lenWord1][lenWord2];
     
-    if(word1[0] == word2[0]){ 
-        arr[lenWord1][lenWord2] = memo(word1 + 1, word2 + 1, arr);
-        return arr[lenWord1][lenWord2];
+    //il valore è già stato calcolato ed evito di muovermi
+    if((arr[lenWord1-1][lenWord2-1]) != -1)
+        return arr[lenWord1-1][lenWord2-1];
+    
+    if(word1[0] == word2[0]){
+        //mi muovo in diagonale
+        arr[lenWord1-1][lenWord2-1] = memo(word1 + 1, word2 + 1, arr, count);
+        return arr[lenWord1-1][lenWord2-1];
     }
     else{
-        int dIns = memo(word1 + 1, word2, arr);
-        int dCanc = memo(word1, word2 + 1, arr);
+        //mi muovo verso l'alto
+        int dIns = memo(word1 + 1, word2, arr, count);
+        //mi muovo verso sinistra
+        int dCanc = memo(word1, word2 + 1, arr, count);
         
-        arr[lenWord1][lenWord2] = 1 + MIN(dIns, dCanc); //non va bene
+        arr[lenWord1-1][lenWord2-1] = 1 + MIN(dIns, dCanc); 
         return 1 + MIN(dIns, dCanc);
     }
 }
-    
+
 int edit_distance_dyn(char *word1, char *word2) {
     if((word1 == NULL) || (word2 == NULL)){
         fprintf(stderr, "String parameters cannot be NULL\n");
         return -1;
     }
     int result;
+    int countRecCall = 0;
     unsigned int lenWord1 = (unsigned) strlen(word1);
     unsigned int lenWord2 = (unsigned) strlen(word2);
 
-    int **arr= (int **) malloc(sizeof(*arr) * (lenWord1 + 1));     //array di puntatori a interi
-    for (unsigned int row = 0; row < lenWord1 + 1; row++){
-        int *values = (int *) malloc(sizeof(int) * (lenWord2 + 1));        //array di puntatori ognuno punta a una zona di memoria 
+    int **arr= (int **) malloc(sizeof(*arr) * (lenWord1));              //array di puntatori a interi
+    for (unsigned int row = 0; row < lenWord1; row++){
+        int *values = (int *) malloc(sizeof(int) * (lenWord2));        //array di puntatori ognuno punta a una zona di memoria 
         arr[row] = values;    
-        for (unsigned int column = 0; column < lenWord2 + 1; column++){
-            arr[row][column] = 0;
+        for (unsigned int column = 0; column < lenWord2; column++){
+            arr[row][column] = -1;
         }
     }
-    result = memo(word1, word2, arr);
-    for (unsigned int row = 0; row < lenWord1 + 1; row++){
+    result = memo(word1, word2, arr, &countRecCall);
+
+    /* 
+    * If the macro PRINT_DYN_MEMO is defined it will be stamp memo array 
+    */
+    #ifdef PRINT_DYN_MEMO
+        for(unsigned int i=0; i < lenWord1; i++){
+            for(unsigned int j=0; j < lenWord2; j++){
+                printf("%d | ", arr[i][j]);
+            }
+            printf("\n");
+        }
+    #endif
+
+    /* 
+    * If the macro SHOW_N_REC_CALLS is defined it will be shown more info on recursive memo calls
+    */
+    #ifdef SHOW_N_REC_CALLS
+        printf("Number of recursive calls (dynamic programming) between %s %s == %d\n", word1, word2, countRecCall);
+    #endif
+    
+    for (unsigned int row = 0; row < lenWord1; row++){
         free(arr[row]);
     }
     free(arr);

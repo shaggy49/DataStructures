@@ -5,10 +5,11 @@
 #include <limits.h>
 #include <unistd.h>
 #include <math.h>
+#include <time.h>
 
 void remove_char(char* s, char c);
 
-#define BUFFER_SIZE 3200
+#define BUFFER_SIZE 1024
 #define REMOVE_PUNTACTION(word)     remove_char((word), ' '); \
                                     remove_char((word), ','); \
                                     remove_char((word), '.'); \
@@ -115,7 +116,9 @@ static void print_array(ArrayStrings *arrayStrings){
 	return;
 }
 
-/* it returns 1 if the word is present in the dictionary, 0 otherwise */
+/* 
+ * It returns 1 if the word is present in the dictionary, 0 otherwise.
+ */
 long binary_search_word(ArrayStrings *dictonaryWords, char *word, long firstPosition, long lastPosition){
     if (firstPosition > lastPosition)
         return 0;
@@ -161,11 +164,15 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
     }
 }
 
-/* It should be invoked with two parameters specifying two data filepaths:
+/* 
+ * It should be invoked with two parameters specifying two data filepaths:
  * the first parameter is the dictonary's filepath to look up for suggestions
  * the second parameter is the txt file's filepath to correct.
  */
+
 int main(int argc, char const *argv[]){
+    clock_t begin, end;
+	double timeSpent;
     ArrayStrings *dictonaryWords;
     ArrayStrings *wordsToCorrect;
 	if (argc < 3){
@@ -177,7 +184,7 @@ int main(int argc, char const *argv[]){
 		exit(EXIT_FAILURE);
     load_array_dictionary(argv[1], dictonaryWords);
     
-    //  printf("Here is your dictonary file:\n\n");
+    //printf("Here is your dictonary file:\n\n");
     //print_array(dictonaryWords);
     
 
@@ -188,9 +195,11 @@ int main(int argc, char const *argv[]){
     
     // printf("\n\nHere is your correctMe file (original):\n\n");
     //print_array(wordsToCorrect);
-
+    begin = clock();
     calculate_edit_distance(wordsToCorrect, dictonaryWords);
-    
+    end = clock();
+    timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("\nTime to correct: %lf\n", timeSpent);
     //printf("\n\nHere is your correctMe file (just modified):\n\n");
     //print_array(wordsToCorrect);
     
@@ -201,3 +210,16 @@ int main(int argc, char const *argv[]){
     
     exit(EXIT_SUCCESS);
 }
+
+
+/*
+int main(int argc, char *argv[]){
+    char *w1 = argv[1];    
+    char *w2 = argv[2];
+
+    printf("EDIT_DYN == %d\n", edit_distance_dyn(w1,w2));
+    printf("EDIT_CLASS == %d\n", edit_distance_classic(w1,w2));
+
+    exit(EXIT_SUCCESS);
+}
+*/

@@ -4,7 +4,7 @@
 #include <time.h>
 #include "array_to_sort.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 512
 
 typedef struct _record {
 	int id_field;

@@ -1,5 +1,5 @@
-CFLAGS 		= -g -O1 -Wall -Wextra -Wpedantic -Wconversion
-COMMON_DEPS 	= src/*.h Makefile
+CFLAGS 		= -g -O1 -Wall -Wextra -Wpedantic -Wconversion #-D SHOW_N_REC_CALLS -D PRINT_DYN_MEMO
+COMMON_DEPS = src/*.h Makefile
 
 all: bin/edit_distance_main
 
