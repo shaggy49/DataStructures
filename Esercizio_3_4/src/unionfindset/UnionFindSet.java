@@ -10,10 +10,10 @@ import java.util.Map;
 
 // A class to represent a union_find set
 public class UnionFindSet<T> {
-	private Map<T, T> parent = new HashMap<T, T>();
+	private Map<T, T> parent = new HashMap<>();
 
 	// stores the depth of trees
-	private Map<T, Integer> rank = new HashMap<T, Integer>();
+	private Map<T, Integer> rank = new HashMap<>();
 
 	// perform MakeSet operation
 	public void makeSet(T element) throws UnionFindSetException {
@@ -61,9 +61,8 @@ public class UnionFindSet<T> {
 			parent.put(element2, element1); 		 // y.p = x
 		else {
 			parent.put(element1, element2); 		// x.p = y
-			if (rank.get(element1) == rank.get(element2)) 	// if (x.rank == y.rank)
+			if ((rank.get(element1)).equals(rank.get(element2))) 	// if (x.rank == y.rank)
 				rank.put(element2, rank.get(element2) + 1); // y.rank = y.rank + 1
 		}
 	}
-
 }

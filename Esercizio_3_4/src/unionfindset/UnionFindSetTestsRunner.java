@@ -12,16 +12,16 @@ public class UnionFindSetTestsRunner {
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(UnionFindSetIntegerTests.class);
         for (Failure failure : result.getFailures()) {
-            System.out.println(failure.toString());
+            System.err.println(failure.toString());
         }
         System.out.println("Integer: " + result.wasSuccessful());
 
         Result resultString = JUnitCore.runClasses(UnionFindSetStringTests.class);
         for (Failure failure : resultString.getFailures()) {
-            System.out.println(failure.toString());
+            System.err.println(failure.toString());
         }
         System.out.println("String: " + resultString.wasSuccessful());
     }
 }
 
-// java -jar UnionFindSetTestsRunner.jar 
+// java -jar UnionFindSetTestsRunner.jar

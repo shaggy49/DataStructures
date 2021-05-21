@@ -10,12 +10,12 @@ public class UnionFindSetIntegerTests {
     private UnionFindSet<Integer> unionFindSet;
 
     @Before
-    public void createUnionFindSet() throws UnionFindSetException {
+    public void createUnionFindSet() {
         i1 = 1;
         i2 = 2;
         i3 = 3;
         i4 = 4;
-        unionFindSet = new UnionFindSet<Integer>();
+        unionFindSet = new UnionFindSet<>();
     }
 
     @Test
@@ -62,19 +62,19 @@ public class UnionFindSetIntegerTests {
             assertEquals("find method: element parameter cannot be null", ex.getMessage());
         }
     }
-    
+
     @Test
     public void testMakeSetAndFindOneEl() throws UnionFindSetException {
         unionFindSet.makeSet(i1);
         assertEquals(i1, unionFindSet.find(i1));
     }
-    
+
     @Test
     public void testMakeSetTwoTimes() throws UnionFindSetException {
         unionFindSet.makeSet(i1);
         unionFindSet.makeSet(i1);
         assertEquals(i1, unionFindSet.find(i1));
-    } 
+    }
 
     @Test
     public void testUnionTwoEl() throws UnionFindSetException {
@@ -91,12 +91,8 @@ public class UnionFindSetIntegerTests {
         unionFindSet.makeSet(i3);
         unionFindSet.makeSet(i4);
         unionFindSet.union(i2, i1);
-        //System.out.println("rappresentante i2 ==> "+unionFindSet.find(i2) + ", rappresentante i1 ==> "+ unionFindSet.find(i1));
         unionFindSet.union(i3, i1);
-        //System.out.println("rappresentante i3 ==> "+unionFindSet.find(i3) + ", rappresentante i1 ==> "+ unionFindSet.find(i1));
         unionFindSet.union(i2, i4);
-        //System.out.println("rappresentante i2 ==> "+unionFindSet.find(i2) + ", rappresentante i4 ==> "+ unionFindSet.find(i4));
-        //arrivato qui avranno tutti e 4 lo stesso rappresentante
         assertEquals(unionFindSet.find(i1), unionFindSet.find(i1));
         assertEquals(unionFindSet.find(i1), unionFindSet.find(i2));
         assertEquals(unionFindSet.find(i1), unionFindSet.find(i3));
