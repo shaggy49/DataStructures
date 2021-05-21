@@ -20,12 +20,20 @@ public class Edge<V, E> {
 		return endNode;
 	}
 
-	public E getedgeWeight() {
+	public E getEdgeWeight() {
 		return edgeWeight;
 	}
 
-	public boolean equals(V otherStartNode, V otherEndNode) {
-		return this.startNode.equals(otherStartNode) && this.endNode.equals(otherEndNode);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Edge other = (Edge) obj;
+		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode()) && this.edgeWeight.equals(other.getEdgeWeight());
 	}
 
 	@Override

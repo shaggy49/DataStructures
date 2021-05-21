@@ -4,23 +4,27 @@ import java.util.*;
 
 public class GraphTest {
 	public static void main(String[] args) {
-		Graph<String, Integer> gr = new Graph<>();
-		List<Edge<String, Integer>> l= new LinkedList<>();
+		Graph<String, String> gr = new Graph<>();
+		List<Edge<String, String>> l= new LinkedList<>();
 		boolean b = false;
 
 		try{
 			/* gr.addUndirectedEdge("A", "B", 30);
 			gr.addUndirectedEdge("B", "A", 30); */
-			gr.addDirectedEdge("A", "C", 20);
-			gr.addDirectedEdge("A", "4", 20);
-			gr.addDirectedEdge("A", "7", 20);
-			gr.addDirectedEdge("C", "A", 30);
-			gr.addDirectedEdge("C", "B", 80);
-			gr.addDirectedEdge("3", "c", 20);
-			b = gr.containsEdge("A", "4", 20);
+			gr.addNode("A");
+			gr.addDirectedEdge("A", "C", "20");
+			gr.addDirectedEdge("A", "E", "20");
+			gr.addDirectedEdge("A", "D", "20");
+			gr.addDirectedEdge("A", "P", "20");
+			System.out.println(gr);
+			b = gr.containsEdge("A", "C", "20");
+			System.out.println(b);
+			gr.removeEdge("A", "E", "20");
+			System.out.println(gr);
 			l = gr.getEdgesFromNode("C");
-			//gr.removeNode("F"); //non sono sicuro pero` di come sia implementatoS
-			
+			System.out.println("Recupero archi e nodi grafo:");
+			gr.graphEdges();
+			gr.graphNodes();
 		}
 		catch(GraphException ex){
 			System.err.println(ex.getMessage());
@@ -29,11 +33,5 @@ public class GraphTest {
 			System.out.println("Diretto");
 		else
 			System.out.println("Indiretto");
-
-		//System.out.println(l);			//se l è vuota --> stampa "[]"
-		//System.out.println(b);
-		//System.out.println(gr);
-		gr.graphNodes();
-		gr.graphEdges();
 	}
 }

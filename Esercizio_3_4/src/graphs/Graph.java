@@ -10,13 +10,13 @@ Aggiunta di un nodo – O(1) 							------FATTO------
 Aggiunta di un arco – O(1)							------FATTO------
 Verifica se il grafo è diretto – O(1)				------FATTO------
 Verifica se il grafo contiene un dato nodo – O(1)	------FATTO------
-Verifica se il grafo contiene un dato arco – O(1)  (*)	
+Verifica se il grafo contiene un dato arco – O(1)  (*) ------FATTO----
 Cancellazione di un nodo – O(n)						------FATTO------
-Cancellazione di un arco – O(1)  (*)
+Cancellazione di un arco – O(1)  (*)				------FATTO------
 Determinazione del numero di nodi – O(1)			------FATTO------
 Determinazione del numero di archi – O(n)			------FATTO------
-Recupero dei nodi del grafo – O(n)
-Recupero degli archi del grafo – O(n)				
+Recupero dei nodi del grafo – O(n)					------FATTO------
+Recupero degli archi del grafo – O(n)				------FATTO------
 Recupero nodi adiacenti di un dato nodo – O(1)  (*)
 Recupero etichetta associata a una coppia di nodi – O(1) (*) */
 
@@ -44,8 +44,8 @@ public class Graph<V, E> {
 		return false;
 	}
 
-	// agiunta di un arco
-	public void addEdges(V node1, V node2, E edgeWeight) throws GraphException {
+	// aggiunta di un arco
+	private void addEdges(V node1, V node2, E edgeWeight) throws GraphException {
 		if (!gr.containsKey(node1))
 			addNode(node1);
 		if (!gr.containsKey(node2))
@@ -56,6 +56,7 @@ public class Graph<V, E> {
 		gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); // inserisco nell'indice node1 una nuova chiave v1
 		nOfEdges++;
 	}
+
 	// aggiunta di un arco in un grafo orientato
 	public void addDirectedEdge(V node1, V node2, E edgeWeight) throws GraphException {
 		if (node1 == null || node2 == null || edgeWeight == null)
@@ -66,6 +67,7 @@ public class Graph<V, E> {
 		// sono allora li creo
 		addEdges(node1, node2, edgeWeight);
 	}
+
 	// aggiunta di un arco in un grapho non orientato
 	public void addUndirectedEdge(V node1, V node2, E edgeWeight) throws GraphException {
 		if (node1 == null || node2 == null || edgeWeight == null)
@@ -90,16 +92,13 @@ public class Graph<V, E> {
 	}
 	
 	// verifica se il grafo contiene un dato arco
-	public boolean containsEdge(V startNode, V endNode, E edgeWeight) throws GraphException {
-		if (startNode == null || endNode == null || edgeWeight == null)
+	public boolean containsEdge(V node1, V node2, E edgeWeight) throws GraphException {
+		if (node1 == null || node2 == null || edgeWeight == null)
 			throw new GraphException("containsEdge: parameter cannot be null");
-		if (!(containsNode(startNode))) // controlla se il nodo e` presente
+		if (!(containsNode(node1))) // controlla se il nodo e` presente
 			return false;
-		Edge<V, E> edge = new Edge<>(startNode, endNode, edgeWeight);
-		System.out.println(" " + gr.hashCode() + ", " + startNode.hashCode() + ", " + endNode.hashCode() + ", " + edgeWeight.hashCode() + ", " + edge.hashCode());
-		System.out.println(gr.get(startNode));
-		return true;
-		//return gr.get(startNode).containsValue(edge);
+		Edge<V, E> ed = new Edge<>(node1, node2, edgeWeight);
+		return gr.get(node1).contains(ed);
 	}
 	
 	// cancellazione di un nodo
@@ -107,13 +106,20 @@ public class Graph<V, E> {
 		if (node == null)
 			throw new GraphException("removeNode: node parameter cannot be null");
 		if (!(containsNode(node)))
-			throw new GraphException("removeNode: node parameter doesn't exist");
+			return false;
 		gr.remove(node);
 		return true;
 	}
 	
 	// cancellazione di un arco
-	// ..........................................
+	public boolean removeEdge(V node1, V node2, E edgeWeight) throws GraphException {
+		if (node1 == null || node2 == null || edgeWeight == null)
+			throw new GraphException("removeEdge: parameter cannot be null");
+		if (!(containsNode(node1))) // controlla se il nodo e` presente
+			return false;
+		Edge<V, E> ed = new Edge<>(node1, node2, edgeWeight);
+		return gr.get(node1).remove(ed);
+	}
 	
 	// determinazione del numero di nodi
 	public long getNumberOfNodes() {
@@ -127,14 +133,14 @@ public class Graph<V, E> {
 		return nOfEdges;
 	}
 
-	// recupero dei nodi del grafo
+	// recupero dei nodi del grafo (siamo sicuri che sono stampe quelle che vogliamo ritornare?)
 	public void graphNodes(){
 		for (V node : gr.keySet()) {
 			System.out.println(node.toString());
 		}
 	}
 
-	// recupero degli archi del grafo
+	// recupero degli archi del grafo (non sarebbe meglio ritornare sia i nodi che gli archi dentro linkedlist?)
 	public void graphEdges(){
 		for (V node : gr.keySet()) {
 			System.out.println(gr.get(node).toString());
@@ -147,7 +153,7 @@ public class Graph<V, E> {
 	// recupero etichetta associata a una coppia di nodi
 	// ...........................................
 
-	// recupero degli archi DI UN NODO del grafo
+	// recupero degli archi	di un nodo del grafo
 	public List<Edge<V, E>> getEdgesFromNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("getEdgesFromNode: node parameter cannot be null");
