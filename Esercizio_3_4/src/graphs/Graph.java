@@ -1,34 +1,40 @@
 // package graphs
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 /* Creazione di un grafo vuoto – O(1)
-Aggiunta di un nodo – O(1) 							------FATTO------
-Aggiunta di un arco – O(1)							------FATTO------
-Verifica se il grafo è diretto – O(1)				------FATTO------
-Verifica se il grafo contiene un dato nodo – O(1)	------FATTO------
-Verifica se il grafo contiene un dato arco – O(1)  (*) ------FATTO----
-Cancellazione di un nodo – O(n)						------FATTO------
-Cancellazione di un arco – O(1)  (*)				------FATTO------
-Determinazione del numero di nodi – O(1)			------FATTO------
-Determinazione del numero di archi – O(n)			------FATTO------
-Recupero dei nodi del grafo – O(n)					------FATTO------
-Recupero degli archi del grafo – O(n)				------FATTO------
-Recupero nodi adiacenti di un dato nodo – O(1)  (*)
-Recupero etichetta associata a una coppia di nodi – O(1) (*) */
+ * Aggiunta di un nodo – O(1) 							------FATTO------
+ * Aggiunta di un arco – O(1)							------FATTO------
+ * Verifica se il grafo è diretto – O(1)				------FATTO------
+ * Verifica se il grafo contiene un dato nodo – O(1)	------FATTO------
+ * Verifica se il grafo contiene un dato arco – O(1)  (*) ------FATTO----
+ * Cancellazione di un nodo – O(n)						------FATTO------ (unico che manca: non va bene per archi non diretti)
+ * Cancellazione di un arco – O(1)  (*)				------FATTO------
+ * Determinazione del numero di nodi – O(1)			------FATTO------
+ * Determinazione del numero di archi – O(n)			------FATTO------
+ * Recupero dei nodi del grafo – O(n)					------FATTO------
+ * Recupero degli archi del grafo – O(n)				------FATTO------
+ * Recupero nodi adiacenti di un dato nodo – O(1)  (*)	-----FATTO-------
+ * Recupero etichetta associata a una coppia di nodi – O(1) (*) ---FATTO-----
+ */
 
 // V (vertex) tipo delle chiavi (nodi, vertici) 
 
 public class Graph<V, E> {
 	private Map<V, List<Edge<V, E>>> gr;
-	private long nOfEdges = 0; // numero di archi, possono essere anche di grafi non orientati
-	private long nOfUndirectedEdges = 0; // numero di archi indiretti
 	private long nOfNodes = 0;
+	private long nOfEdges = 0; 
+	private boolean directed = false;
 
-	public Graph() {
+	public Graph(String answer) {
+		if(answer == "directed" || answer == "Directed"){
+			this.directed = true;
+		}
+		//in ogni altro caso, se non specificato dal cliente il grafo sarà non orientato
 		gr = new HashMap<>();
 	}
 
@@ -44,50 +50,47 @@ public class Graph<V, E> {
 		return false;
 	}
 
-	// aggiunta di un arco
-	private void addEdges(V node1, V node2, E edgeWeight) throws GraphException {
+	// aggiunta di un arco (gestire caso in cui l'arco è già presente)
+	public boolean addEdge(V node1, V node2, E edgeWeight) throws GraphException {
+		if (node1 == null || node2 == null || edgeWeight == null)
+			throw new GraphException("addEdge: parameter cannot be null");
 		if (!gr.containsKey(node1))
 			addNode(node1);
 		if (!gr.containsKey(node2))
 			addNode(node2);
-		/*
-			* node1 (nodo partenza) node2 (nodo arrivo) edgeWeight (etichetta arco)
-			*/
-		gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); // inserisco nell'indice node1 una nuova chiave v1
+		if(containsEdge(node1, node2))
+			return false; //vedere se conviene lanciare un'eccezione (anche se mi sembra un po' too much)
+		if(directed)
+			gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); 
+		else{
+			gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); 
+			gr.get(node2).add(new Edge<>(node2, node1, edgeWeight)); 
+		}
 		nOfEdges++;
+		return true;
 	}
 
-	// aggiunta di un arco in un grafo orientato
-	public void addDirectedEdge(V node1, V node2, E edgeWeight) throws GraphException {
-		if (node1 == null || node2 == null || edgeWeight == null)
-			throw new GraphException("addDirectedEdge: parameter cannot be null");
-		if (!(isDirected()) && nOfUndirectedEdges > 0)
-			throw new GraphException("You can't add a directed edge on an undirected graph!");
-		// controllo che i due nodi siano presenti all' interno del grafo, se non ci
-		// sono allora li creo
-		addEdges(node1, node2, edgeWeight);
+	//metodo che ritorna true se l'arco è già contenuto nel grafo
+	private boolean containsEdge(V node1, V node2) throws GraphException{
+		if (!(containsNode(node1)))
+			return false;
+		List<Edge<V,E>> listNode = gr.get(node1);
+		for(Edge<V,E> ed : listNode){
+			if(node1.equals(ed.getStartNode()) && node2.equals(ed.getEndNode()))
+				return true;
+		}
+		return false;
 	}
 
-	// aggiunta di un arco in un grapho non orientato
-	public void addUndirectedEdge(V node1, V node2, E edgeWeight) throws GraphException {
-		if (node1 == null || node2 == null || edgeWeight == null)
-			throw new GraphException("addUndirectedEdge: parameter cannot be null.");
-		if (isDirected() && nOfEdges > 0)
-			throw new GraphException("You can't add an undirected edge on an directed graph!");
-		addEdges(node1, node2, edgeWeight);
-		addEdges(node1, node2, edgeWeight);
-		nOfUndirectedEdges += 2;
-	}
-	
 	// verifica se il grafo è diretto
 	public boolean isDirected() {
-		return (nOfEdges != nOfUndirectedEdges);
+		return this.directed;
 	}
 	
 	// verifica se il grafo contiene un dato nodo
 	public boolean containsNode(V node) throws GraphException {
 		if (node == null)
-		throw new GraphException("containsNode: node parameter cannot be null");
+			throw new GraphException("containsNode: node parameter cannot be null");
 		return gr.containsKey(node);
 	}
 	
@@ -98,29 +101,63 @@ public class Graph<V, E> {
 		if (!(containsNode(node1))) // controlla se il nodo e` presente
 			return false;
 		Edge<V, E> ed = new Edge<>(node1, node2, edgeWeight);
-		return gr.get(node1).contains(ed);
+		if(directed)
+			return gr.get(node1).contains(ed);
+		else{
+			Edge<V, E> ed1 = new Edge<>(node2, node1, edgeWeight);
+			return gr.get(node1).contains(ed) || gr.get(node2).contains(ed1);
+		}
 	}
 	
+	/* 
+	* Manca gestire il caso il grafo non sia diretto
+	*/
 	// cancellazione di un nodo
 	public boolean removeNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("removeNode: node parameter cannot be null");
 		if (!(containsNode(node)))
 			return false;
+		//elimino prima tutti gli archi del nodo
+		Iterator<Edge<V,E>> edgeIterator = gr.get(node).iterator();
+		if(directed){
+			while( edgeIterator.hasNext()){
+				edgeIterator.next();
+				edgeIterator.remove();
+				nOfEdges--;
+			}
+		}
+/*		TODO: gestire caso degli archi non orientati (rimuovere anche l'inverso)
+ 		else{
+			while( edgeIterator.hasNext()){
+				edgeIterator.next();
+				edgeIterator.remove();
+				nOfEdges--;
+			}
+		}
+ */		//rimuovo poi il nodo effettivo
 		gr.remove(node);
+		nOfNodes--;
 		return true;
-	}
+	}	
 	
-	// cancellazione di un arco
-	public boolean removeEdge(V node1, V node2, E edgeWeight) throws GraphException {
+	//cancellazione di un arco (gestire caso in cui l'arco non sia presente)
+	public void removeEdge(V node1, V node2, E edgeWeight) throws GraphException{
 		if (node1 == null || node2 == null || edgeWeight == null)
 			throw new GraphException("removeEdge: parameter cannot be null");
-		if (!(containsNode(node1))) // controlla se il nodo e` presente
-			return false;
+		if(!containsEdge(node1, node2, edgeWeight))
+			throw new GraphException("removeEdge: edge's not contained in the graph");
 		Edge<V, E> ed = new Edge<>(node1, node2, edgeWeight);
-		return gr.get(node1).remove(ed);
+		if(directed)
+			gr.get(node1).remove(ed);
+		else{
+			Edge<V, E> ed1 = new Edge<>(node2, node1, edgeWeight);
+			gr.get(node1).remove(ed);
+			gr.get(node2).remove(ed1);
+		}
+		nOfEdges--;
 	}
-	
+
 	// determinazione del numero di nodi
 	public long getNumberOfNodes() {
 		return nOfNodes;
@@ -128,30 +165,55 @@ public class Graph<V, E> {
 
 	// determinazione del numero di archi
 	public long getNumberOfEdges() {
-		/* if (!(isDirected()))
-			return nOfUndirectedEdges; */
 		return nOfEdges;
 	}
 
-	// recupero dei nodi del grafo (siamo sicuri che sono stampe quelle che vogliamo ritornare?)
-	public void graphNodes(){
+	// recupero dei nodi del grafo 
+	public List<V> graphNodes(){
+		List<V> listAllNodes = new LinkedList<>();
 		for (V node : gr.keySet()) {
-			System.out.println(node.toString());
+			listAllNodes.add(node);
 		}
+		return listAllNodes;
 	}
 
-	// recupero degli archi del grafo (non sarebbe meglio ritornare sia i nodi che gli archi dentro linkedlist?)
-	public void graphEdges(){
-		for (V node : gr.keySet()) {
-			System.out.println(gr.get(node).toString());
+	// recupero degli archi del grafo 
+	public List<Edge<V,E>> graphEdges(){
+		List<Edge<V,E>> listAllEdges = new LinkedList<>();
+		for (List<Edge<V,E>> listNode : gr.values()) {
+			for(Edge<V,E> edge : listNode){
+				listAllEdges.add(edge);
+			}
 		}
+		return  listAllEdges;
 	}
 
 	// recupero nodi adiacenti di un dato nodo
-	// ...........................................
+	public List<V> getAdiacentsFromNode(V node) throws GraphException {
+		if (node == null)
+			throw new GraphException("getEdgesFromNode: node parameter cannot be null");
+		if (!gr.containsKey(node))
+			throw new GraphException("getEdgesFromNode: node parameter must exist");
+		List<V> listAdiacents = new LinkedList<>();
+		for(Edge<V,E> edge : gr.get(node)){
+			listAdiacents.add(edge.getEndNode());
+		}
+		return listAdiacents;
+	}
 
 	// recupero etichetta associata a una coppia di nodi
-	// ...........................................
+	public E getEdgeWeight(V node1, V node2) throws GraphException{
+		if (node1 == null || node2 == null)
+			throw new GraphException("getEdgesWeight: node parameter cannot be null");
+		if (!(containsNode(node1)) || !(containsNode(node2)))
+			throw new GraphException("gedEdgesWeight: edge is not contained in the graph");
+		List<Edge<V,E>> listNode = gr.get(node1);
+		for(Edge<V,E> ed : listNode){
+			if(node1.equals(ed.getStartNode()) && node2.equals(ed.getEndNode()))
+				return ed.getEdgeWeight();
+		}
+		return null;
+	}
 
 	// recupero degli archi	di un nodo del grafo
 	public List<Edge<V, E>> getEdgesFromNode(V node) throws GraphException {
