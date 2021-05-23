@@ -1,31 +1,56 @@
-// package graphs
+package graphs;
 
-import java.util.*;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 
-public class GraphTest {
+public class GraphTestsRunner {
+    /**
+     * @param args the command line arguments
+     */
+
+    public static void main(String[] args) {
+        Result result = JUnitCore.runClasses(GraphStringTests.class);
+        for (Failure failure : result.getFailures()) {
+            System.err.println(failure.toString());
+        }
+        System.out.println("String: " + result.wasSuccessful());
+
+        /* Result resultInteger = JUnitCore.runClasses(GraphIntegerTests.class);
+        for (Failure failure : resultInteger.getFailures()) {
+            System.err.println(failure.toString());
+        }
+        System.out.println("INteger: " + resultInteger.wasSuccessful()); */
+    }
+}
+
+// java -jar GraphTestsRunner.jar
+
+/*
+public class GraphTests {
 	public static void main(String[] args) {
 		Graph<String, String> gr = new Graph<>("directed");
 		List<Edge<String, String>> l= new LinkedList<>();
 
 		try{
-			/* gr.addUndirectedEdge("A", "B", 30);
-			gr.addUndirectedEdge("B", "A", 30); */
+			//gr.addUndirectedEdge("A", "B", 30);
+			//gr.addUndirectedEdge("B", "A", 30);
 			gr.addNode("A");
 			gr.addEdge("A", "C", "20");
 			gr.addEdge("A", "C", "22");
 			gr.addEdge("A", "E", "20");
 			gr.addEdge("A", "D", "255");
 			gr.addEdge("A", "P", "ciaone");
-			gr.addEdge("X", "Y", "evviva");
+			gr.addEdge("X", "A", "evviva");
 			gr.addEdge("P", "X", "ritorno");
 			System.out.println("Grafo iniziale appena creato:");
 			System.out.println(gr);
 			System.out.println("Il grafo contiene " + gr.getNumberOfNodes() + " nodi e " + gr.getNumberOfEdges() + " archi");
 			System.out.println("Gli adiacenti del nodo A sono:");
 			System.out.println(gr.getAdiacentsFromNode("A"));
-			System.out.println("Il grafo contiene l'arco (A , P : ciaone):");
-			System.out.println(gr.containsEdge("A", "C", "20"));
-			System.out.println("Rimozione dell'arco (A, E : 20):");
+			System.out.println("Il grafo contiene l'arco (A ==> P : ciaone):");
+			System.out.println(gr.containsEdge("A", "P", "ciaone"));
+			System.out.println("Rimozione dell'arco (A ==> E : 20):");
 			gr.removeEdge("A", "E", "20");
 			System.out.println(gr);
 			System.out.println("Rimozione del nodo A:");
@@ -51,3 +76,4 @@ public class GraphTest {
 		}
 	}
 }
+*/

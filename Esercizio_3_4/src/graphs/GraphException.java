@@ -1,4 +1,4 @@
-// package graphs
+package graphs;
 
 public class GraphException extends Exception {
     public GraphException(String message) {

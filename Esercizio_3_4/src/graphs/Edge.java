@@ -1,4 +1,4 @@
-// package graphs
+package graphs;
 
 //V (vertex) tipo delle chiavi (nodi, vertici), E (edge) indica il tipo delle edgeWeight (archi)
 public class Edge<V, E> {
@@ -32,14 +32,15 @@ public class Edge<V, E> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Edge other = (Edge) obj;
+		Edge <V,E> other = (Edge <V,E>) obj;
 		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode()) && this.edgeWeight.equals(other.getEdgeWeight());
 	}
 
+	/* -----------------non utilizzato------------------
 	@Override
 	public int hashCode() {
 		return startNode.hashCode();
-	}
+	} */
 
 	public String toString() {
 		return " (" + startNode + " ==> " + endNode + " : " + edgeWeight + ") ";

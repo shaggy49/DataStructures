@@ -10,11 +10,11 @@ public class UnionFindSetTestsRunner {
      */
 
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(UnionFindSetIntegerTests.class);
-        for (Failure failure : result.getFailures()) {
+        Result resultInteger = JUnitCore.runClasses(UnionFindSetIntegerTests.class);
+        for (Failure failure : resultInteger.getFailures()) {
             System.err.println(failure.toString());
         }
-        System.out.println("Integer: " + result.wasSuccessful());
+        System.out.println("Integer: " + resultInteger.wasSuccessful());
 
         Result resultString = JUnitCore.runClasses(UnionFindSetStringTests.class);
         for (Failure failure : resultString.getFailures()) {
