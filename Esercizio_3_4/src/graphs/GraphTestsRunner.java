@@ -10,17 +10,17 @@ public class GraphTestsRunner {
      */
 
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(GraphStringTests.class);
+        Result result = JUnitCore.runClasses(GraphDirectedStringTests.class);
         for (Failure failure : result.getFailures()) {
             System.err.println(failure.toString());
         }
-        System.out.println("String: " + result.wasSuccessful());
+        System.out.println("Directed Graph (String nodes, String Edges): " + result.wasSuccessful());
 
-        Result resultInteger = JUnitCore.runClasses(GraphIntegerTests.class);
+        Result resultInteger = JUnitCore.runClasses(GraphUndirectedIntegerTests.class);
         for (Failure failure : resultInteger.getFailures()) {
             System.err.println(failure.toString());
         }
-        System.out.println("Integer: " + resultInteger.wasSuccessful());
+        System.out.println("Undirected Graph (Integer nodes, Double Edges): " + resultInteger.wasSuccessful());
     }
 }
 

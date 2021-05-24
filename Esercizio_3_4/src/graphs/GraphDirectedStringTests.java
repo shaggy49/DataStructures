@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
-public class GraphStringTests {
+public class GraphDirectedStringTests {
 	
 	Graph<String, String> gr;
 	String node1, node2, node3, node4;
