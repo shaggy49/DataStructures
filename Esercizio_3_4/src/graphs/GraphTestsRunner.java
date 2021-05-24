@@ -16,11 +16,11 @@ public class GraphTestsRunner {
         }
         System.out.println("String: " + result.wasSuccessful());
 
-        /* Result resultInteger = JUnitCore.runClasses(GraphIntegerTests.class);
+        Result resultInteger = JUnitCore.runClasses(GraphIntegerTests.class);
         for (Failure failure : resultInteger.getFailures()) {
             System.err.println(failure.toString());
         }
-        System.out.println("INteger: " + resultInteger.wasSuccessful()); */
+        System.out.println("Integer: " + resultInteger.wasSuccessful());
     }
 }
 

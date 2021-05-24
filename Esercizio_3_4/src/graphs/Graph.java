@@ -192,9 +192,11 @@ public class Graph<V, E> {
 		List<V> listAdiacents = new LinkedList<>();
 		for (List<Edge<V,E>> listNode : gr.values()) {
 			for(Edge<V,E> edge : listNode){
+				if ((edge.getStartNode()).equals(node) && (edge.getEndNode()).equals(node))
+					continue;
 				if ((edge.getStartNode()).equals(node))
 					listAdiacents.add(edge.getEndNode());
-				else if ((edge.getEndNode()).equals(node))
+				if ((directed) && ((edge.getEndNode()).equals(node)))
 					listAdiacents.add(edge.getStartNode());
 			}
 		}
