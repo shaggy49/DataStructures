@@ -62,7 +62,7 @@ public class GraphUndirectedIntegerTests {
 	@Test
 	public void testAddEdgeAndContainsEdgeOneEdge() throws GraphException {
 		gr.addEdge(node1, node2, 15.55);
-		assertTrue(gr.containsEdge(node1, node2, 15.55));
+		assertTrue(gr.containsEdge(node1, node2));
 	}
 
 	@Test
@@ -104,8 +104,8 @@ public class GraphUndirectedIntegerTests {
 
 	@Test
 	public void testRemoveEdgeNoAdd() throws GraphException {
-		assertFalse(gr.removeEdge(node1, node2, 5.55));
-		assertFalse(gr.removeEdge(node2, node3, 20.22));
+		assertFalse(gr.removeEdge(node1, node2));
+		assertFalse(gr.removeEdge(node2, node3));
 	}
 
 	@Test
@@ -114,12 +114,12 @@ public class GraphUndirectedIntegerTests {
 		gr.addEdge(node2, node1, 9.99);
 		gr.addEdge(node3, node4, 8.41);
 		gr.addEdge(node4, node2, 11.11);
-		assertTrue(gr.removeEdge(node1, node2, 55.55));
-		assertFalse(gr.removeEdge(node2, node1, 60.22));
-		assertTrue(gr.removeEdge(node3, node4, 8.41));
-		assertFalse(gr.removeEdge(node4, node1, 55.55));
-		assertTrue(gr.removeEdge(node4, node2, 11.11));
-		assertFalse(gr.removeEdge(node4, node2, 50.21));
+		assertTrue(gr.removeEdge(node1, node2));
+		assertFalse(gr.removeEdge(node2, node1));
+		assertTrue(gr.removeEdge(node3, node4));
+		assertFalse(gr.removeEdge(node4, node1));
+		assertTrue(gr.removeEdge(node4, node2));
+		assertFalse(gr.removeEdge(node4, node2));
 	}
 
 	@Test
@@ -155,10 +155,10 @@ public class GraphUndirectedIntegerTests {
 		assertEquals(3 , gr.getNumberOfEdges());
 		gr.addEdge(node4, node3, 54.25);
 		assertEquals(4 , gr.getNumberOfEdges());
-		gr.removeEdge(node1, node2, 22.22);
-		gr.removeEdge(node2, node3, 87.23);
-		gr.removeEdge(node1, node4, 98.54);
-		gr.removeEdge(node4, node3, 54.25);
+		gr.removeEdge(node1, node2);
+		gr.removeEdge(node2, node3);
+		gr.removeEdge(node1, node4);
+		gr.removeEdge(node4, node3);
 		assertEquals(0 , gr.getNumberOfEdges());
 	}
 
@@ -180,22 +180,22 @@ public class GraphUndirectedIntegerTests {
 	@Test
 	public void testGraphEdgesAndAddManyNodes() throws GraphException {
 		List<Edge<Integer, Double>> graphEdges = new LinkedList<>();
+		Edge<Integer,Double> edge1 = new Edge<>(node1, node2, 1.12);
+		Edge<Integer,Double> edge2 = new Edge<>(node2, node4, 2.23);
+		Edge<Integer,Double> edge3 = new Edge<>(node2, node3, 3.34);
+		Edge<Integer,Double> edge4 = new Edge<>(node4, node4, 4.45);
 		assertEquals(graphEdges, gr.graphNodes());
 		gr.addEdge(node1, node2, 1.12);
 		gr.addEdge(node2, node4, 2.23);
+		gr.addEdge(node3, node2, 3.34);
 		gr.addEdge(node4, node4, 4.45);
-		Edge<Integer,Double> edge1 = new Edge<>(node1, node2, 1.12);
-		Edge<Integer,Double> edge2 = new Edge<>(node2, node1, 1.12);
-		Edge<Integer,Double> edge3 = new Edge<>(node2, node4, 2.23);
-		Edge<Integer,Double> edge4 = new Edge<>(node4, node2, 2.23);
-		Edge<Integer,Double> edge5 = new Edge<>(node4, node4, 4.45);
+		//aggiungiamo gli archi (aggiunti al grafo) in una lista di archi
 		graphEdges.add(edge1);
 		graphEdges.add(edge2);
 		graphEdges.add(edge3);
 		graphEdges.add(edge4);
-		graphEdges.add(edge5);
-		graphEdges.add(edge5);
 		assertEquals(graphEdges, gr.graphEdges());
+		assertEquals(4, gr.getNumberOfEdges());
 	}
 
 	@Test
@@ -207,21 +207,23 @@ public class GraphUndirectedIntegerTests {
 		}
 	}
 
-	//---------------------------------funziona ma da rivedere se è sensato così------------------------------
 	@Test
 	public void testGetAdiacentsFromNodeAndAddManyNodes() throws GraphException {
 		List<Integer> graphNodes = new LinkedList<>();
 		List<Integer> graphNodes2 = new LinkedList<>();
 		gr.addNode(node1);
 		assertEquals(graphNodes, gr.getAdiacentsFromNode(node1));
-		gr.addEdge(node1, node2, 1.11);
+		gr.addEdge(node1, node2, 1.22);
 		gr.addEdge(node2, node2, 2.22);
-		gr.addEdge(node3, node2, 3.33);
+		gr.addEdge(node3, node2, 3.22);
 		gr.addEdge(node4, node4, 4.44);
-		graphNodes.add(node1);
-		graphNodes.add(node3);
-		assertEquals(graphNodes, gr.getAdiacentsFromNode(node2));
-		assertEquals(graphNodes2, gr.getAdiacentsFromNode(node4));
+		graphNodes.add(node2);
+		graphNodes2.add(node1);
+		graphNodes2.add(node2);
+		graphNodes2.add(node3);
+		assertEquals(graphNodes, gr.getAdiacentsFromNode(node1));
+		assertEquals(graphNodes2, gr.getAdiacentsFromNode(node2));
+		assertEquals(graphNodes, gr.getAdiacentsFromNode(node3));
 	}
 	
 	@Test
@@ -229,7 +231,7 @@ public class GraphUndirectedIntegerTests {
 		try {
 			gr.getEdgeWeight(node1, node2);
 		} catch (GraphException ex) {
-			assertEquals("gedEdgesWeight: node parameter must exist", ex.getMessage());
+			assertEquals("getEdgesWeight: node parameter must exist", ex.getMessage());
 		}
 	}
 
@@ -254,5 +256,34 @@ public class GraphUndirectedIntegerTests {
 		assertEquals(edge1.getEdgeWeight(), gr.getEdgeWeight(node1, node2));
 		assertEquals(edge2.getEdgeWeight(), gr.getEdgeWeight(node3, node2));
 		assertEquals(edge3.getEdgeWeight(), gr.getEdgeWeight(node4, node4));
+	}
+
+	@Test
+	public void testComplete() throws GraphException {
+		List<Integer> listNodeRemain = new LinkedList<>();
+		gr.addEdge(node1, node2, 1.22);
+		gr.addEdge(node4, node1, 4.11);
+		gr.addEdge(node2, node4, 2.44);
+		gr.addEdge(node1, node3, 1.33);
+		gr.addEdge(node2, node3, 2.33);
+		gr.removeNode(node4);
+		listNodeRemain.add(node1);
+		listNodeRemain.add(node2);
+		listNodeRemain.add(node3);
+		assertEquals(3, gr.getNumberOfNodes());
+		assertEquals(3, gr.getNumberOfEdges());
+		assertEquals(listNodeRemain, gr.graphNodes());
+		assertTrue(gr.removeNode(node1));
+		assertEquals(2, gr.getNumberOfNodes());
+		assertFalse(gr.removeNode(node1));
+		assertEquals(2, gr.getNumberOfNodes());
+		gr.removeNode(node2);
+		assertEquals(0, gr.getNumberOfEdges());
+		listNodeRemain.remove(node1);
+		listNodeRemain.remove(node2);
+		assertEquals(listNodeRemain, gr.graphNodes());
+		assertEquals(1, gr.getNumberOfNodes());
+		assertTrue(gr.removeNode(node3));
+		assertFalse(gr.removeNode(node4));
 	}
 }

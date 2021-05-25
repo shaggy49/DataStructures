@@ -33,16 +33,10 @@ public class Edge<V, E> {
 		if (getClass() != obj.getClass())
 			return false;
 		Edge <V,E> other = (Edge <V,E>) obj;
-		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode()) && this.edgeWeight.equals(other.getEdgeWeight());
+		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode());
 	}
 
-	/* -----------------non utilizzato------------------
-	@Override
-	public int hashCode() {
-		return startNode.hashCode();
-	} */
-
 	public String toString() {
-		return " (" + startNode + " ==> " + endNode + " : " + edgeWeight + ") ";
+		return " (" + startNode + " === " + endNode + " : " + edgeWeight + ")";
 	}
 }
