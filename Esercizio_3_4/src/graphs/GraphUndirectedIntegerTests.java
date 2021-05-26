@@ -2,6 +2,7 @@ package graphs;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.assertTrue;
@@ -285,5 +286,25 @@ public class GraphUndirectedIntegerTests {
 		assertEquals(1, gr.getNumberOfNodes());
 		assertTrue(gr.removeNode(node3));
 		assertFalse(gr.removeNode(node4));
+	}
+
+	@Test
+	public void testSort() throws GraphException {
+		List<Edge<Integer,Double>> listNodeSorted = new LinkedList<>();
+		Edge<Integer,Double> edge1 = new Edge<>(node3, node4, 5.22);
+		Edge<Integer,Double> edge2 = new Edge<>(node2, node3, 3.22);
+		Edge<Integer,Double> edge3 = new Edge<>(node1, node2, 9.22);
+		Edge<Integer,Double> edge4 = new Edge<>(node4, node4, 4.44);
+		gr.addEdge(node3, node4, 5.22);
+		gr.addEdge(node3, node2, 3.22);
+		gr.addEdge(node1, node2, 9.22);
+		gr.addEdge(node4, node4, 4.44);
+		listNodeSorted.add(edge2);
+		listNodeSorted.add(edge4);
+		listNodeSorted.add(edge1);
+		listNodeSorted.add(edge3);
+		List<Edge<Integer, Double>> listToSort = gr.graphEdges();
+        Collections.sort(listToSort); //   ordina gli archi in una sequenza S di pesi crescenti;
+		assertEquals(listNodeSorted, listToSort);
 	}
 }

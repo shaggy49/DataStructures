@@ -16,7 +16,8 @@
 		<delete dir="classes" />
 	</target>
 
-	<target depends="init" name="compileUnion">
+	<!-- <target depends="init" name="compileUnion"> -->
+	<target depends="init, clean" name="compileUnion">
 		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}" srcdir="${unionFindSrc.dir}">
 			<classpath>
@@ -26,12 +27,13 @@
 		</javac>
 	</target>
 	
-	<target depends="init" name="compileGraph">
+	<target depends="init, compileUnion" name="compileGraph">
 		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}" srcdir="${graphsSrc.dir}">
 			<classpath>
 				<pathelement location="${junit}" />
 				<pathelement location="${hamcrest-core}" />
+				<pathelement location="${unionFindSrc.dir}" />
 			</classpath>
 		</javac>
 	</target>
@@ -50,10 +52,7 @@
 	<target depends="compileGraph" name="jarGraph">
 		<mkdir dir="build" />
 		<jar destfile="build/Graph.jar" basedir="classes">
-			<!-- <manifest>
-				<attribute name="Main-Class" value="graph/Kruskal" />
-				<attribute name="Class-Path" value="${classpath}" />
-			</manifest> -->
+		
 		</jar>
 	</target>
 

@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Iterator;
 
 /* 
  * Creazione di un grafo vuoto – O(1)
@@ -25,7 +24,7 @@ import java.util.Iterator;
 
 // V (vertex) tipo delle chiavi (nodi, vertici) 
 
-public class Graph<V, E> {
+public class Graph<V, E extends Comparable<E>> {
 	private Map<V, List<Edge<V, E>>> gr;
 	private long nOfNodes = 0;
 	private long nOfEdges = 0; 
