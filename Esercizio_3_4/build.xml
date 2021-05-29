@@ -16,7 +16,6 @@
 		<delete dir="classes" />
 	</target>
 
-	<!-- <target depends="init" name="compileUnion"> -->
 	<target depends="init, clean" name="compileUnion">
 		<mkdir dir="${classes.dir}" />
 		<javac destdir="${classes.dir}" srcdir="${unionFindSrc.dir}">
@@ -52,7 +51,10 @@
 	<target depends="compileGraph" name="jarGraph">
 		<mkdir dir="build" />
 		<jar destfile="build/Graph.jar" basedir="classes">
-		
+			<!-- <manifest>
+				<attribute name="Main-Class" value="graph/KruskalAlgorithmTestsRunner" />
+				<attribute name="Class-Path" value="${classpath}" />
+			</manifest> -->
 		</jar>
 	</target>
 
@@ -78,9 +80,33 @@
 		</jar>
 	</target>
 
+	<target depends="compile" name="junitKruskal">
+		<mkdir dir="build" />
+		<jar destfile="build/KruskalAlgorithmTestsRunner.jar" basedir="classes">
+			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
+			<manifest>
+				<attribute name="Main-Class" value="graphs/KruskalAlgorithmTestsRunner" />
+				<attribute name="Class-Path" value="${classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target depends="compile" name="Main">
+		<mkdir dir="build" />
+		<jar destfile="build/GraphKruskalMain.jar" basedir="classes">
+			<zipgroupfileset dir="lib" includes="*.jar" excludes="" />
+			<manifest>
+				<attribute name="Main-Class" value="graphs/GraphKruskalMain" />
+				<attribute name="Class-Path" value="${classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
 	<target depends="jarUnion,junitUnion" name="allUnion" />
 	<target depends="jarGraph,junitGraph" name="allGraph" />
-	<target depends="allUnion,allGraph" name="all" />
+	<target depends="jarUnion,jarGraph,junitKruskal" name="allKruskal" />
+	<target depends="jarUnion,jarGraph,Main" name="allMain" />
+	<target depends="allUnion,allGraph,allKruskal, allMain" name="all" />
 
 </project>
 

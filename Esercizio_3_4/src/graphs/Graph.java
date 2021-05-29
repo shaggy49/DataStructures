@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * Cancellazione di un nodo – O(n)						------FATTO------
  * Cancellazione di un arco – O(1)  (*)					------FATTO------
  * Determinazione del numero di nodi – O(1)				------FATTO------
- * Determinazione del numero di archi – O(n)			------FATTO------ (va bene in O(1) ? )
+ * Determinazione del numero di archi – O(n)			------FATTO------
  * Recupero dei nodi del grafo – O(n)					------FATTO------
  * Recupero degli archi del grafo – O(n)				------FATTO------ (\\\\\\)
  * Recupero nodi adiacenti di un dato nodo – O(1)  (*)	-----FATTO-------
@@ -27,14 +27,15 @@ import java.util.LinkedList;
 public class Graph<V, E extends Comparable<E>> {
 	private Map<V, List<Edge<V, E>>> gr;
 	private long nOfNodes = 0;
-	private long nOfEdges = 0; 
+	private long nOfEdges = 0;
 	private boolean directed = false;
+	private List<Edge<V, E>> listAllEdges = new LinkedList<>();
 
 	// creazione di un grafo vuoto - O(1)
 	public Graph(String answer) {
-		if(answer.equalsIgnoreCase("directed"))
+		if (answer.equalsIgnoreCase("directed"))
 			this.directed = true;
-		//in ogni altro caso, se non specificato dal cliente il grafo sarà non orientato
+		// in ogni altro caso, se non specificato dal cliente il grafo sarà non orientato
 		gr = new HashMap<>();
 	}
 
@@ -58,14 +59,16 @@ public class Graph<V, E extends Comparable<E>> {
 			addNode(node1);
 		if (!(containsNode(node2)))
 			addNode(node2);
-		if(containsEdge(node1, node2))
-			return false; //vedere se conviene lanciare un'eccezione (anche se mi sembra un po' too much) ---> secondo me va bene così, l'eccezione è un po' too much concordo
-		if(directed)
-			gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); 
-		else{
-			gr.get(node1).add(new Edge<>(node1, node2, edgeWeight)); 
-			gr.get(node2).add(new Edge<>(node2, node1, edgeWeight)); 
+		if (containsEdge(node1, node2))
+			return false;
+		
+		Edge<V, E> ed1 = new Edge<>(node1, node2, edgeWeight);
+		gr.get(node1).add(ed1);
+		if (!(directed)){
+			Edge<V, E> ed2 = new Edge<>(node2, node1, edgeWeight);
+			gr.get(node2).add(ed2);
 		}
+		listAllEdges.add(ed1);
 		nOfEdges++;
 		return true;
 	}
@@ -74,14 +77,14 @@ public class Graph<V, E extends Comparable<E>> {
 	public boolean isDirected() {
 		return this.directed;
 	}
-	
+
 	// verifica se il grafo contiene un dato nodo - O(1)
 	public boolean containsNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("containsNode: node parameter cannot be null");
 		return gr.containsKey(node);
 	}
-	
+
 	// verifica se il grafo contiene un dato arco - O(1) (*)
 	public boolean containsEdge(V node1, V node2) throws GraphException {
 		if (node1 == null || node2 == null)
@@ -89,55 +92,59 @@ public class Graph<V, E extends Comparable<E>> {
 		if (!(containsNode(node1))) // controlla se il nodo e` presente
 			return false;
 		Edge<V, E> ed1 = new Edge<>(node1, node2, null);
-		if(directed)
+		if (directed)
 			return gr.get(node1).contains(ed1);
-		else{
+		else {
 			Edge<V, E> ed2 = new Edge<>(node2, node1, null);
 			return gr.get(node1).contains(ed1) && gr.get(node2).contains(ed2);
 		}
 	}
-	
+
 	// cancellazione di un nodo - O(n)
 	public boolean removeNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("removeNode: node parameter cannot be null");
 		if (!(containsNode(node)))
 			return false;
-
-		//elimino tutti gli archi del nodo
-		List<V> listAdiacents = getAdiacentsFromNode(node);
-		for (V nodeAd : listAdiacents)
-			removeEdge(node, nodeAd);
-		/* se il grafo NON è diretto potrebbero esserci altri archi che hanno "node" come nodo finale.
-		   Quindi elimino qualsiasi arco contenga questo nodo come ultimo nodo*/
-		if (directed){
-			//si potrebbe anche sfuttare il metodo graphEdges e scorrere quello piuttosto che tutti i nodi
-			for (List<Edge<V,E>> listNode : gr.values()) {
-				for(Edge<V,E> edge : listNode){
-					if ((edge.getEndNode()).equals(node))
-						removeEdge(edge.getStartNode(), edge.getEndNode());
-				}
+		
+		/*
+		* se il grafo è diretto potrebbero esserci archi che hanno "node" come
+		* nodo finale. Quindi elimino qualsiasi arco contenga questo nodo come
+		* ultimo nodo.
+		*/
+		if (directed) {
+			for(Edge<V,E> edge : listAllEdges){
+				if ((edge.getStartNode()).equals(node))
+					removeEdge(node, edge.getEndNode());
+				if ((edge.getEndNode()).equals(node))
+					removeEdge(edge.getStartNode(), node);
 			}
-		}	
-		//rimuovo poi il nodo effettivo
+		}
+		else {
+			// elimino tutti gli archi del nodo --> dovrebbe essere più veloce di quello sopra nell'ipotesi in cui non ci siano tanti nodi sconnessi tra loro
+			List<V> listAdiacents = getAdiacentsFromNode(node);
+			for (V nodeAd : listAdiacents)
+				removeEdge(node, nodeAd);
+		}
+		// rimuovo poi il nodo effettivo
 		gr.remove(node);
 		nOfNodes--;
 		return true;
 	}
-	
+
 	// cancellazione di un arco - O(1) (*)
-	public boolean removeEdge(V node1, V node2) throws GraphException{
+	public boolean removeEdge(V node1, V node2) throws GraphException {
 		if (node1 == null || node2 == null)
 			throw new GraphException("removeEdge: parameter cannot be null");
-		if(!(containsEdge(node1, node2)))
-			//throw new GraphException("removeEdge: edge's not contained in the graph");
+		if (!(containsEdge(node1, node2)))
 			return false;
 		Edge<V, E> edge = new Edge<>(node1, node2, null);
 		gr.get(node1).remove(edge);
-		if (!(directed)){
+		if (!(directed)) {
 			Edge<V, E> ed1 = new Edge<>(node2, node1, null);
 			gr.get(node2).remove(ed1);
 		}
+		listAllEdges.remove(edge);
 		nOfEdges--;
 		return true;
 	}
@@ -153,7 +160,7 @@ public class Graph<V, E extends Comparable<E>> {
 	}
 
 	// recupero dei nodi del grafo - O(n)
-	public List<V> graphNodes(){
+	public List<V> graphNodes() {
 		List<V> listAllNodes = new LinkedList<>();
 		for (V node : gr.keySet()) {
 			listAllNodes.add(node);
@@ -161,59 +168,49 @@ public class Graph<V, E extends Comparable<E>> {
 		return listAllNodes;
 	}
 
-	// recupero degli archi del grafo - O(n) //da gestire casi dei grafi non orientati
-	public List<Edge<V,E>> graphEdges() throws GraphException{
-		List<Edge<V,E>> listAllEdges = new LinkedList<>();
-		for (List<Edge<V,E>> listNode : gr.values()) {
-			for(Edge<V,E> edge : listNode){
-				if (!(directed)){
-					Edge<V,E> edge2 = new Edge<> (edge.getEndNode(), edge.getStartNode(), null);
-					if(listAllEdges.contains(edge2))
-						continue;
-				}
-				listAllEdges.add(edge);
-			}
-		}
+	// recupero degli archi del grafo - O(n)
+	public List<Edge<V, E>> graphEdges() throws GraphException {
 		return listAllEdges;
 	}
-	
 
-	// recupero nodi adiacenti di un dato nodo - O(1) (*)
+	// recupero nodi adiacenti di un dato nodo - O(1) (*) -------> motivazione: se il grafo è sparso si avranno pochi archi associati a un nodo --> il for a riga 196 può considerarsi con tempo costante
 	public List<V> getAdiacentsFromNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("getAdiacentsFromNode: node parameter cannot be null");
 		if (!(containsNode(node)))
 			throw new GraphException("getAdiacentsFromNode: node parameter must exist");
 		List<V> listAdiacents = new LinkedList<>();
-		for(Edge<V,E> edge : gr.get(node)){
-			if(!(listAdiacents.contains(edge.getEndNode())))
+		for (Edge<V, E> edge : gr.get(node)) {
+			if (!(listAdiacents.contains(edge.getEndNode())))
 				listAdiacents.add(edge.getEndNode());
 		}
 		return listAdiacents;
 	}
 
-	// recupero etichetta associata a una coppia di nodi - O(1) (*)
-	public E getEdgeWeight(V node1, V node2) throws GraphException{
+	// recupero etichetta associata a una coppia di nodi - O(1) (*) -------> vedi sopra
+	public E getEdgeWeight(V node1, V node2) throws GraphException {
 		if (node1 == null || node2 == null)
 			throw new GraphException("getEdgesWeight: node parameter cannot be null");
 		if (!(containsNode(node1)) || !(containsNode(node2)))
 			throw new GraphException("getEdgesWeight: node parameter must exist");
-		for(Edge<V,E> edge : gr.get(node1)){
-			if(node2.equals(edge.getEndNode()))
+		for (Edge<V, E> edge : gr.get(node1)) {
+			if (node2.equals(edge.getEndNode()))
 				return edge.getEdgeWeight();
-		}
+		} 
 		return null;
 	}
 
-	// recupero degli archi	di un nodo del grafo
-	public List<Edge<V, E>> getEdgesFromNode(V node) throws GraphException {
-		if (node == null)
-			throw new GraphException("getEdgesFromNode: node parameter cannot be null");
-		if (!(containsNode(node)))
-			throw new GraphException("getEdgesFromNode: node parameter must exist");
-		return gr.get(node);
-	}
-	
+	/*
+	 * // recupero degli archi di un nodo del grafo
+	 * public List<Edge<V, E>> getEdgesFromNode(V node) throws GraphException { 
+	 * 		if (node == null)
+	 * 			throw new GraphException("getEdgesFromNode: node parameter cannot be null");
+	 * 		if (!(containsNode(node)))
+	 * 			throw new GraphException("getEdgesFromNode: node parameter must exist");
+	 * 		return gr.get(node);
+	 * }
+	 */
+
 	public String toString() {
 		String data = "";
 		for (V node : gr.keySet()) {

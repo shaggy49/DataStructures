@@ -183,7 +183,7 @@ public class GraphUndirectedIntegerTests {
 		List<Edge<Integer, Double>> graphEdges = new LinkedList<>();
 		Edge<Integer,Double> edge1 = new Edge<>(node1, node2, 1.12);
 		Edge<Integer,Double> edge2 = new Edge<>(node2, node4, 2.23);
-		Edge<Integer,Double> edge3 = new Edge<>(node2, node3, 3.34);
+		Edge<Integer,Double> edge3 = new Edge<>(node3, node2, 3.34);
 		Edge<Integer,Double> edge4 = new Edge<>(node4, node4, 4.45);
 		assertEquals(graphEdges, gr.graphNodes());
 		gr.addEdge(node1, node2, 1.12);
@@ -292,7 +292,7 @@ public class GraphUndirectedIntegerTests {
 	public void testSort() throws GraphException {
 		List<Edge<Integer,Double>> listNodeSorted = new LinkedList<>();
 		Edge<Integer,Double> edge1 = new Edge<>(node3, node4, 5.22);
-		Edge<Integer,Double> edge2 = new Edge<>(node2, node3, 3.22);
+		Edge<Integer,Double> edge2 = new Edge<>(node3, node2, 3.22);
 		Edge<Integer,Double> edge3 = new Edge<>(node1, node2, 9.22);
 		Edge<Integer,Double> edge4 = new Edge<>(node4, node4, 4.44);
 		gr.addEdge(node3, node4, 5.22);

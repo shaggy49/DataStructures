@@ -4,8 +4,7 @@ import java.util.*;
 
 //V (vertex) tipo delle chiavi (nodi, vertici), E (edge) indica il tipo delle edgeWeight (archi)
 
-public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V,E>> {
-//public class Edge<V, E> {
+public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> {
 	private V startNode;
 	private V endNode;
 	private E edgeWeight;
@@ -30,19 +29,28 @@ public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V,E>> {
 
 	@Override
 	public boolean equals(Object obj) {
-		//return this.startNode.equals(edge2.getStartNode()) && this.endNode.equals(edge2.getEndNode());
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Edge <V,E> other = (Edge <V,E>) obj;
+		Edge<V, E> other = (Edge<V, E>) obj;
 		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode());
 	}
- 
+
+	/*
+	 * This class overrides equals(Object) method so it's necessaty to override the
+	 * hashCode() method because the general contract for the hashCode() method, which
+	 * states that equal objects must have equal hash codes.
+	 */
 	@Override
-	public int compareTo(Edge<V,E> edge) {
+	public int hashCode() {
+		return startNode.hashCode();
+	}
+
+	@Override
+	public int compareTo(Edge<V, E> edge) {
 		return (this.getEdgeWeight()).compareTo(edge.getEdgeWeight());
 	}
 
