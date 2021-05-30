@@ -147,7 +147,14 @@ public class GraphDirectedStringTests {
 		gr.removeEdge(node2, node3);
 		gr.removeEdge(node1, node4);
 		gr.removeEdge(node4, node3);
-		assertEquals(0 , gr.getNumberOfEdges());
+		assertEquals(0 , gr.getNumberOfEdges());		
+		gr.addEdge(node1, node2, "weight1");
+		gr.addEdge(node1, node3, "weight4");
+		gr.addEdge(node4, node1, "weight2");
+		gr.addEdge(node2, node4, "weight3");
+		gr.addEdge(node2, node3, "weight5");
+		assertTrue(gr.removeNode(node1));
+		assertTrue(gr.removeNode(node2));
 	}
 	
 	@Test
@@ -182,6 +189,10 @@ public class GraphDirectedStringTests {
 		graphEdges.add(edge3);
 		graphEdges.add(edge4);
 		assertEquals(graphEdges, gr.graphEdges());
+		gr.removeEdge(node1, node2);
+		graphEdges.remove(edge1);
+		assertEquals(graphEdges, gr.graphEdges());
+		assertEquals(3, gr.getNumberOfEdges());
 	}
 	
 	@Test
@@ -251,7 +262,8 @@ public class GraphDirectedStringTests {
 		gr.addEdge(node2, node4, "weight3");
 		gr.addEdge(node1, node3, "weight4");
 		gr.addEdge(node2, node3, "weight5");
-		gr.removeNode(node4);
+		gr.addEdge(node4, node4, "weight6");
+		assertTrue(gr.removeNode(node4));
 		listNodeRemain.add(node1);
 		listNodeRemain.add(node2);
 		listNodeRemain.add(node3);
@@ -262,7 +274,7 @@ public class GraphDirectedStringTests {
 		assertEquals(2, gr.getNumberOfNodes());
 		assertFalse(gr.removeNode(node1));
 		assertEquals(2, gr.getNumberOfNodes());
-		gr.removeNode(node2);
+		assertTrue(gr.removeNode(node2));
 		assertEquals(0, gr.getNumberOfEdges());
 		listNodeRemain.remove(node1);
 		listNodeRemain.remove(node2);

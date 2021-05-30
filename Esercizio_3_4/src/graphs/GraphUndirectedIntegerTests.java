@@ -267,7 +267,8 @@ public class GraphUndirectedIntegerTests {
 		gr.addEdge(node2, node4, 2.44);
 		gr.addEdge(node1, node3, 1.33);
 		gr.addEdge(node2, node3, 2.33);
-		gr.removeNode(node4);
+		gr.addEdge(node4, node4, 2.33);
+		assertTrue(gr.removeNode(node4));
 		listNodeRemain.add(node1);
 		listNodeRemain.add(node2);
 		listNodeRemain.add(node3);
@@ -278,7 +279,7 @@ public class GraphUndirectedIntegerTests {
 		assertEquals(2, gr.getNumberOfNodes());
 		assertFalse(gr.removeNode(node1));
 		assertEquals(2, gr.getNumberOfNodes());
-		gr.removeNode(node2);
+		assertTrue(gr.removeNode(node2));
 		assertEquals(0, gr.getNumberOfEdges());
 		listNodeRemain.remove(node1);
 		listNodeRemain.remove(node2);

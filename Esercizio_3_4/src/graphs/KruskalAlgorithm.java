@@ -8,7 +8,7 @@ import unionfindset.UnionFindSetException;
 
 public class KruskalAlgorithm <V,E extends Comparable<E>> {
     
-	public Graph<V,E> kruskalAlgorithm(Graph<V,E> gr) throws GraphException, UnionFindSetException {
+	public Graph<V,E> kruskal(Graph<V,E> gr) throws GraphException, UnionFindSetException {
         Graph <V,E> minimumSpanningForest = new Graph<>("undirected");
         UnionFindSet<V> grSet = new UnionFindSet<>();				//mettiamo qui tutti i set creati a riga 17
         List<Edge<V,E>> listEdges;

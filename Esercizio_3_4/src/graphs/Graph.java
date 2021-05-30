@@ -12,12 +12,12 @@ import java.util.LinkedList;
  * Verifica se il grafo è diretto – O(1)				------FATTO------
  * Verifica se il grafo contiene un dato nodo – O(1)	------FATTO------
  * Verifica se il grafo contiene un dato arco – O(1)  (*) ----FATTO------
- * Cancellazione di un nodo – O(n)						------FATTO------
- * Cancellazione di un arco – O(1)  (*)					------FATTO------
+ * Cancellazione di un nodo – O(n)						------FATTO------ (\\\\\\\\\\\\\\\\\\)
+ * Cancellazione di un arco – O(1)  (*)					------FATTO------ (\\\\\\\\\\\\\\\\\\)
  * Determinazione del numero di nodi – O(1)				------FATTO------
  * Determinazione del numero di archi – O(n)			------FATTO------
  * Recupero dei nodi del grafo – O(n)					------FATTO------
- * Recupero degli archi del grafo – O(n)				------FATTO------ (\\\\\\)
+ * Recupero degli archi del grafo – O(n)				------FATTO------
  * Recupero nodi adiacenti di un dato nodo – O(1)  (*)	-----FATTO-------
  * Recupero etichetta associata a una coppia di nodi – O(1) (*) ---FATTO-----
  */
@@ -61,7 +61,6 @@ public class Graph<V, E extends Comparable<E>> {
 			addNode(node2);
 		if (containsEdge(node1, node2))
 			return false;
-		
 		Edge<V, E> ed1 = new Edge<>(node1, node2, edgeWeight);
 		gr.get(node1).add(ed1);
 		if (!(directed)){
@@ -100,24 +99,35 @@ public class Graph<V, E extends Comparable<E>> {
 		}
 	}
 
-	// cancellazione di un nodo - O(n)
+	// cancellazione di un nodo - O(n) ------------------------> NON VA BENE PERCHÉ NON HA (*) ---> cioè il nostro andrebbe bene per grafi sparsi come complessità, ma NON in generale!!
 	public boolean removeNode(V node) throws GraphException {
 		if (node == null)
 			throw new GraphException("removeNode: node parameter cannot be null");
 		if (!(containsNode(node)))
 			return false;
 		
+		// elimino tutti gli archi del nodo
+		List<V> listAdiacents = getAdiacentsFromNode(node);
+		for (V nodeAd : listAdiacents)
+			removeEdge(node, nodeAd);
 		/*
-		* se il grafo è diretto potrebbero esserci archi che hanno "node" come
-		* nodo finale. Quindi elimino qualsiasi arco contenga questo nodo come
-		* ultimo nodo.
-		*/
+		 * se il grafo è diretto potrebbero esserci altri archi che hanno "node"
+		 * come nodo finale. Quindi elimino qualsiasi arco contenga questo nodo come
+		 * ultimo nodo
+		 */
 		if (directed) {
-			for(Edge<V,E> edge : listAllEdges){
-				if ((edge.getStartNode()).equals(node))
-					removeEdge(node, edge.getEndNode());
-				if ((edge.getEndNode()).equals(node))
-					removeEdge(edge.getStartNode(), node);
+			// si potrebbe anche sfuttare il metodo graphEdges e scorrere quello piuttosto che tutti i nodi
+			for (List<Edge<V, E>> listNode : gr.values()) {
+				for (Edge<V, E> edge : listNode) {
+					if ((edge.getEndNode()).equals(node))
+						removeEdge(edge.getStartNode(), edge.getEndNode());
+				}
+			}
+		}
+		/* if (directed) {
+			for (Edge<V, E> edge : listAllEdges) {
+				if ((edge.getStartNode()).equals(node) || (edge.getEndNode()).equals(node))
+					removeEdge(edge.getStartNode(), edge.getEndNode());
 			}
 		}
 		else {
@@ -125,7 +135,7 @@ public class Graph<V, E extends Comparable<E>> {
 			List<V> listAdiacents = getAdiacentsFromNode(node);
 			for (V nodeAd : listAdiacents)
 				removeEdge(node, nodeAd);
-		}
+		} */
 		// rimuovo poi il nodo effettivo
 		gr.remove(node);
 		nOfNodes--;
@@ -151,6 +161,7 @@ public class Graph<V, E extends Comparable<E>> {
 
 	// determinazione del numero di nodi - O(1)
 	public long getNumberOfNodes() {
+		//return gr.size();
 		return nOfNodes;
 	}
 
