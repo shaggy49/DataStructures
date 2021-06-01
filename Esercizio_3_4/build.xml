@@ -2,7 +2,6 @@
 	<target name="init">
 		<property name="project.name" value="${ant.project.name}" />
 		<property location="classes" name="classes.dir" />
-		<!-- <property location="classes" name="graphClasses.dir" /> -->
 		<property location="src" name="src.dir" />
 		<property location="src/unionfindset" name="unionFindSrc.dir" />
 		<property location="src/graphs" name="graphsSrc.dir" />
@@ -18,7 +17,7 @@
 
 	<target depends="init, clean" name="compileUnion">
 		<mkdir dir="${classes.dir}" />
-		<javac destdir="${classes.dir}" srcdir="${unionFindSrc.dir}">
+		<javac includeantruntime="false" destdir="${classes.dir}" srcdir="${unionFindSrc.dir}">
 			<classpath>
 				<pathelement location="${junit}" />
 				<pathelement location="${hamcrest-core}" />
@@ -28,7 +27,7 @@
 	
 	<target depends="init, compileUnion" name="compileGraph">
 		<mkdir dir="${classes.dir}" />
-		<javac destdir="${classes.dir}" srcdir="${graphsSrc.dir}">
+		<javac includeantruntime="false" destdir="${classes.dir}" srcdir="${graphsSrc.dir}">
 			<classpath>
 				<pathelement location="${junit}" />
 				<pathelement location="${hamcrest-core}" />
@@ -41,21 +40,17 @@
 
 	<target depends="compileUnion" name="jarUnion">
 		<mkdir dir="build" />
-		<jar destfile="build/UnionFindSet.jar" basedir="classes" >
-			<!-- <manifest>
-				<attribute name="Main-Class" value="unionfindset/UnionFindSetTestsRunner" />
-			</manifest> -->
-		</jar>
+		<jar destfile="build/UnionFindSet.jar" basedir="classes" />
 	</target>
 
 	<target depends="compileGraph" name="jarGraph">
 		<mkdir dir="build" />
-		<jar destfile="build/Graph.jar" basedir="classes">
-			<!-- <manifest>
-				<attribute name="Main-Class" value="graph/KruskalAlgorithmTestsRunner" />
-				<attribute name="Class-Path" value="${classpath}" />
-			</manifest> -->
-		</jar>
+		<jar destfile="build/Graph.jar" basedir="classes"/>
+	</target>
+
+	<target depends="compileGraph,compileUnion" name="jarKruskal">
+		<mkdir dir="build" />
+		<jar destfile="build/Kruskal.jar" basedir="classes"/>
 	</target>
 
 	<target depends="compileUnion" name="junitUnion">
@@ -104,37 +99,9 @@
 
 	<target depends="jarUnion,junitUnion" name="allUnion" />
 	<target depends="jarGraph,junitGraph" name="allGraph" />
-	<target depends="jarUnion,jarGraph,junitKruskal" name="allKruskal" />
-	<target depends="jarUnion,jarGraph,Main" name="allMain" />
-	<target depends="allUnion,allGraph,allKruskal, allMain" name="all" />
+	<target depends="jarKruskal,junitKruskal" name="allKruskal" />
+	<target depends="jarUnion,jarGraph,jarKruskal,Main" name="allMain" />
+	<target depends="allGraph,allKruskal,allMain" name="allGraphPackage" />
+	<target depends="allUnion,allGraphPackage" name="all" />
 
 </project>
-
-<!-- 	
-	<target name="run">
-		<java classname="${UnionFindSetTestsRunner.jar}">
-    		<classpath>
-				<path refid="build" />
-				<path location="${jar.build/}/${ant.UnionFindSetTestRunner}.jar" />
-			</classpath>
-    	</java>
-	</target> -->
-
-<!-- 	<path id="build">
-		<fileset dir="${*.build}" includes="**/*.jar"/>
-	</path> -->
-
-<!-- 
-	<target name="run" >
-		<java fork="true" classname="${main-class}">
-			<classpath>
-				<path refid="classpath"/>
-				<path location="${jar.dir}/${ant.project.name}.jar"/>
-			</classpath>
-		</java>
-	</target>
-	
-	<path id="classpath">
-		<fileset dir="${lib.dir}" includes="**/*.jar"/>
-	</path>
- -->

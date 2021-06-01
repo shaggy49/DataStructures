@@ -1,6 +1,7 @@
 package graphs;
 
-import java.util.*;
+import java.util.List;
+import java.util.Collections;
 import unionfindset.UnionFindSet;
 import unionfindset.UnionFindSetException;
 
@@ -19,7 +20,7 @@ public class KruskalAlgorithm <V,E extends Comparable<E>> {
 			grSet.makeSet(node);
 		}
 		
-		//ordina gli archi del grafo in senso non decrescente rispetto al peso
+		//ordina gli archi del grafo in senso non decrescente rispetto al peso. All elements in the list must implement the Comparable interface.
 		listEdges = gr.graphEdges();
 		
 		Collections.sort(listEdges);

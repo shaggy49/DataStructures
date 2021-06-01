@@ -194,6 +194,38 @@ public class GraphDirectedStringTests {
 		assertEquals(graphEdges, gr.graphEdges());
 		assertEquals(3, gr.getNumberOfEdges());
 	}
+
+	@Test
+	public void testGetEdgeFromNoNode() throws GraphException {
+		try {
+			gr.getEdgesFromNode(node1);
+		} catch (GraphException ex) {
+			assertEquals("getEdgesFromNode: node parameter must exist", ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetEdgeFromNode() throws GraphException {
+		List<Edge<String,String>> listAllEdgesFromNode1 = new LinkedList<>();
+		List<Edge<String,String>> listAllEdgesFromNode2 = new LinkedList<>();
+		List<Edge<String,String>> listAllEdgesFromNode34 = new LinkedList<>();
+		Edge<String,String> edge1 = new Edge<>(node1, node2, "weight1");
+		Edge<String,String> edge2 = new Edge<>(node1, node3, "weight2");
+		Edge<String,String> edge3 = new Edge<>(node2, node2, "weight3");
+		Edge<String,String> edge4 = new Edge<>(node2, node4, "weight4");
+		gr.addEdge(node1, node2, "weight1");
+		gr.addEdge(node1, node3, "weight2");
+		gr.addEdge(node2, node2, "weight3");
+		gr.addEdge(node2, node4, "weight4");
+		listAllEdgesFromNode1.add(edge1);
+		listAllEdgesFromNode1.add(edge2);
+		assertEquals(listAllEdgesFromNode1, gr.getEdgesFromNode(node1));
+		listAllEdgesFromNode2.add(edge3);
+		listAllEdgesFromNode2.add(edge4);
+		assertEquals(listAllEdgesFromNode2, gr.getEdgesFromNode(node2));
+		assertEquals(listAllEdgesFromNode34, gr.getEdgesFromNode(node3));
+		assertEquals(listAllEdgesFromNode34, gr.getEdgesFromNode(node4));
+	}
 	
 	@Test
 	public void testGetAdiacentsFromNodeNoNode() throws GraphException {

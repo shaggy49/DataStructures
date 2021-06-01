@@ -1,14 +1,9 @@
 package graphs;
 
-/* import java.util.Scanner;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.IOException;
-*/
-
-import java.util.*;
 import java.io.*;
 import java.nio.*;
+import java.util.List;
+import java.util.Scanner;
 import java.time.Instant;
 import java.time.Duration;
 import unionfindset.UnionFindSetException;
@@ -66,7 +61,7 @@ public class GraphKruskalMain {
         System.out.println("End Kruskal algorithm execution.\n");
 
         time = Duration.between(start, end).toMillis();
-        System.out.println("Kruskal algorithm execution time: " + time + " milliseconds.");
+        System.out.println("Kruskal algorithm execution time: " + time + " milliseconds.\n");
 
         System.out.println("After Kruskal algorithm execution there are " + minimumSpanningForest.getNumberOfNodes()
                 + " nodes and " + minimumSpanningForest.getNumberOfEdges() + " edges. The total weight is "

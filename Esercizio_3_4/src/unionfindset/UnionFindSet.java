@@ -1,7 +1,6 @@
 package unionfindset;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /*===========Spiegazioni===========*/
 /*
@@ -9,11 +8,13 @@ import java.util.Map;
  */
 
 // A class to represent a union_find set
+// T indica il tipo generico: in Kruskal T è il nodo
+
 public class UnionFindSet<T> { /* Map<T,S> */
-	private Map<T, T> parent = new HashMap<>(); // arco
+	private HashMap<T, T> parent = new HashMap<>(); // arco
 
 	// stores the depth of trees
-	private Map<T, Integer> rank = new HashMap<>(); // per ogni elemento c'è un rango
+	private HashMap<T, Integer> rank = new HashMap<>(); // per ogni elemento c'è un rango
 
 	// perform MakeSet operation
 	public void makeSet(T element) throws UnionFindSetException {

@@ -1,7 +1,5 @@
 package graphs;
 
-import java.util.*;
-
 //V (vertex) tipo delle chiavi (nodi, vertici), E (edge) indica il tipo delle edgeWeight (archi)
 
 public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> {
@@ -27,13 +25,14 @@ public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> 
 		return edgeWeight;
 	}
 
+//Ant da un warning per colpa di riga 37 che assumiamo che obj sia Edge
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (this.getClass() != obj.getClass())
 			return false;
 		Edge<V, E> other = (Edge<V, E>) obj;
 		return this.startNode.equals(other.getStartNode()) && this.endNode.equals(other.getEndNode());

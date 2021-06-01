@@ -2,9 +2,9 @@ package graphs;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Collections;
 import org.junit.Test;
 import org.junit.Before;
+import java.util.Collections;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -246,6 +246,47 @@ public class GraphUndirectedIntegerTests {
 		assertEquals(null, gr.getEdgeWeight(node3, node1));
 	}
 
+	@Test
+	public void testGetEdgeFromNoNode() throws GraphException {
+		try {
+			gr.getEdgesFromNode(node1);
+		} catch (GraphException ex) {
+			assertEquals("getEdgesFromNode: node parameter must exist", ex.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetEdgeFromNode() throws GraphException {
+		List<Edge<Integer,Double>> listAllEdgesFromNode1 = new LinkedList<>();
+		List<Edge<Integer,Double>> listAllEdgesFromNode2 = new LinkedList<>();
+		List<Edge<Integer,Double>> listAllEdgesFromNode3 = new LinkedList<>();
+		List<Edge<Integer,Double>> listAllEdgesFromNode4 = new LinkedList<>();
+		Edge<Integer,Double> edge1 = new Edge<>(node1, node2, 1.22);
+		Edge<Integer,Double> edge1und = new Edge<>(node2, node1, 1.22);
+		Edge<Integer,Double> edge2 = new Edge<>(node1, node3, 1.33);
+		Edge<Integer,Double> edge2und = new Edge<>(node3, node1, 1.33);
+		Edge<Integer,Double> edge3 = new Edge<>(node2, node2, 2.22);
+		Edge<Integer,Double> edge3und = new Edge<>(node2, node2, 2.22);
+		Edge<Integer,Double> edge4 = new Edge<>(node2, node4, 2.44);
+		Edge<Integer,Double> edge4und = new Edge<>(node4, node2, 2.44);
+		gr.addEdge(node1, node2, 1.22);
+		gr.addEdge(node1, node3, 1.33);
+		gr.addEdge(node2, node2, 2.22);
+		gr.addEdge(node2, node4, 2.44);
+		listAllEdgesFromNode1.add(edge1);
+		listAllEdgesFromNode1.add(edge2);
+		assertEquals(listAllEdgesFromNode1, gr.getEdgesFromNode(node1));
+		listAllEdgesFromNode2.add(edge1und);
+		listAllEdgesFromNode2.add(edge3);
+		listAllEdgesFromNode2.add(edge3und);
+		listAllEdgesFromNode2.add(edge4);
+		assertEquals(listAllEdgesFromNode2, gr.getEdgesFromNode(node2));
+		listAllEdgesFromNode3.add(edge2und);
+		assertEquals(listAllEdgesFromNode3, gr.getEdgesFromNode(node3));
+		listAllEdgesFromNode4.add(edge4und);
+		assertEquals(listAllEdgesFromNode4, gr.getEdgesFromNode(node4));
+	}
+	
 	@Test
 	public void testGetEdgeWeightManyEdges() throws GraphException {
 		Edge<Integer,Double> edge1 = new Edge<>(node1, node2, 1.22);
