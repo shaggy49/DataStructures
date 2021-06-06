@@ -14,12 +14,5 @@ public class KruskalAlgorithmTestsRunner {
             System.err.println(failure.toString());
         }
         System.out.println("Undirected Graph (String nodes, Float Edges): " + result.wasSuccessful());
-        /*
-        Result resultInteger = JUnitCore.runClasses(GraphUndirectedIntegerTests.class);
-        for (Failure failure : resultInteger.getFailures()) {
-            System.err.println(failure.toString());
-        }
-        System.out.println("Undirected Graph (Integer nodes, Double Edges): " + resultInteger.wasSuccessful());
-        */
     }
 }

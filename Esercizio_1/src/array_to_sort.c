@@ -25,7 +25,6 @@ typedef struct _UnsortedArray{
     int (*compare)(void *, void *);
 } UnsortedArray;
 
-
 UnsortedArray *array_to_sort_create(int (*compare)(void *, void *)){
     if (compare == NULL) {
         fprintf(stderr, "array_to_sort_create: compare parameter cannot be NULL");
@@ -66,7 +65,7 @@ int array_to_sort_add(UnsortedArray *unsortedArray, void *element){
     }
 
     if (unsortedArray->size >= unsortedArray->array_capacity) {
-        unsortedArray->array_capacity = 2 * unsortedArray->array_capacity; // Why multiply by 2?
+        unsortedArray->array_capacity = 2 * unsortedArray->array_capacity;
         unsortedArray->array = (void **)realloc(unsortedArray->array, unsortedArray->array_capacity * sizeof(void *));
         if (unsortedArray->array == NULL) {
             fprintf(stderr, "array_to_sort_add: unable to reallocate memory to host the new element");
@@ -110,20 +109,26 @@ int array_to_sort_free_memory(UnsortedArray *unsortedArray){
     return 0;
 }
 
-/* ------------------ ORDER FUNCTIONS ------------------ */
+/* ------------------ SORT FUNCTIONS ------------------ */
 
+/*
+ * It returns the correct position where the element should be insert
+ */
 unsigned long binary_search(UnsortedArray *unsortedArray, void *selectedElem, long firstPosition, long lastPosition){
     if (lastPosition < firstPosition)
         return (unsigned) firstPosition;
     else {
         long middlePosition = (firstPosition + lastPosition) / 2;
         if (unsortedArray->compare(selectedElem, unsortedArray->array[middlePosition]) == -1)      
-            return binary_search(unsortedArray, selectedElem, firstPosition, middlePosition - 1);   //richiamo sulla meta di sinistra
+            return binary_search(unsortedArray, selectedElem, firstPosition, middlePosition - 1);   
         else                                                                                        
-            return binary_search(unsortedArray, selectedElem, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
+            return binary_search(unsortedArray, selectedElem, middlePosition + 1, lastPosition);    
     }
 }
 
+/*
+ * It ordered the array with binary_insertion_sort
+ */
 void array_to_sort_binary_insertion_sort(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
     unsigned long positionElem, tempPos, finalPositionElem;
     void *selectedElem;
@@ -156,6 +161,9 @@ int array_to_sort_merge_binary_insertion_sort(UnsortedArray *unsortedArray, unsi
     return 0;
 }
 
+/*
+ * It is actually the merge_sort implementation
+ */
 void array_to_sort_merge_sort_modified(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long lastPosition){
     unsigned long middlePosition;
     unsigned long currentSize = lastPosition - firstPosition + 1;
@@ -172,6 +180,9 @@ void array_to_sort_merge_sort_modified(UnsortedArray *unsortedArray, unsigned lo
     return;
 }
 
+/*
+ * It merges two ordered sub-array
+ */
 void merge(UnsortedArray *unsortedArray, unsigned long firstPosition, unsigned long middlePosition, unsigned long lastPosition){
     unsigned long sizeArrayLeft;
     unsigned long sizeArrayRight;

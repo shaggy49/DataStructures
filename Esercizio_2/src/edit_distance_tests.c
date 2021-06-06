@@ -4,11 +4,9 @@
 #include "unity.h"
 #include "edit_distance.h"
 
-
 /*
  * Test suite for edit_distance.c library
  */
-
 
 /* -------------------TESTING edit_distance_is_empty()------------------- */
 
@@ -51,11 +49,6 @@ static void test_edit_distance_add_get_one_el(){
     TEST_ASSERT_EQUAL_STRING(string, edit_distance_get(array_strings, 0));
     edit_distance_free_memory(array_strings);
 }
-
-/* -------------------TESTING edit_distance_swap_words()------------------- */
-
-//static int edit_distance_swap_words(ArrayStrings *, unsigned long, ArrayStrings *, unsigned long){}
-
 
 /* -------------------TESTING edit_distance_utilities()------------------- */
 

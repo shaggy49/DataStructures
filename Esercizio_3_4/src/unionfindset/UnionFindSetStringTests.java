@@ -81,7 +81,7 @@ public class UnionFindSetStringTests {
         unionFindSet.makeSet(i1);
         unionFindSet.makeSet(i2);
         unionFindSet.union(i1, i2);
-        assertEquals(unionFindSet.find(i1), unionFindSet.find(i2)); // stesso rappresentate dopo aver fatto la union
+        assertEquals(unionFindSet.find(i1), unionFindSet.find(i2));
     }
 
     @Test

@@ -23,5 +23,3 @@ public class UnionFindSetTestsRunner {
         System.out.println("String: " + resultString.wasSuccessful());
     }
 }
-
-// java -jar UnionFindSetTestsRunner.jar

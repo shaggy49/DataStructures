@@ -71,7 +71,6 @@ static void load_array_words(const char *fileName, ArrayStrings *arrayStrings){
     return;
 }
 
-/* Da cambiare perche` noi dobbiamo avere le virgole nella stampa finale */
 void remove_char(char* string, char toRemove){
     unsigned int length = (unsigned int) strlen(string);
     unsigned int j = 0;
@@ -104,17 +103,19 @@ void write_to_file(ArrayStrings *arrayStrings){
 	printf("Just created correct file\n");
 } 
 
+/* 
 static void print_array(ArrayStrings *arrayStrings){
-	unsigned long size = edit_distance_size(arrayStrings);
-	char *arrayWord;
-	
+    unsigned long size = edit_distance_size(arrayStrings);
+    char *arrayWord;
+    
     for (unsigned long i = 0; i < size; ++i){
-		arrayWord = edit_distance_get(arrayStrings, i);
-		printf("%s\n", arrayWord);
-	}
-	printf("\n");
-	return;
+        arrayWord = edit_distance_get(arrayStrings, i);
+        printf("%s\n", arrayWord);
+    }
+    printf("\n");
+    return;
 }
+*/
 
 /* 
  * It returns 1 if the word is present in the dictionary, 0 otherwise.
@@ -124,17 +125,21 @@ long binary_search_word(ArrayStrings *dictonaryWords, char *word, long firstPosi
         return 0;
     else {
         long middlePosition = (firstPosition + lastPosition) / 2;
-        // 0 se sono uguali, -1 se minore, 1 se maggiore
         if (strcmp(word, edit_distance_get(dictonaryWords, (unsigned) middlePosition)) == 0){
             return 1;
         }
         else if (strcmp(word, edit_distance_get(dictonaryWords, (unsigned) middlePosition)) < 0)
-            return binary_search_word(dictonaryWords, word, firstPosition, middlePosition - 1);   //richiamo sulla meta di sinistra
+            return binary_search_word(dictonaryWords, word, firstPosition, middlePosition - 1);
         else
-            return binary_search_word(dictonaryWords, word, middlePosition + 1, lastPosition);    //richiamo sulla meta di destra
+            return binary_search_word(dictonaryWords, word, middlePosition + 1, lastPosition);
     }
 }
 
+/*
+ * It invokes the edit distance function for the words that there are not in the dictionary and whose difference
+ * calcualted between the word to be corrected and the words in the dictionary is lower than the minimum
+ * edit_distance until then.
+ */
 void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictonaryWords){
     unsigned long nWordsToCorrect = edit_distance_size(wordsToCorrect);
     unsigned long nDictonaryWords = edit_distance_size(dictonaryWords);
@@ -146,10 +151,8 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
         minPosDict = INT_MAX;
         
         if (binary_search_word(dictonaryWords, edit_distance_get(wordsToCorrect,i), 0, (signed) nDictonaryWords - 1) == 0) {
-            // parola non presente nel dizionario
             for(unsigned long j = 0; j < nDictonaryWords; j++){
                 int lengthDifference = abs((int) strlen(edit_distance_get(wordsToCorrect,i)) - (int) strlen(edit_distance_get(dictonaryWords,j)));
-                //per evitare di confrontare la parola con altre che sicuramente hanno una edit distance maggiore
                 if (lengthDifference < minEdDist){
                     editDistance = edit_distance_dyn(edit_distance_get(wordsToCorrect,i), edit_distance_get(dictonaryWords,j));
                     if (editDistance < minEdDist){
@@ -167,7 +170,7 @@ void calculate_edit_distance(ArrayStrings *wordsToCorrect, ArrayStrings *dictona
 /* 
  * It should be invoked with two parameters specifying two data filepaths:
  * the first parameter is the dictonary's filepath to look up for suggestions
- * the second parameter is the txt file's filepath to correct.
+ * the second parameter is the file's filepath to correct.
  */
 
 int main(int argc, char const *argv[]){
@@ -179,47 +182,23 @@ int main(int argc, char const *argv[]){
 		printf("Usage: edit_distance_main <dictionaryFileName> <correctMeFileName>\n");
 		exit(EXIT_FAILURE);										
 	}
-
     if ((dictonaryWords = edit_distance_create()) == NULL)
 		exit(EXIT_FAILURE);
     load_array_dictionary(argv[1], dictonaryWords);
-    
-    //printf("Here is your dictonary file:\n\n");
-    //print_array(dictonaryWords);
-    
 
     if ((wordsToCorrect = edit_distance_create()) == NULL)
-		exit(EXIT_FAILURE);
-    
+		exit(EXIT_FAILURE); 
     load_array_words(argv[2], wordsToCorrect);
     
-    // printf("\n\nHere is your correctMe file (original):\n\n");
-    //print_array(wordsToCorrect);
     begin = clock();
     calculate_edit_distance(wordsToCorrect, dictonaryWords);
     end = clock();
     timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("\nTime to correct: %lf\n", timeSpent);
-    //printf("\n\nHere is your correctMe file (just modified):\n\n");
-    //print_array(wordsToCorrect);
     
     write_to_file(wordsToCorrect);
-    
+
     edit_distance_free_memory(dictonaryWords);
     edit_distance_free_memory(wordsToCorrect);
-    
     exit(EXIT_SUCCESS);
 }
-
-
-/*
-int main(int argc, char *argv[]){
-    char *w1 = argv[1];    
-    char *w2 = argv[2];
-
-    printf("EDIT_DYN == %d\n", edit_distance_dyn(w1,w2));
-    printf("EDIT_CLASS == %d\n", edit_distance_classic(w1,w2));
-
-    exit(EXIT_SUCCESS);
-}
-*/

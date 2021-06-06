@@ -10,7 +10,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
 public class GraphUndirectedIntegerTests {
-	
 	Graph<Integer, Double> gr;
 	Integer node1, node2, node3, node4;
 	
@@ -190,7 +189,6 @@ public class GraphUndirectedIntegerTests {
 		gr.addEdge(node2, node4, 2.23);
 		gr.addEdge(node3, node2, 3.34);
 		gr.addEdge(node4, node4, 4.45);
-		//aggiungiamo gli archi (aggiunti al grafo) in una lista di archi
 		graphEdges.add(edge1);
 		graphEdges.add(edge2);
 		graphEdges.add(edge3);
@@ -346,7 +344,7 @@ public class GraphUndirectedIntegerTests {
 		listNodeSorted.add(edge1);
 		listNodeSorted.add(edge3);
 		List<Edge<Integer, Double>> listToSort = gr.graphEdges();
-        Collections.sort(listToSort); //   ordina gli archi in una sequenza S di pesi crescenti;
+        Collections.sort(listToSort);
 		assertEquals(listNodeSorted, listToSort);
 	}
 }

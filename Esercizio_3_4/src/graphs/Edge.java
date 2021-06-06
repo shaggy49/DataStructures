@@ -1,7 +1,5 @@
 package graphs;
 
-//V (vertex) tipo delle chiavi (nodi, vertici), E (edge) indica il tipo delle edgeWeight (archi)
-
 public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> {
 	private V startNode;
 	private V endNode;
@@ -25,7 +23,6 @@ public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> 
 		return edgeWeight;
 	}
 
-//Ant da un warning per colpa di riga 37 che assumiamo che obj sia Edge
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -40,8 +37,8 @@ public class Edge<V, E extends Comparable<E>> implements Comparable<Edge<V, E>> 
 
 	/*
 	 * This class overrides equals(Object) method so it's necessaty to override the
-	 * hashCode() method because the general contract for the hashCode() method, which
-	 * states that equal objects must have equal hash codes.
+	 * hashCode() method because the general contract for the hashCode() method,
+	 * which states that equal objects must have equal hash codes.
 	 */
 	@Override
 	public int hashCode() {

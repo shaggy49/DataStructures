@@ -2,7 +2,7 @@
 #define EDIT_DISTANCE
 
 /*
- * An array of strings that contains words of any kind
+ * An array of strings that contains words of any kind.
  */
 typedef struct _ArrayStrings ArrayStrings;
 

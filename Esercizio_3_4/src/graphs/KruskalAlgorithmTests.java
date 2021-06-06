@@ -12,6 +12,7 @@ public class KruskalAlgorithmTests {
     
     @Before
     public void createGraphDirected() {
+        gr = new Graph<>("undirected");
         node1 = "A";
         node2 = "B";
         node3 = "C";
@@ -30,7 +31,6 @@ public class KruskalAlgorithmTests {
         node16 = "P";
         node17 = "Q";
         node18 = "R";
-        gr = new Graph<>("undirected");
         weight1 = 1.11f;
         weight2 = 2.22f;
         weight3 = 3.33f;
@@ -75,7 +75,6 @@ public class KruskalAlgorithmTests {
         gr.addEdge(node3, node6, weight9);
         gr.addEdge(node3, node17, weight7);
         gr.addEdge(node4, node18, weight9);
-        //gr.addEdge(node4, node1, weight4);
         gr.addEdge(node4, node5, weight1);
         gr.addEdge(node5, node6, weight8);
         gr.addEdge(node5, node8, weight6);
@@ -113,7 +112,7 @@ public class KruskalAlgorithmTests {
         grTest.addEdge(node10, node13, weight5);
         grTest.addEdge(node14, node15, weight6);
         grTest.addEdge(node3, node17, weight7);
-        grTest.addEdge(node12, node13, weight8);        
+        grTest.addEdge(node12, node13, weight8);      
         assertEquals(grTest.graphEdges(), minimumSpanningForest.graphEdges());
     }
 }

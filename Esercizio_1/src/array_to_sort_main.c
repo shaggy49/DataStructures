@@ -89,6 +89,9 @@ static int compare_record_floating_field(void *r1P, void *r2P){
 	return 1;
 }
 
+/* 
+ * It frees the memory occupied by unsortedArray
+ */
 static void free_array(UnsortedArray *unsortedArray){
 	unsigned long size = array_to_sort_size(unsortedArray);
 	for (unsigned long i = 0; i < size; ++i){
@@ -115,6 +118,7 @@ static void print_array(UnsortedArray *unsortedArray){
 }
 */
 
+/* It writes the ordered array into a new file .csv */
 static void write_to_file(UnsortedArray *unsortedArray, unsigned int typeWrite){
 	unsigned long size = array_to_sort_size(unsortedArray);
 	Record *arrayElement;
@@ -142,7 +146,7 @@ static void write_to_file(UnsortedArray *unsortedArray, unsigned int typeWrite){
 }
 
 /* 
- * Takes as input the csv filename to convert in UnsortedArray type
+ * It takes as input the csv filename to convert in UnsortedArray type
  * and insert all the element in the same order as the original file.
  */
 static void load_array(const char *fileName, UnsortedArray *unsortedArray){
@@ -184,6 +188,10 @@ static void load_array(const char *fileName, UnsortedArray *unsortedArray){
 	return;
 }
 
+/* 
+ * It create an new array with the input file's content and later invokes the function array_to_sort_merge_binary_insertion_sort
+ * to sort the array just created. At the end of sorting it writes the final ordered file into a new file.
+ */
 static void test_with_comparison_function(const char *fileName, int (*compare)(void *, void *), unsigned int typeWrite){
 	clock_t begin, end;
 	double timeSpent;
@@ -193,8 +201,6 @@ static void test_with_comparison_function(const char *fileName, int (*compare)(v
 		exit(EXIT_FAILURE);
 	load_array(fileName, unsortedArray);
 	unsigned long size = array_to_sort_size(unsortedArray);
-	/* printf("\nSorting the file with binary_insertion_sort\n");
-	array_to_sort_binary_insertion_sort(unsortedArray, 0, size-1); */
 	printf("\nSorting the file with merge_bin_ins_sort\n");
 	begin = clock();
 	if(array_to_sort_merge_binary_insertion_sort(unsortedArray, 0, size-1) == -1)
@@ -204,12 +210,13 @@ static void test_with_comparison_function(const char *fileName, int (*compare)(v
 	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("\nTime to sort: %lf\n", timeSpent);
 	write_to_file(unsortedArray, typeWrite);
-	//print_array(unsortedArray);
 	free_array(unsortedArray);
 	return;
 }
 
-/* It should be invoked with one parameter specifying the filepath of the data file */
+/* 
+ * It should be invoked with one parameter specifying the filepath of the data file 
+ */
 int main(int argc, char const *argv[]){
 	unsigned int numOrd, contErr;
 

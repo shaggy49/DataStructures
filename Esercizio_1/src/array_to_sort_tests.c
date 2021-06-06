@@ -35,7 +35,6 @@ static int precedes_string_field(void *r1_p, void *r2_p){
 	return 1;
 }
 
-
 static int precedes_integer_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){
 		fprintf(stderr, "precedes_record_integer_field: the first parameter is a null pointer");
@@ -53,7 +52,6 @@ static int precedes_integer_field(void *r1_p, void *r2_p){
 		return 0;
 	return 1;
 }
-
 
 static int precedes_floating_field(void *r1_p, void *r2_p){
 	if (r1_p == NULL){

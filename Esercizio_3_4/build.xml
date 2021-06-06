@@ -1,4 +1,4 @@
-<project name="UnionFindSet" basedir="." default="all">
+<project name="UnionFindSetAndGraph" basedir="." default="all">
 	<target name="init">
 		<property name="project.name" value="${ant.project.name}" />
 		<property location="classes" name="classes.dir" />

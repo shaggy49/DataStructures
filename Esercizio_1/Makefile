@@ -6,6 +6,7 @@ all: bin/array_to_sort_main
 tests: bin/array_to_sort_tests
 	./bin/array_to_sort_tests
 
+#Insert the path of the file next to ./bin/array_to_sort_main
 run : ./bin/array_to_sort_main
 	./bin/array_to_sort_main ~/Downloads/records.csv
 

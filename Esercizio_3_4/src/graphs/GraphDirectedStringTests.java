@@ -9,7 +9,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 
 public class GraphDirectedStringTests {
-	
 	Graph<String, String> gr;
 	String node1, node2, node3, node4;
 	
@@ -76,7 +75,6 @@ public class GraphDirectedStringTests {
 
 	@Test
 	public void testRemoveNodeNoAdd() throws GraphException {
-		//caso in cui il nodo non è presente nel grafo
 		assertFalse(gr.removeNode(node1));
 		assertFalse(gr.removeNode(node2));
 	}

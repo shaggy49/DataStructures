@@ -6,6 +6,7 @@ all: bin/edit_distance_main
 tests: bin/edit_distance_tests
 	./bin/edit_distance_tests
 
+#Insert the path of two file next to ./bin/edit_distance_main
 run : ./bin/edit_distance_main 
 	./bin/edit_distance_main ~/Downloads/dictionary.txt ~/Downloads/correctme.txt
 
